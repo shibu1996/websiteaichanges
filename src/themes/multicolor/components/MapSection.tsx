@@ -40,11 +40,72 @@ const MapSection = ({
       if (mapRef.current && lat != null && lng != null && mounted) {
         map = new mapboxgl.default.Map({
           container: mapRef.current,
-          style: 'mapbox://styles/mapbox/light-v11',
+          style: 'mapbox://styles/mapbox/outdoors-v12',
           center: [lng, lat],
           zoom: getZoomLevel(pageType),
           projection: 'globe',
           pitch: 45,
+        });
+
+        // Add custom overlay for service area
+        map.on('load', () => {
+          
+          // Add custom layer for service area highlight
+          map.addSource('service-area', {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: [lng, lat]
+              },
+              properties: {
+                name: locationName
+              }
+            }
+          });
+
+          // Add service area circle
+          map.addLayer({
+            id: 'service-area-circle',
+            type: 'circle',
+            source: 'service-area',
+            paint: {
+              'circle-radius': {
+                stops: [
+                  [0, 0],
+                  [20, 1000]
+                ],
+                base: 2
+              },
+              'circle-color': `${colors.primaryButton.bg}20`,
+              'circle-stroke-color': colors.primaryButton.bg,
+              'circle-stroke-width': 2,
+              'circle-opacity': 0.3
+            }
+          });
+
+          // Add service area pulse effect
+          map.addLayer({
+            id: 'service-area-pulse',
+            type: 'circle',
+            source: 'service-area',
+            paint: {
+              'circle-radius': {
+                stops: [
+                  [0, 0],
+                  [20, 1500]
+                ],
+                base: 2
+              },
+              'circle-color': `${colors.accent}15`,
+              'circle-stroke-color': colors.accent,
+              'circle-stroke-width': 1,
+              'circle-opacity': 0.2
+            }
+          });
+
+          setMapReady(true);
         });
 
         map.addControl(new mapboxgl.default.NavigationControl({ visualizePitch: true }), 'top-right');
@@ -231,8 +292,6 @@ const MapSection = ({
             className: 'custom-popup'
           }).setHTML(popupContent))
           .addTo(map);
-
-        map.on('load', () => setMapReady(true));
       }
     };
 
