@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { httpFile } from "../../../config.js";
-import { MapPin, Clock, Award } from 'lucide-react';
+import { MapPin, Clock, Award, Phone, Star, Sparkles, Eye, Home, Wrench, Calendar } from 'lucide-react';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -9,19 +9,16 @@ import AreasHero from '../components/areas/AreasHero';
 import AreasGrid from '../components/areas/AreasGrid';
 import WhyChooseUsSimple from '../components/WhyChooseUsSimple';
 import FAQSection from '../components/FAQSection';
-import BookingSection from '../components/BookingSection';
 import PageSchemaMarkup from '../components/PageSchemaMarkup';
 import SEOHead from '../components/SEOHead';
-import { Phone, Star, Sparkles, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { useSEO } from '../../../hooks/useSEO';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
-import { Home } from 'lucide-react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-
 import { Card, CardContent } from '@/components/ui/card';
 import DynamicFAIcon from '../../../extras/DynamicFAIcon.js';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Areas = () => {
   const breadcrumbItems = [
@@ -30,6 +27,8 @@ const Areas = () => {
   const [whyChooseUsAboutPage, setWhyChooseUsAboutPage] = useState([]);
 
   const { seoData } = useSEO('/areas');
+  const { getThemeColors } = useTheme();
+  const colors = getThemeColors();
   const [aboutHeroText, setAboutHeroText] = useState('');
   const [projectCategory, setProjectCategory] = useState("");
   const [heroImage, setHeroImage] = useState("");
@@ -40,6 +39,7 @@ const Areas = () => {
 
   const [UpcomingPage, setUpcomingPage] = useState("");
   const [locations, setLocations] = useState([]);
+  const [CTA, setCTA] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -65,6 +65,7 @@ const Areas = () => {
           setPhoneNumber(data.aboutUs.phone);
           setWhyChooseUsAboutPage(data.projectInfo.whyChooseUsAboutPage)
           setProjectName(data.projectInfo.projectName);
+          setCTA(data.projectInfo.cta || []);
 
           setHeroImage(data.projectInfo.images[4].url);
 
@@ -146,6 +147,13 @@ const Areas = () => {
     return '';
   };
 
+  const getCTAContent = (index) => {
+    if (CTA.length === 0) {
+      return { title: "Ready to Get Started?", description: "Contact us for professional services in your area" };
+    }
+    return CTA[index] || CTA[0];
+  };
+
 
   return (
 
@@ -166,174 +174,349 @@ const Areas = () => {
           breadcrumbs={[{ name: "Areas", url: "/areas" }]}
         />
         <Header />
-        {/* Breadcrumb */}
-        <div className="bg-gray-50 py-4">
-          <div className="max-w-7xl mx-auto px-16 sm:px-6 lg:px-8">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/" className="flex items-center">
-                      <Home className="w-4 h-4 mr-1" />
-                      Home
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="font-medium text-green-600">Areas We Serve</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </div>
-
-        {/* Areas Hero section */}
-
+        
+        {/* Hero section */}
         <section
-          className="relative min-h-[80vh] md:min-h-[85vh] flex items-center justify-center py-8 px-16 transition-all duration-300 overflow-hidden animate-hero-fade-in"
+          id="home"
+          className="relative min-h-screen flex items-center overflow-hidden pb-16 sm:pb-20 lg:pb-24"
           style={{
-            backgroundImage: `url(${heroImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
+            backgroundColor: colors.surface
           }}
         >
-          {/* Background Overlay with Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-accent/80 animate-gradient-shift bg-[length:200%_200%]"></div>
-
-          {/* Animated Background Elements */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-10 left-10 w-20 h-20 bg-primary-foreground/10 rounded-full animate-float-bounce stagger-1"></div>
-            <div className="absolute top-32 right-20 w-16 h-16 bg-accent-foreground/20 rounded-full animate-float-bounce stagger-2"></div>
-            <div className="absolute bottom-20 left-32 w-12 h-12 bg-primary-foreground/15 animate-morphing-shape stagger-3"></div>
-            <div className="absolute bottom-40 right-10 w-24 h-24 bg-accent-foreground/10 rounded-full animate-float-bounce stagger-4"></div>
-            <div className="absolute top-1/2 left-1/4 w-8 h-8 bg-primary-foreground/20 rounded-full animate-float stagger-5"></div>
-            <div className="absolute top-1/3 right-1/3 w-14 h-14 bg-accent-foreground/15 animate-morphing-shape stagger-6"></div>
-          </div>
-
-          <div className="container mx-auto px-16 py-8 z-10 max-w-6xl relative">
-            <div className="text-center space-y-6">
-
-              {/* Enhanced Trust Badge */}
-              <div className="inline-flex items-center glass-card rounded-full px-6 py-3 text-primary-foreground font-semibold text-base sm:text-lg animate-badge-bounce shadow-2xl hover-glow">
-                <Star className="w-5 h-5 mr-2 fill-current animate-pulse stagger-1" />
-                <Sparkles className="w-4 h-4 mr-1 animate-pulse stagger-2" />
-                Professional Services Available
-                <Sparkles className="w-4 h-4 ml-1 animate-pulse stagger-3" />
-              </div>
-
-
-              {/* Enhanced Main Headline */}
-              <div className="space-y-3 animate-heading-slide-up stagger-2">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-primary-foreground leading-tight">
-                  Areas We <span className="text-yellow-300 animate-wiggle inline-block">Serve</span>
-                </h1>
-              </div>
-
-              {/* Enhanced Subheadline */}
-              <p className="text-lg sm:text-xl md:text-2xl text-primary-foreground/90 font-medium max-w-4xl mx-auto leading-relaxed animate-subtitle-fade-in stagger-3">
-                Professional <span className="text-plumbing-responsive font-bold">{projectCategory}</span> {aboutHeroText}.
-              </p>
-
-              {/* Two Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4 animate-cta-zoom-in stagger-4">
-                {/* Call Now Button */}
-                <div className="relative group">
-                  <div className="absolute -inset-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-                  <div className="absolute -inset-1 glass-card rounded-2xl animate-pulse-glow"></div>
-
-                  <Button
-                    size="lg"
-                    className="relative overflow-hidden bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-600 hover:via-red-600 hover:to-pink-600 text-white px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold shadow-2xl rounded-2xl border-2 border-orange-400/50 transform hover:scale-105 transition-all duration-300 group animate-gradient-shift bg-[length:200%_200%] hover-float"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 via-orange-400/20 to-red-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-gradient-shift bg-[length:200%_200%]"></div>
-
-                    <div className="relative flex items-center">
-                      <div className="relative mr-3">
-                        <Phone className="w-6 h-6 animate-icon-bounce" />
-                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                      </div>
-
-                      <a
-                        href={`tel:${phoneNumber}`}>
-                        <div className="flex flex-col items-start">
-                          <span className="text-sm font-semibold opacity-90">CALL NOW</span>
-                          <span className="text-xl font-black tracking-wide">{phoneNumber}</span>
-                        </div>
-                      </a>
-                    </div>
-
-                    <div className="absolute top-2 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse" />
-                    </div>
-                  </Button>
+          {/* Left Side - Content */}
+          <div className="w-full lg:w-1/2 relative z-10">
+            <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+              {/* Breadcrumb - Top Left */}
+              <div className="absolute top-6 left-4 sm:left-8 lg:left-16 z-30">
+                <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
+                  <Breadcrumb>
+                    <BreadcrumbList>
+                      <BreadcrumbItem>
+                        <BreadcrumbLink asChild>
+                          <Link to="/" className="flex items-center text-xs text-gray-600 hover:text-gray-900 transition-colors">
+                            <Home className="w-3 h-3 mr-1" />
+                            Home
+                          </Link>
+                        </BreadcrumbLink>
+                      </BreadcrumbItem>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                        <BreadcrumbPage className="font-medium text-xs" style={{ color: colors.primaryButton.bg }}>Areas We Serve</BreadcrumbPage>
+                      </BreadcrumbItem>
+                    </BreadcrumbList>
+                  </Breadcrumb>
                 </div>
+              </div>
 
-                {/* View All Areas Button */}
-                <div className="relative group">
-                  <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 via-primary to-blue-600 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
+              <div className="pt-16 sm:pt-20 lg:pt-24">
+                <div className="text-center lg:text-left space-y-6 relative z-20">
 
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="relative bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/30 px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold shadow-xl rounded-2xl transform hover:scale-105 transition-all duration-300 group hover:bg-primary hover:text-white hover-float"
+                  {/* Badge */}
+                  <div className="inline-block mb-4">
+                    <span
+                      className="inline-flex items-center gap-2 backdrop-blur-sm rounded-full px-6 py-2.5"
+                      style={{
+                        color: colors.heading,
+                        backgroundColor: `${colors.primaryButton.bg}15`
+                      }}
+                    >
+                      <Star className="w-4 h-4" />
+                      Professional Services Available
+                    </span>
+                  </div>
+
+                  {/* Main Heading */}
+                  <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black leading-[1.1] tracking-tight">
+                    <span style={{ color: colors.heading }}>
+                      Areas We
+                    </span>{' '}
+                    <span
+                      className="inline-block"
+                      style={{
+                        backgroundImage: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
+                        WebkitBackgroundClip: 'text',
+                        backgroundClip: 'text',
+                        color: 'transparent',
+                        WebkitTextFillColor: 'transparent'
+                      }}
+                    >
+                      Serve
+                    </span>
+                  </h1>
+
+                  {/* Subheading */}
+                  <p
+                    className="text-xs sm:text-sm md:text-base lg:text-lg max-w-3xl mx-auto lg:mx-0 leading-relaxed"
+                    style={{ color: colors.description }}
                   >
-                    <div className="relative flex items-center">
-                      <div className="relative mr-3">
-                        <Eye className="w-6 h-6 animate-icon-bounce-delayed" />
+                    Professional <span className="font-bold">{projectCategory}</span> {aboutHeroText}.
+                  </p>
+
+                  {/* CTA Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-4">
+
+                    {/* Call Button */}
+                    <a
+                      href={`tel:${phoneNumber}`}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300"
+                      style={{
+                        backgroundColor: colors.primaryButton.bg,
+                        color: colors.primaryButton.text
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
+                    >
+                      <Phone className="w-5 h-5" />
+                      <div className="text-left">
+                        <div className="text-xs opacity-90">Call Now</div>
+                        <div className="text-sm font-bold">{phoneNumber}</div>
                       </div>
-                      <div className="flex flex-col items-start">
-                        <span className="text-sm font-semibold opacity-90">SEE</span>
-                        <span className="text-xl font-black tracking-wide">All Areas</span>
-                      </div>
+                    </a>
+
+                    {/* Get Estimate Button */}
+                    <button
+                      onClick={() => navigate('/contact')}
+                      className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300"
+                      style={{
+                        backgroundColor: colors.secondaryButton.bg,
+                        color: colors.secondaryButton.text,
+                        border: `2px solid ${colors.secondaryButton.border}`
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.secondaryButton.hover}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.secondaryButton.bg}
+                    >
+                      <Wrench className="w-5 h-5" />
+                      <span>Get Free Estimate</span>
+                    </button>
+                  </div>
+
+                  {/* Trust Indicators */}
+                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-6 pt-6">
+                    <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#22C55E' }}></div>
+                      <span className="text-xs font-semibold">24/7 Available</span>
                     </div>
-                  </Button>
+                    <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#3B82F6' }}></div>
+                      <span className="text-xs font-semibold">Licensed & Insured</span>
+                    </div>
+                    <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: colors.accent }}></div>
+                      <span className="text-xs font-semibold">Same Day Service</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Right Side - Image */}
+          <div className="hidden lg:flex w-1/2 relative min-h-screen items-center justify-center p-8">
+            <div className="relative w-full max-w-lg">
+              {/* Main Image */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                <img
+                  src={heroImage || '/placeholder.svg'}
+                  alt="Professional Services"
+                  className="w-full h-[500px] object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = '/placeholder.svg';
+                  }}
+                />
+                
+                {/* Gradient Overlay */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: `linear-gradient(135deg, ${colors.gradient.from}20, ${colors.gradient.to}20)`
+                  }}
+                ></div>
+              </div>
+              
+              {/* Decorative Elements */}
+              <div className="absolute -top-4 -right-4 w-20 h-20 rounded-2xl opacity-20" style={{ backgroundColor: colors.primaryButton.bg }}></div>
+              <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-xl opacity-15" style={{ backgroundColor: colors.accent }}></div>
+              
+              {/* Floating Badge */}
+              <div className="absolute top-6 right-6 bg-white rounded-xl px-4 py-3 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg }}></div>
+                  <span className="text-gray-900 font-semibold text-sm">Professional Service</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Animated Particles */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-20 right-10 w-2 h-2 bg-primary/40 rounded-full animate-ping" style={{ backgroundColor: colors.accent }}></div>
+              <div className="absolute top-40 right-20 w-3 h-3 bg-accent/30 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg, animationDelay: '1s' }}></div>
+              <div className="absolute bottom-32 right-1/4 w-2 h-2 bg-primary/50 rounded-full animate-ping" style={{ backgroundColor: colors.accent, animationDelay: '2s' }}></div>
+              <div className="absolute bottom-20 right-1/3 w-3 h-3 bg-accent/40 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg, animationDelay: '3s' }}></div>
+            </div>
+          </div>
+
+          {/* Mobile Background Image */}
+          <div
+            className="lg:hidden absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: heroImage ? `url(${heroImage})` : `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
+              zIndex: -1
+            }}
+          >
+            {/* Gradient Overlay */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(135deg, ${colors.gradient.from}, ${colors.gradient.to})`,
+                mixBlendMode: colors.overlay.blend as any
+              }}
+            ></div>
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundColor: colors.overlay.color
+              }}
+            ></div>
           </div>
         </section>
         {/* <AreasGrid /> */}
         {/* Areas grid */}
 
 
-        <section className="py-20 bg-gradient-to-b from-background to-secondary/30 transition-colors duration-300 ">
-          <div className="container mx-auto px-16">
-            <div className="text-center mb-16 animate-hero-fade-in">
-              <h2 className="text-5xl font-bold text-foreground mb-6 animate-heading-slide-up">Areas We Serve</h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-12 animate-subtitle-fade-in stagger-1">
-                Professional <span className="text-plumbing-responsive font-bold">{projectCategory}</span> services throughout Our availability.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-12">
-                <div className="glass-card rounded-2xl p-6 border border-border/50 shadow-lg animate-card-scale-in stagger-1 hover-float hover-glow">
-                  <MapPin className="w-12 h-12 text-primary mx-auto mb-4 animate-icon-bounce" />
-                  <h3 className="text-xl font-bold text-card-foreground mb-2">Our Availability</h3>
-                  <p className="text-muted-foreground">Nationwide coverage with local expertise</p>
-                </div>
-
-                <div className="glass-card rounded-2xl p-6 border border-border/50 shadow-lg animate-card-scale-in stagger-2 hover-float hover-glow">
-                  <Clock className="w-12 h-12 text-primary mx-auto mb-4 animate-icon-bounce-delayed" />
-                  <h3 className="text-xl font-bold text-card-foreground mb-2">Response time: Extreme</h3>
-                  <p className="text-muted-foreground">Fast and reliable service delivery</p>
-                </div>
-
-                <div className="glass-card rounded-2xl p-6 border border-border/50 shadow-lg animate-card-scale-in stagger-3 hover-float hover-glow">
-                  <Award className="w-12 h-12 text-primary mx-auto mb-4 animate-icon-bounce" />
-                  <h3 className="text-xl font-bold text-card-foreground mb-2">100% Original services</h3>
-                  <p className="text-muted-foreground">Quality guaranteed every time</p>
-                </div>
+        {/* Areas We Serve Section */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <div className="inline-block mb-4">
+                <span 
+                  className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                  style={{ 
+                    color: colors.primaryButton.bg,
+                    backgroundColor: `${colors.primaryButton.bg}15`
+                  }}
+                >
+                  Service Areas
+                </span>
               </div>
-
-             
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                Areas We <span style={{ color: colors.primaryButton.bg }}>Serve</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto leading-relaxed mt-6">
+                Professional <span className="font-bold">{projectCategory}</span> services throughout our availability.
+              </p>
             </div>
 
-          
+            {/* Locations Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
+              {locations.slice(0, 6).map((location, index) => (
+                <div 
+                  key={location._id || index}
+                  className="group relative bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                  onClick={() => handleLocationClick(location, false)}
+                >
+                  {/* Hover Border Effect */}
+                  <div 
+                    className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                    style={{
+                      border: `2px solid ${colors.primaryButton.bg}40`,
+                      boxShadow: `0 0 20px ${colors.primaryButton.bg}20`
+                    }}
+                  ></div>
+
+                  {/* Content */}
+                  <div className="relative">
+                    {/* Icon and Badge */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div 
+                        className="w-12 h-12 rounded-xl flex items-center justify-center"
+                        style={{ backgroundColor: `${colors.primaryButton.bg}15` }}
+                      >
+                        <MapPin className="w-6 h-6" style={{ color: colors.primaryButton.bg }} />
+                      </div>
+                      <span 
+                        className="text-xs font-bold px-3 py-1 rounded-full"
+                        style={{ 
+                          color: colors.primaryButton.bg,
+                          backgroundColor: `${colors.primaryButton.bg}15`
+                        }}
+                      >
+                        Available
+                      </span>
+                    </div>
+
+                    {/* Location Info */}
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-bold text-gray-900 group-hover:text-gray-800 transition-colors">
+                        {location.name}
+                      </h3>
+                      {location.description && (
+                        <p className="text-sm text-gray-600 line-clamp-2">
+                          {location.description}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Bottom Accent Line */}
+                    <div 
+                      className="h-1 rounded-full transition-all duration-300 group-hover:w-full mt-4"
+                      style={{
+                        width: '2rem',
+                        background: `linear-gradient(90deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* View All Locations Button */}
+            {locations.length > 6 && (
+              <div className="text-center mb-8">
+                <button
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300 hover:-translate-y-1"
+                  style={{
+                    backgroundColor: colors.primaryButton.bg,
+                    color: colors.primaryButton.text
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
+                  onClick={() => {
+                    const areasSection = document.getElementById('areas-grid-section');
+                    if (areasSection) {
+                      areasSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                >
+                  <MapPin className="w-5 h-5" />
+                  View All {locations.length} Locations
+                </button>
+              </div>
+            )}
+
+            {/* Stats Row */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-center">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: colors.primaryButton.bg }} />
+                <span className="text-gray-900 font-semibold text-sm sm:text-base">Serving {locations.length}+ Areas</span>
+              </div>
+              <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
+              <div className="text-gray-600 text-sm sm:text-base">
+                <span className="font-bold text-gray-900">24/7</span> Emergency Service
+              </div>
+              <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
+              <div className="text-gray-600 text-sm sm:text-base">
+                <span className="font-bold text-gray-900">100%</span> Coverage
+              </div>
+            </div>
           </div>
         </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+        {/* Areas Grid Section */}
+        <section id="areas-grid-section" className="py-20 bg-background">
+          <div className="container mx-auto px-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
               {locations.map((area, index) => (
                 <div
                   key={area.name}
@@ -378,36 +561,204 @@ const Areas = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
 
-        <section className="py-20 bg-muted/20">
-          <div className="container mx-auto px-16">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-foreground mb-4">Why Choose {projectName}?</h2>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                We're committed to providing exceptional {projectCategory} services with professional expertise and customer satisfaction.
+        {/* Why Choose Us Section */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <div className="inline-block mb-4">
+                <span 
+                  className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                  style={{ 
+                    color: colors.primaryButton.bg,
+                    backgroundColor: `${colors.primaryButton.bg}15`
+                  }}
+                >
+                  Why Choose Us
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                Why Choose <span style={{ color: colors.primaryButton.bg }}>{projectName}</span>?
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
+                When you choose us, you're choosing quality, reliability, and exceptional service that's backed by years of experience and thousands of satisfied customers.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {whyChooseUsAboutPage.map((feature, index) => {
+            {/* Features Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {whyChooseUsAboutPage.map((feature, index) => (
+                <div 
+                  key={index} 
+                  className="group relative bg-white rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
+                  style={{
+                    border: `1px solid ${colors.primaryButton.bg}15`
+                  }}
+                >
+                  {/* Hover Border Effect */}
+                  <div 
+                    className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                      border: `2px solid ${colors.primaryButton.bg}40`,
+                      boxShadow: `0 0 20px ${colors.primaryButton.bg}20`
+                    }}
+                  ></div>
 
-                return (
-                  <Card key={index} className="bg-card border border-border shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <CardContent className="p-8 text-center">
-                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <DynamicFAIcon iconClass={feature.iconClass || ''} className="w-18 h-18 text-primary" />
+                  {/* Content */}
+                  <div className="relative space-y-5">
+                    {/* Icon Container */}
+                    <div className="w-fit">
+                      <div 
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110"
+                        style={{
+                          backgroundColor: `${colors.primaryButton.bg}15`,
+                          border: `2px solid ${colors.primaryButton.bg}30`
+                        }}
+                      >
+                        {feature.iconClass ? (
+                          <div style={{ color: colors.primaryButton.bg }}>
+                            <DynamicFAIcon 
+                              iconClass={feature.iconClass} 
+                              className="text-2xl"
+                            />
+                          </div>
+                        ) : null}
                       </div>
-                      <h3 className="text-2xl font-bold text-card-foreground mb-4">{feature.title}</h3>
-                      <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                    </div>
+
+                    {/* Text Content */}
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-bold leading-tight text-gray-900">
+                        {feature.title}
+                      </h3>
+                      <p className="text-base leading-relaxed text-gray-600">
+                        {feature.description}
+                      </p>
+                    </div>
+
+                    {/* Bottom Accent Line */}
+                    <div 
+                      className="h-1 rounded-full transition-all duration-500 group-hover:w-full"
+                      style={{
+                        width: '3rem',
+                        background: `linear-gradient(90deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
+
+        {/* CTA Section */}
+        <section
+          className="py-16 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${colors.gradient.from}, ${colors.gradient.to})`
+          }}
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-10 left-10 w-20 h-20 rounded-full animate-pulse" style={{ backgroundColor: colors.accent }}></div>
+            <div className="absolute bottom-10 right-10 w-16 h-16 rounded-full animate-pulse" style={{ animationDelay: '1s', backgroundColor: colors.primaryButton.bg }}></div>
+            <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ animationDelay: '2s', backgroundColor: colors.accent }}></div>
+          </div>
+
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16 text-center relative z-10">
+            
+            {/* Section Header */}
+            <div className="mb-8">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 max-w-2xl mx-auto leading-tight">
+                {getCTAContent(0).title}
+              </h2>
+              <p className="text-xs sm:text-sm text-white/90 max-w-2xl mx-auto leading-relaxed">
+                {getCTAContent(0).description}
+              </p>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              
+              {/* Call Button */}
+              <a
+                href={`tel:${phoneNumber}`}
+                className="group relative inline-flex items-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:-translate-y-1 shadow-lg"
+                style={{
+                  backgroundColor: colors.primaryButton.bg,
+                  color: colors.primaryButton.text
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
+              >
+                <div className="relative">
+                  <Phone className="w-5 h-5" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-semibold opacity-90 uppercase tracking-wide">Emergency Call</div>
+                  <div className="text-sm font-bold">{phoneNumber}</div>
+                </div>
+              </a>
+
+              {/* Book Online Button */}
+              <Link
+                to="/contact"
+                className="group relative inline-flex items-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:-translate-y-1 shadow-lg backdrop-blur-md"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  color: colors.primaryButton.bg,
+                  border: `2px solid ${colors.primaryButton.bg}30`
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = colors.primaryButton.bg;
+                  e.currentTarget.style.color = colors.primaryButton.text;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                  e.currentTarget.style.color = colors.primaryButton.bg;
+                }}
+              >
+                <Calendar className="w-5 h-5" />
+                <div className="text-left">
+                  <div className="text-xs font-semibold opacity-90 uppercase tracking-wide">Book Online</div>
+                  <div className="text-sm font-bold">Schedule Service</div>
+                </div>
+              </Link>
+            </div>
+
+            {/* Trust Indicators */}
+            <div className="flex flex-wrap justify-center gap-6 text-white/90">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">24/7 Available</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.primaryButton.bg }}
+                ></div>
+                <span className="text-xs font-semibold">Licensed & Insured</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">Same Day Service</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <FAQSection />
-        <BookingSection />
         <Footer />
       </div>
 

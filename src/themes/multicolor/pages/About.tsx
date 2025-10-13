@@ -13,7 +13,7 @@ import PageSchemaMarkup from '../components/PageSchemaMarkup';
 import SEOHead from '../components/SEOHead';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link, useParams } from "react-router-dom";
-import { Phone, Clock, Calendar, Star, Shield, Award, Sparkles, Users } from 'lucide-react';
+import { Phone, Clock, Calendar, Star, Shield, Award, Sparkles, Users, Wrench } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { httpFile } from "../../../config.js";
 
@@ -23,8 +23,12 @@ import DynamicFAIcon from '../../../extras/DynamicFAIcon.js';
 
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
 import { Home } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 const About = () => {
+  const { getThemeColors } = useTheme();
+  const colors = getThemeColors();
+  
   const breadcrumbItems = [
     { label: "About" }
   ];
@@ -178,104 +182,206 @@ const About = () => {
         breadcrumbs={[{ name: "About", url: "/about" }]}
       />
       <Header />
-      <PageBreadcrumb items={breadcrumbItems} />
+      {/* Hero Section */}
       <section
-        className="relative min-h-[80vh] md:min-h-[85vh] flex items-center justify-center py-8 px-16 transition-all duration-300 overflow-hidden"
+        id="home"
+        className="relative min-h-screen flex items-center overflow-hidden pb-16 sm:pb-20 lg:pb-24"
         style={{
-          backgroundImage: `url(${backgroundImage})`,
-
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          backgroundColor: colors.surface
         }}
       >
-        {/* Background Overlay with Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-accent/80 animate-gradient-shift bg-[length:200%_200%]"></div>
-
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-10 left-10 w-20 h-20 bg-primary-foreground/10 rounded-full animate-float-bounce"></div>
-          <div className="absolute top-32 right-20 w-16 h-16 bg-accent-foreground/20 rounded-full animate-float-bounce" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute bottom-20 left-32 w-12 h-12 bg-primary-foreground/15 animate-morphing-shape"></div>
-          <div className="absolute bottom-40 right-10 w-24 h-24 bg-accent-foreground/10 rounded-full animate-float-bounce" style={{ animationDelay: '2s' }}></div>
-        </div>
-
-        <div className="container mx-auto px-16 py-8 z-10 max-w-6xl relative">
-          <div className="text-center space-y-6 animate-hero-fade-in">
-
-            {/* Enhanced Trust Badge */}
-            <div className="inline-flex items-center glass-card rounded-full px-6 py-3 text-primary-foreground font-semibold text-base sm:text-lg animate-badge-bounce shadow-2xl">
-              <Star className="w-5 h-5 mr-2 fill-current animate-pulse" />
-              <Sparkles className="w-4 h-4 mr-1 animate-pulse" />
-              Your Trusted {projectCategory} Partners
-              <Sparkles className="w-4 h-4 ml-1 animate-pulse" />
-            </div>
-
-            {/* Enhanced Main Headline */}
-            <div className="space-y-3 animate-heading-slide-up" style={{ animationDelay: '0.2s' }}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-primary-foreground leading-tight">
-                About
-                <span className="block md:inline text-plumbing-responsive bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text animate-gradient-shift"> {projectName}</span>
-              </h1>
-            </div>
-
-            {/* Enhanced Subheadline */}
-            <p className="text-lg sm:text-xl md:text-2xl text-primary-foreground/90 font-medium max-w-4xl mx-auto leading-relaxed animate-subtitle-fade-in" style={{ animationDelay: '0.4s' }}>
-              {aboutHeroText}
-            </p>
-
-            {/* Two Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4 animate-cta-zoom-in" style={{ animationDelay: '0.6s' }}>
-              {/* Call Now Button */}
-              <div className="relative group">
-                <div className="absolute -inset-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-                <div className="absolute -inset-1 glass-card rounded-2xl animate-pulse-glow"></div>
-
-                <Button
-                  size="lg"
-                  className="relative overflow-hidden bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-600 hover:via-red-600 hover:to-pink-600 text-white px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold shadow-2xl rounded-2xl border-2 border-orange-400/50 transform hover:scale-105 transition-all duration-300 group animate-gradient-shift bg-[length:200%_200%]"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 via-orange-400/20 to-red-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-gradient-shift bg-[length:200%_200%]"></div>
-
-                  <div className="relative flex items-center">
-                    <div className="relative mr-3">
-                      <Phone className="w-6 h-6 animate-float-bounce" />
-                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    </div>
-                    <div className="flex flex-col items-start">
-                      <span className="text-sm font-semibold opacity-90">CALL NOW</span>
-                      <span className="text-xl font-black tracking-wide">{phoneNumber}</span>
-                    </div>
-                  </div>
-
-                  <div className="absolute top-2 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse" />
-                  </div>
-                </Button>
+        {/* Left Side - Content */}
+        <div className="w-full lg:w-1/2 relative z-10">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            {/* Breadcrumb - Top Left */}
+            <div className="absolute top-6 left-4 sm:left-8 lg:left-16 z-30">
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
+                <Breadcrumb>
+                  <BreadcrumbList>
+                    <BreadcrumbItem>
+                      <BreadcrumbLink asChild>
+                        <Link to="/" className="flex items-center text-xs text-gray-600 hover:text-gray-900 transition-colors">
+                          <Home className="w-3 h-3 mr-1" />
+                          Home
+                        </Link>
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage className="font-medium text-xs" style={{ color: colors.primaryButton.bg }}>About Us</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb>
               </div>
+            </div>
 
-              {/* Learn More Button */}
-              <div className="relative group">
-                <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 via-primary to-blue-600 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
+            <div className="pt-16 sm:pt-20 lg:pt-24">
+              <div className="text-center lg:text-left space-y-6 relative z-20">
 
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="relative bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/30 px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold shadow-xl rounded-2xl transform hover:scale-105 transition-all duration-300 group hover:bg-primary hover:text-white"
+                {/* Badge */}
+                <div className="inline-block mb-4">
+                  <span
+                    className="inline-flex items-center gap-2 backdrop-blur-sm rounded-full px-6 py-2.5"
+                    style={{
+                      color: colors.heading,
+                      backgroundColor: `${colors.primaryButton.bg}15`
+                    }}
+                  >
+                    <Star className="w-4 h-4" />
+                    Your Trusted {projectCategory} Partners
+                  </span>
+                </div>
+
+                {/* Main Heading */}
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black leading-[1.1] tracking-tight">
+                  <span style={{ color: colors.heading }}>
+                    About
+                  </span>{' '}
+                  <span
+                    className="inline-block"
+                    style={{
+                      backgroundImage: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
+                      WebkitBackgroundClip: 'text',
+                      backgroundClip: 'text',
+                      color: 'transparent',
+                      WebkitTextFillColor: 'transparent'
+                    }}
+                  >
+                    {projectName}
+                  </span>
+                </h1>
+
+                {/* Subheading */}
+                <p
+                  className="text-xs sm:text-sm md:text-base lg:text-lg max-w-3xl mx-auto lg:mx-0 leading-relaxed"
+                  style={{ color: colors.description }}
                 >
-                  <div className="relative flex items-center">
-                    <div className="relative mr-3">
-                      <Users className="w-6 h-6 animate-float-bounce" />
+                  {aboutHeroText}
+                </p>
+
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-4">
+
+                  {/* Call Button */}
+                  <a
+                    href={`tel:${phoneNumber}`}
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300"
+                    style={{
+                      backgroundColor: colors.primaryButton.bg,
+                      color: colors.primaryButton.text
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
+                  >
+                    <Phone className="w-5 h-5" />
+                    <div className="text-left">
+                      <div className="text-xs opacity-90">Call Now</div>
+                      <div className="text-sm font-bold">{phoneNumber}</div>
                     </div>
-                    <div className="flex flex-col items-start">
-                      <span className="text-sm font-semibold opacity-90">LEARN</span>
-                      <span className="text-xl font-black tracking-wide">Our Story</span>
-                    </div>
+                  </a>
+
+                  {/* Learn More Button */}
+                  <button
+                    onClick={() => {
+                      const aboutSection = document.getElementById('about-content');
+                      if (aboutSection) {
+                        aboutSection.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300"
+                    style={{
+                      backgroundColor: colors.secondaryButton.bg,
+                      color: colors.secondaryButton.text,
+                      border: `2px solid ${colors.secondaryButton.border}`
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.secondaryButton.hover}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.secondaryButton.bg}
+                  >
+                    <Users className="w-5 h-5" />
+                    <span>Learn Our Story</span>
+                  </button>
+                </div>
+
+                {/* Trust Indicators */}
+                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-6 pt-6">
+                  <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                    <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#22C55E' }}></div>
+                    <span className="text-xs font-semibold">24/7 Available</span>
                   </div>
-                </Button>
+                  <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                    <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#3B82F6' }}></div>
+                    <span className="text-xs font-semibold">Licensed & Insured</span>
+                  </div>
+                  <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                    <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: colors.accent }}></div>
+                    <span className="text-xs font-semibold">Same Day Service</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Right Side - Image */}
+        <div className="hidden lg:flex w-1/2 relative min-h-screen items-center justify-center p-8">
+          <div className="relative w-full max-w-lg">
+            {/* Main Image */}
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+              <img
+                src={heroImage || '/placeholder.svg'}
+                alt="About Us"
+                className="w-full h-[500px] object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = '/placeholder.svg';
+                }}
+              />
+              
+              {/* Gradient Overlay */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(135deg, ${colors.gradient.from}20, ${colors.gradient.to}20)`
+                }}
+              ></div>
+            </div>
+            
+            {/* Decorative Elements */}
+            <div className="absolute -top-4 -right-4 w-20 h-20 rounded-2xl opacity-20" style={{ backgroundColor: colors.primaryButton.bg }}></div>
+            <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-xl opacity-15" style={{ backgroundColor: colors.accent }}></div>
+            
+            {/* Floating Badge */}
+            <div className="absolute top-6 right-6 bg-white rounded-xl px-4 py-3 shadow-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg }}></div>
+                <span className="text-gray-900 font-semibold text-sm">About Us</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Animated Particles */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-20 right-10 w-2 h-2 bg-primary/40 rounded-full animate-ping" style={{ backgroundColor: colors.accent }}></div>
+            <div className="absolute top-40 right-20 w-3 h-3 bg-accent/30 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg, animationDelay: '1s' }}></div>
+            <div className="absolute bottom-32 right-1/4 w-2 h-2 bg-primary/50 rounded-full animate-ping" style={{ backgroundColor: colors.accent, animationDelay: '2s' }}></div>
+            <div className="absolute bottom-20 right-1/3 w-3 h-3 bg-accent/40 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg, animationDelay: '3s' }}></div>
+          </div>
+        </div>
+
+        {/* Mobile Background Image */}
+        <div
+          className="lg:hidden absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: heroImage ? `url(${heroImage})` : `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
+            zIndex: -1
+          }}
+        >
+          {/* Gradient Overlay */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(135deg, ${colors.gradient.from}CC, ${colors.gradient.to}CC)`
+            }}
+          ></div>
         </div>
       </section>
       <section className="py-20 bg-muted/30">
