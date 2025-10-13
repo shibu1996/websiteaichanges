@@ -72,114 +72,129 @@ const sanitize = (raw: any): string =>
   // ];
 
   return (
-    <section id="about" className="py-20 bg-white">
+    <section id="about" className="py-16 bg-white">
       <div className="container mx-auto px-16">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span style={{ color: colors.heading }}>Professional </span>
+        
+        {/* Section Title */}
+        <div className="text-center mb-12">
+          <div className="inline-block mb-4">
             <span 
-              className="inline-block"
-              style={{
-                backgroundImage: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-                color: 'transparent',
-                WebkitTextFillColor: 'transparent'
+              className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+              style={{ 
+                color: colors.primaryButton.bg,
+                backgroundColor: `${colors.primaryButton.bg}15`
               }}
             >
-              {projectCategory}
+              About Us
             </span>
-            <span style={{ color: colors.heading }}> You Can Trust</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+            Professional <span style={{ color: colors.primaryButton.bg }}>{projectCategory}</span> You Can Trust
           </h2>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-5 gap-8 items-start mb-16">
-          {/* Left: Image */}
-          <div className="lg:col-span-2">
-            <div className="relative group">
+        {/* Main Content */}
+        <div className="grid lg:grid-cols-12 gap-12 items-center">
+          
+          {/* Left: Image - 5 columns */}
+          <div className="lg:col-span-5">
+            <div className="relative">
+              {/* Main Image */}
               <div className="relative rounded-3xl overflow-hidden">
                 <img 
                   src={aboutImage}
                   alt="Professional service"
-                  className="w-full h-[600px] object-cover"
+                  className="w-full h-[500px] object-cover"
                 />
                 
-                {/* Licensed Badge */}
-                <div 
-                  className="absolute bottom-6 left-6 right-6 px-6 py-4 rounded-2xl backdrop-blur-md flex items-center justify-center gap-3"
-                  style={{
-                    backgroundColor: `${colors.primaryButton.bg}95`,
-                    border: `1px solid ${colors.primaryButton.bg}`
-                  }}
-                >
-                  <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-                  <span className="text-white font-bold text-base">Licensed Professional</span>
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                
+                {/* Badge at Bottom */}
+                <div className="absolute bottom-8 left-8 right-8">
+                  <div 
+                    className="backdrop-blur-md rounded-2xl px-6 py-4 flex items-center gap-3"
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      border: `2px solid ${colors.primaryButton.bg}30`
+                    }}
+                  >
+                    <div 
+                      className="w-3 h-3 rounded-full animate-pulse"
+                      style={{ backgroundColor: colors.primaryButton.bg }}
+                    ></div>
+                    <span className="font-bold text-gray-900">Licensed Professional</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Decorative Border on Hover */}
+              {/* Decorative Element */}
               <div 
-                className="absolute -inset-4 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"
-                style={{
-                  background: `linear-gradient(135deg, ${colors.primaryButton.bg}30, ${colors.accent}30)`,
-                  filter: 'blur(20px)'
-                }}
+                className="absolute -bottom-6 -right-6 w-32 h-32 rounded-3xl -z-10"
+                style={{ backgroundColor: `${colors.primaryButton.bg}20` }}
               ></div>
             </div>
           </div>
 
-          {/* Right: Content */}
-          <div className="lg:col-span-3 space-y-8">
+          {/* Right: Content - 7 columns */}
+          <div className="lg:col-span-7 space-y-10">
+            
             {/* Description */}
-            <div 
-              className="p-8 rounded-2xl space-y-4"
-              style={{
-                backgroundColor: `${colors.primaryButton.bg}08`,
-                border: `1px solid ${colors.primaryButton.bg}20`
-              }}
-            >
-              <p className="text-lg leading-relaxed text-black">
+            <div className="space-y-6">
+              <p className="text-xl text-gray-700 leading-relaxed">
                 {firstPart}
               </p>
-              <p className="text-lg leading-relaxed text-black">
+              <p className="text-xl text-gray-700 leading-relaxed">
                 {secondPart}
               </p>
             </div>
 
-            {/* Stats - Horizontal Layout */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {stats.map((stat, index) => (
-                <div 
-                  key={index}
-                  className="text-center p-6 rounded-xl transition-all duration-300 hover:scale-105"
-                  style={{
-                    backgroundColor: index % 2 === 0 ? colors.primaryButton.bg : colors.accent,
-                  }}
-                >
-                  {/* Icon */}
-                  {stat.iconName && (
-                    <div className="flex justify-center mb-3">
-                      <DynamicIcon
-                        iconName={stat.iconName}
-                        className="w-10 h-10 text-white"
-                      />
+            {/* Stats Section */}
+            <div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                {stats.map((stat, index) => (
+                  <div 
+                    key={index}
+                    className="group"
+                  >
+                    <div className="flex flex-col items-center text-center space-y-4">
+                      {/* Icon Circle */}
+                      {stat.iconName && (
+                        <div 
+                          className="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+                          style={{ 
+                            backgroundColor: `${colors.primaryButton.bg}15`,
+                            border: `2px solid ${colors.primaryButton.bg}30`
+                          }}
+                        >
+                          <DynamicIcon
+                            iconName={stat.iconName}
+                            className="w-8 h-8"
+                            style={{ color: colors.primaryButton.bg }}
+                          />
+                        </div>
+                      )}
+                      
+                      {/* Value */}
+                      <div>
+                        <div 
+                          className="text-3xl md:text-4xl font-black mb-1"
+                          style={{ color: colors.primaryButton.bg }}
+                        >
+                          {stat.value}
+                        </div>
+                        
+                        {/* Label */}
+                        <div className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                          {stat.label}
+                        </div>
+                      </div>
                     </div>
-                  )}
-                  
-                  {/* Value */}
-                  <div className="text-3xl font-black text-white mb-2">
-                    {stat.value}
                   </div>
-                  
-                  {/* Label */}
-                  <div className="text-xs font-semibold text-white uppercase tracking-wide opacity-90">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
+
           </div>
         </div>
       </div>

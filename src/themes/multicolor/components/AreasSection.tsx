@@ -4,8 +4,11 @@ import { httpFile } from "../../../config.js";
 import { MapPin, Clock, Shield, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTheme } from '../contexts/ThemeContext';
 
 const AreasSection = () => {
+  const { getThemeColors } = useTheme();
+  const colors = getThemeColors();
   const [locations, setLocations] = useState([]);
   const [projectCategory, setProjectCategory] = useState("");
   const [UpcomingPage, setUpcomingPage] = useState("");
@@ -76,51 +79,146 @@ const AreasSection = () => {
   });
 
   return (
-    <section id="areas" className="py-20 bg-background transition-colors duration-300">
+    <section id="areas" className="py-16 bg-white">
       <div className="container mx-auto px-16">
+        
+        {/* Section Header */}
         <div className="text-center mb-12">
-          <h3 className="text-4xl font-bold text-foreground mb-8">Areas We Serve</h3>
-          <p className="text-lg text-muted-foreground mb-8">
-            Professional {projectCategory} throughout Our availability.
+          <div className="inline-block mb-4">
+            <span 
+              className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+              style={{ 
+                color: colors.primaryButton.bg,
+                backgroundColor: `${colors.primaryButton.bg}15`
+              }}
+            >
+              Service Areas
+            </span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+            Areas We <span style={{ color: colors.primaryButton.bg }}>Serve</span>
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mt-6">
+            Professional {projectCategory} throughout our availability.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        {/* Areas Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {locations.map((area, index) => (
             <Link
               key={index}
               to={handleLocationClick(area)}
-              state={commonState(area)} // Normal navigation from top
-              className="group bg-card border border-border shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden"
+              state={commonState(area)}
+              className="group relative bg-white rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
+              style={{
+                border: `1px solid ${colors.primaryButton.bg}15`
+              }}
             >
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <MapPin className="w-8 h-8 text-primary" />
+              {/* Hover Border Effect */}
+              <div 
+                className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                style={{
+                  border: `2px solid ${colors.primaryButton.bg}40`,
+                  boxShadow: `0 0 20px ${colors.primaryButton.bg}20`
+                }}
+              ></div>
+
+              {/* Content */}
+              <div className="relative text-center space-y-6">
+                {/* Icon */}
+                <div className="flex justify-center">
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-500 group-hover:scale-110"
+                    style={{
+                      background: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                    }}
+                  >
+                    <MapPin className="w-8 h-8 text-white" />
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-card-foreground mb-4 group-hover:text-primary transition-colors">
+
+                {/* Area Name */}
+                <h3 className="text-2xl font-bold text-gray-900 group-hover:text-gray-700 transition-colors">
                   {area.name}
                 </h3>
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center justify-center text-card-foreground">
-                    <Clock className="w-4 h-4 text-green-500 mr-2" />
-                    <span className="text-sm">Response time: Extreme</span>
+
+                {/* Features */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-center gap-3">
+                    <div 
+                      className="w-8 h-8 rounded-lg flex items-center justify-center"
+                      style={{
+                        backgroundColor: `${colors.primaryButton.bg}15`
+                      }}
+                    >
+                      <Clock className="w-4 h-4" style={{ color: colors.primaryButton.bg }} />
+                    </div>
+                    <span className="text-sm text-gray-600 font-medium">Response time: Extreme</span>
                   </div>
-                  <div className="flex items-center justify-center text-card-foreground">
-                    <Shield className="w-4 h-4 text-emerald-500 mr-2" />
-                    <span className="text-sm">100% Original services</span>
+                  <div className="flex items-center justify-center gap-3">
+                    <div 
+                      className="w-8 h-8 rounded-lg flex items-center justify-center"
+                      style={{
+                        backgroundColor: `${colors.primaryButton.bg}15`
+                      }}
+                    >
+                      <Shield className="w-4 h-4" style={{ color: colors.primaryButton.bg }} />
+                    </div>
+                    <span className="text-sm text-gray-600 font-medium">100% Original services</span>
                   </div>
                 </div>
-                {/* Button now uses navigate for scroll behavior */}
+
+                {/* Button */}
                 <button
                   onClick={(e) => handleSeeAreasClick(area, e)}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 w-full rounded-md inline-flex items-center justify-center"
+                  className="w-full px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300 inline-flex items-center justify-center gap-2"
+                  style={{
+                    backgroundColor: colors.primaryButton.bg,
+                    color: colors.primaryButton.text
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
                 >
-                  <Phone className="w-4 h-4 mr-2" />
+                  <Phone className="w-4 h-4" />
                   See Areas
                 </button>
-              </CardContent>
+
+                {/* Bottom Accent Line */}
+                <div 
+                  className="h-1 rounded-full transition-all duration-500 group-hover:w-full"
+                  style={{
+                    width: '3rem',
+                    background: `linear-gradient(90deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                  }}
+                ></div>
+              </div>
             </Link>
           ))}
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="text-center mt-16">
+          <div 
+            className="inline-flex items-center gap-6 px-8 py-6 rounded-2xl"
+            style={{
+              backgroundColor: `${colors.primaryButton.bg}08`,
+              border: `1px solid ${colors.primaryButton.bg}20`
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <MapPin className="w-5 h-5" style={{ color: colors.primaryButton.bg }} />
+              <span className="text-gray-900 font-semibold">Serving {locations.length}+ Areas</span>
+            </div>
+            <div className="w-px h-6 bg-gray-300"></div>
+            <div className="text-gray-600">
+              <span className="font-bold text-gray-900">24/7</span> Emergency Service
+            </div>
+            <div className="w-px h-6 bg-gray-300"></div>
+            <div className="text-gray-600">
+              <span className="font-bold text-gray-900">100%</span> Coverage
+            </div>
+          </div>
         </div>
       </div>
     </section>

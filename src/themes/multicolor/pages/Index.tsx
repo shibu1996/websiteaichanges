@@ -178,7 +178,7 @@ const Index = () => {
         {/* Modern Hero Section */}
         <section
           id="home"
-          className="relative min-h-screen flex items-center justify-center overflow-hidden py-20"
+          className="relative min-h-screen flex items-center justify-center overflow-hidden py-16"
           style={{
             backgroundImage: `url(${backgroundImage})`,
             backgroundSize: 'cover',
@@ -212,7 +212,7 @@ const Index = () => {
 
           <div className="container mx-auto px-16 relative z-10">
             <div className="max-w-5xl mx-auto">
-              <div className="text-center lg:text-left space-y-8 relative z-20">
+              <div className="text-center lg:text-left space-y-6 relative z-20">
                 
                 {/* Badge */}
                 <div 
@@ -235,7 +235,7 @@ const Index = () => {
                 </div>
 
                 {/* Main Heading */}
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
                   <span style={{ color: colors.heading }}>
                     {heroHeadingPart1}
                   </span>{' '}
@@ -339,8 +339,10 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Features Section - Separated from Hero */}
-        <section className="py-20 relative -mt-1 bg-white">
+        <AboutSection />
+
+        {/* Features Section - After About */}
+        <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-16">
             {/* Cards Grid */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
@@ -348,34 +350,34 @@ const Index = () => {
                 return (
                   <div
                     key={index}
-                    className="group relative bg-white rounded-2xl p-8 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl"
+                    className="group relative bg-white rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
                     style={{
-                      border: `2px solid ${colors.primaryButton.bg}20`,
-                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                      border: `1px solid ${colors.primaryButton.bg}15`
                     }}
                   >
                     {/* Hover Border Effect */}
                     <div 
-                      className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                       style={{
-                        border: `2px solid ${colors.primaryButton.bg}`,
-                        boxShadow: `0 0 30px ${colors.primaryButton.bg}30`
+                        border: `2px solid ${colors.primaryButton.bg}40`,
+                        boxShadow: `0 0 20px ${colors.primaryButton.bg}20`
                       }}
                     ></div>
 
                     {/* Content */}
-                    <div className="relative space-y-6">
+                    <div className="relative space-y-5">
                       {/* Icon Container */}
                       <div className="w-fit">
                         <div 
-                          className="p-4 rounded-xl transition-all duration-500 group-hover:scale-110"
+                          className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110"
                           style={{
-                            background: `linear-gradient(135deg, ${colors.primaryButton.bg}15, ${colors.accent}15)`
+                            backgroundColor: `${colors.primaryButton.bg}15`,
+                            border: `2px solid ${colors.primaryButton.bg}30`
                           }}
                         >
                           <DynamicIcon
                             iconName={f.iconName}
-                            className="w-10 h-10 transition-transform duration-500 group-hover:rotate-12"
+                            className="w-8 h-8 transition-transform duration-500 group-hover:rotate-12"
                             style={{ color: colors.primaryButton.bg }}
                           />
                         </div>
@@ -384,12 +386,12 @@ const Index = () => {
                       {/* Text Content */}
                       <div className="space-y-3">
                         <h3 
-                          className="text-xl font-bold leading-tight text-black"
+                          className="text-xl font-bold leading-tight text-gray-900"
                         >
                           {f.title}
                         </h3>
                         <p 
-                          className="text-base leading-relaxed text-black"
+                          className="text-base leading-relaxed text-gray-600"
                         >
                           {f.subtitle}
                         </p>
@@ -411,83 +413,106 @@ const Index = () => {
           </div>
         </section>
 
-
-        <AboutSection />
         <ServicesSection />
         {/* <BookingSection />*/}
 
-        <section className="py-20 bg-hero-gradient text-primary-foreground transition-all duration-300">
-          <div className="container mx-auto px-16 text-center">
-            <h2 className="text-4xl font-bold mb-6 text-primary-foreground">
-              {getCTAContent(1).title}
-            </h2>
-            <p className="text-xl mb-8 max-w-3xl mx-auto text-primary-foreground/80">
-              {getCTAContent(1).description}
-            </p>
+        <section 
+          className="py-12 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${colors.gradient.from}, ${colors.gradient.to})`
+          }}
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-10 left-10 w-20 h-20 rounded-full animate-pulse" style={{ backgroundColor: colors.accent }}></div>
+            <div className="absolute bottom-10 right-10 w-16 h-16 rounded-full animate-pulse" style={{ animationDelay: '1s', backgroundColor: colors.primaryButton.bg }}></div>
+            <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ animationDelay: '2s', backgroundColor: colors.accent }}></div>
+          </div>
 
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              {/* Theme-Responsive Call Now Button */}
-              <div className="relative group">
-                <div className="absolute -inset-4 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-                <div className="absolute -inset-2 glass-card rounded-2xl animate-pulse-glow"></div>
+          <div className="container mx-auto px-16 text-center relative z-10">
+            
+            {/* Section Header */}
+            <div className="mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 max-w-2xl mx-auto leading-tight">
+                {getCTAContent(1).title}
+              </h2>
+              <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+                {getCTAContent(1).description}
+              </p>
+            </div>
 
-                <Button
-                  size="lg"
-                  className="relative overflow-hidden btn-cta-primary text-white px-10 py-8 text-xl font-bold shadow-2xl rounded-2xl btn-cta-border btn-cta-glow group animate-gradient-shift bg-[length:200%_200%]"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-gradient-shift bg-[length:200%_200%]"></div>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              
+              {/* Call Button */}
+              <a
+                href={`tel:${phoneNumber}`}
+                className="group relative inline-flex items-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:-translate-y-1 shadow-lg"
+                style={{
+                  backgroundColor: colors.primaryButton.bg,
+                  color: colors.primaryButton.text
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
+              >
+                <div className="relative">
+                  <Phone className="w-5 h-5" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-semibold opacity-90 uppercase tracking-wide">Emergency Call</div>
+                  <div className="text-sm font-bold">{phoneNumber}</div>
+                </div>
+              </a>
 
-                  <div className="relative flex items-center">
-                    <div className="relative mr-4">
-                      <Phone className="w-7 h-7 animate-float-bounce" />
-                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                    </div>
-                    <div className="flex flex-col items-start">
-                      <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">EMERGENCY CALL</span>
-                      <a
-                        href={`tel:${phoneNumber}`}>
-                        <span className="text-2xl font-black tracking-wide">{phoneNumber}</span></a>
-                    </div>
-                  </div>
-                </Button>
-              </div>
-
-              {/* Secondary Button */}
-              <div className="relative group">
-                <div className="absolute -inset-2 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="relative bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/30 px-10 py-8 text-xl font-bold shadow-xl rounded-2xl transform hover:scale-105 transition-all duration-300 group hover:bg-primary hover:text-white"
-                >
-                  <Link
-                    to="/contact">
-                    <div className="relative flex items-center">
-                      <Calendar className="w-7 h-7 mr-4" />
-                      <div className="flex flex-col items-start">
-                        <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">BOOK ONLINE</span>
-                        <span className="text-xl font-black tracking-wide">Schedule Service</span>
-                      </div>
-                    </div>
-                  </Link>
-                </Button>
-              </div>
+              {/* Book Online Button */}
+              <Link
+                to="/contact"
+                className="group relative inline-flex items-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:-translate-y-1 shadow-lg backdrop-blur-md"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  color: colors.primaryButton.bg,
+                  border: `2px solid ${colors.primaryButton.bg}30`
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = colors.primaryButton.bg;
+                  e.currentTarget.style.color = colors.primaryButton.text;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                  e.currentTarget.style.color = colors.primaryButton.bg;
+                }}
+              >
+                <Calendar className="w-5 h-5" />
+                <div className="text-left">
+                  <div className="text-xs font-semibold opacity-90 uppercase tracking-wide">Book Online</div>
+                  <div className="text-sm font-bold">Schedule Service</div>
+                </div>
+              </Link>
             </div>
 
             {/* Trust Indicators */}
-            <div className="mt-8 flex flex-wrap justify-center gap-6 text-primary-foreground/80">
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-sm font-semibold">24/7 Available</span>
+            <div className="flex flex-wrap justify-center gap-6 text-white/90">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">24/7 Available</span>
               </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-sm font-semibold">Licensed & Insured</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.primaryButton.bg }}
+                ></div>
+                <span className="text-xs font-semibold">Licensed & Insured</span>
               </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-sm font-semibold">Same Day Service</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">Same Day Service</span>
               </div>
             </div>
           </div>
@@ -499,78 +524,103 @@ const Index = () => {
         <ProcessSection />
         {/* <BookingSection /> */}
 
-        <section className="py-20 bg-hero-gradient text-primary-foreground transition-all duration-300">
-          <div className="container mx-auto px-16 text-center">
-            <h2 className="text-4xl font-bold mb-6 text-primary-foreground">
-              {getCTAContent(2).title}
-            </h2>
-            <p className="text-xl mb-8 max-w-3xl mx-auto text-primary-foreground/80">
-              {getCTAContent(2).description}
-            </p>
+        <section 
+          className="py-12 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${colors.gradient.from}, ${colors.gradient.to})`
+          }}
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-10 left-10 w-20 h-20 rounded-full animate-pulse" style={{ backgroundColor: colors.accent }}></div>
+            <div className="absolute bottom-10 right-10 w-16 h-16 rounded-full animate-pulse" style={{ animationDelay: '1s', backgroundColor: colors.primaryButton.bg }}></div>
+            <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ animationDelay: '2s', backgroundColor: colors.accent }}></div>
+          </div>
 
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              {/* Theme-Responsive Call Now Button */}
-              <div className="relative group">
-                <div className="absolute -inset-4 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-                <div className="absolute -inset-2 glass-card rounded-2xl animate-pulse-glow"></div>
+          <div className="container mx-auto px-16 text-center relative z-10">
+            
+            {/* Section Header */}
+            <div className="mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 max-w-2xl mx-auto leading-tight">
+                {getCTAContent(2).title}
+              </h2>
+              <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+                {getCTAContent(2).description}
+              </p>
+            </div>
 
-                <Button
-                  size="lg"
-                  className="relative overflow-hidden btn-cta-primary text-white px-10 py-8 text-xl font-bold shadow-2xl rounded-2xl btn-cta-border btn-cta-glow group animate-gradient-shift bg-[length:200%_200%]"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-gradient-shift bg-[length:200%_200%]"></div>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              
+              {/* Call Button */}
+              <a
+                href={`tel:${phoneNumber}`}
+                className="group relative inline-flex items-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:-translate-y-1 shadow-lg"
+                style={{
+                  backgroundColor: colors.primaryButton.bg,
+                  color: colors.primaryButton.text
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
+              >
+                <div className="relative">
+                  <Phone className="w-5 h-5" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-semibold opacity-90 uppercase tracking-wide">Emergency Call</div>
+                  <div className="text-sm font-bold">{phoneNumber}</div>
+                </div>
+              </a>
 
-                  <div className="relative flex items-center">
-                    <div className="relative mr-4">
-                      <Phone className="w-7 h-7 animate-float-bounce" />
-                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                    </div>
-                    <div className="flex flex-col items-start">
-                      <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">EMERGENCY CALL</span>
-                      <a
-                        href={`tel:${phoneNumber}`}>
-                        <span className="text-2xl font-black tracking-wide">{phoneNumber}</span></a>
-                    </div>
-                  </div>
-                </Button>
-              </div>
-
-              {/* Secondary Button */}
-              <div className="relative group">
-                <div className="absolute -inset-2 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="relative bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/30 px-10 py-8 text-xl font-bold shadow-xl rounded-2xl transform hover:scale-105 transition-all duration-300 group hover:bg-primary hover:text-white"
-                >
-                  <Link
-                    to="/contact">
-                    <div className="relative flex items-center">
-                      <Calendar className="w-7 h-7 mr-4" />
-                      <div className="flex flex-col items-start">
-                        <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">BOOK ONLINE</span>
-                        <span className="text-xl font-black tracking-wide">Schedule Service</span>
-                      </div>
-                    </div>
-                  </Link>
-                </Button>
-              </div>
+              {/* Book Online Button */}
+              <Link
+                to="/contact"
+                className="group relative inline-flex items-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:-translate-y-1 shadow-lg backdrop-blur-md"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  color: colors.primaryButton.bg,
+                  border: `2px solid ${colors.primaryButton.bg}30`
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = colors.primaryButton.bg;
+                  e.currentTarget.style.color = colors.primaryButton.text;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                  e.currentTarget.style.color = colors.primaryButton.bg;
+                }}
+              >
+                <Calendar className="w-5 h-5" />
+                <div className="text-left">
+                  <div className="text-xs font-semibold opacity-90 uppercase tracking-wide">Book Online</div>
+                  <div className="text-sm font-bold">Schedule Service</div>
+                </div>
+              </Link>
             </div>
 
             {/* Trust Indicators */}
-            <div className="mt-8 flex flex-wrap justify-center gap-6 text-primary-foreground/80">
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-sm font-semibold">24/7 Available</span>
+            <div className="flex flex-wrap justify-center gap-6 text-white/90">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">24/7 Available</span>
               </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-sm font-semibold">Licensed & Insured</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.primaryButton.bg }}
+                ></div>
+                <span className="text-xs font-semibold">Licensed & Insured</span>
               </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-sm font-semibold">Same Day Service</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">Same Day Service</span>
               </div>
             </div>
           </div>
@@ -581,78 +631,103 @@ const Index = () => {
         <TestimonialsSection />
         {/* <BookingSection /> */}
 
-        <section className="py-20 bg-hero-gradient text-primary-foreground transition-all duration-300">
-          <div className="container mx-auto px-16 text-center">
-            <h2 className="text-4xl font-bold mb-6 text-primary-foreground">
-              {getCTAContent(3).title}
-            </h2>
-            <p className="text-xl mb-8 max-w-3xl mx-auto text-primary-foreground/80">
-              {getCTAContent(3).description}
-            </p>
+        <section 
+          className="py-12 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${colors.gradient.from}, ${colors.gradient.to})`
+          }}
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-10 left-10 w-20 h-20 rounded-full animate-pulse" style={{ backgroundColor: colors.accent }}></div>
+            <div className="absolute bottom-10 right-10 w-16 h-16 rounded-full animate-pulse" style={{ animationDelay: '1s', backgroundColor: colors.primaryButton.bg }}></div>
+            <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ animationDelay: '2s', backgroundColor: colors.accent }}></div>
+          </div>
 
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              {/* Theme-Responsive Call Now Button */}
-              <div className="relative group">
-                <div className="absolute -inset-4 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-                <div className="absolute -inset-2 glass-card rounded-2xl animate-pulse-glow"></div>
+          <div className="container mx-auto px-16 text-center relative z-10">
+            
+            {/* Section Header */}
+            <div className="mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 max-w-2xl mx-auto leading-tight">
+                {getCTAContent(3).title}
+              </h2>
+              <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+                {getCTAContent(3).description}
+              </p>
+            </div>
 
-                <Button
-                  size="lg"
-                  className="relative overflow-hidden btn-cta-primary text-white px-10 py-8 text-xl font-bold shadow-2xl rounded-2xl btn-cta-border btn-cta-glow group animate-gradient-shift bg-[length:200%_200%]"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-gradient-shift bg-[length:200%_200%]"></div>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              
+              {/* Call Button */}
+              <a
+                href={`tel:${phoneNumber}`}
+                className="group relative inline-flex items-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:-translate-y-1 shadow-lg"
+                style={{
+                  backgroundColor: colors.primaryButton.bg,
+                  color: colors.primaryButton.text
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
+              >
+                <div className="relative">
+                  <Phone className="w-5 h-5" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-semibold opacity-90 uppercase tracking-wide">Emergency Call</div>
+                  <div className="text-sm font-bold">{phoneNumber}</div>
+                </div>
+              </a>
 
-                  <div className="relative flex items-center">
-                    <div className="relative mr-4">
-                      <Phone className="w-7 h-7 animate-float-bounce" />
-                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                    </div>
-                    <div className="flex flex-col items-start">
-                      <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">EMERGENCY CALL</span>
-                      <a
-                        href={`tel:${phoneNumber}`}>
-                        <span className="text-2xl font-black tracking-wide">{phoneNumber}</span></a>
-                    </div>
-                  </div>
-                </Button>
-              </div>
-
-              {/* Secondary Button */}
-              <div className="relative group">
-                <div className="absolute -inset-2 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="relative bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/30 px-10 py-8 text-xl font-bold shadow-xl rounded-2xl transform hover:scale-105 transition-all duration-300 group hover:bg-primary hover:text-white"
-                >
-                  <Link
-                    to="/contact">
-                    <div className="relative flex items-center">
-                      <Calendar className="w-7 h-7 mr-4" />
-                      <div className="flex flex-col items-start">
-                        <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">BOOK ONLINE</span>
-                        <span className="text-xl font-black tracking-wide">Schedule Service</span>
-                      </div>
-                    </div>
-                  </Link>
-                </Button>
-              </div>
+              {/* Book Online Button */}
+              <Link
+                to="/contact"
+                className="group relative inline-flex items-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:-translate-y-1 shadow-lg backdrop-blur-md"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  color: colors.primaryButton.bg,
+                  border: `2px solid ${colors.primaryButton.bg}30`
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = colors.primaryButton.bg;
+                  e.currentTarget.style.color = colors.primaryButton.text;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                  e.currentTarget.style.color = colors.primaryButton.bg;
+                }}
+              >
+                <Calendar className="w-5 h-5" />
+                <div className="text-left">
+                  <div className="text-xs font-semibold opacity-90 uppercase tracking-wide">Book Online</div>
+                  <div className="text-sm font-bold">Schedule Service</div>
+                </div>
+              </Link>
             </div>
 
             {/* Trust Indicators */}
-            <div className="mt-8 flex flex-wrap justify-center gap-6 text-primary-foreground/80">
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-sm font-semibold">24/7 Available</span>
+            <div className="flex flex-wrap justify-center gap-6 text-white/90">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">24/7 Available</span>
               </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-sm font-semibold">Licensed & Insured</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.primaryButton.bg }}
+                ></div>
+                <span className="text-xs font-semibold">Licensed & Insured</span>
               </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-sm font-semibold">Same Day Service</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">Same Day Service</span>
               </div>
             </div>
           </div>
