@@ -2,7 +2,11 @@ import DynamicIcon from '../../../extras/DynamicIcon.js';
 // src/themes/multicolor/components/CleaningAboutUs.tsx
 import React, { useEffect, useState } from 'react';
 import { httpFile } from '../../../config.js';
+import { useTheme } from '../contexts/ThemeContext';
+
 const AboutSection = () => {
+  const { getThemeColors } = useTheme();
+  const colors = getThemeColors();
 
 const sanitize = (raw: any): string =>
   typeof raw === 'string'
@@ -68,82 +72,113 @@ const sanitize = (raw: any): string =>
   // ];
 
   return (
-    <section id="about" className="py-16 sm:py-20 bg-secondary transition-colors duration-300 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-20 w-32 h-32 bg-primary rounded-full animate-float"></div>
-        <div className="absolute bottom-32 right-16 w-24 h-24 bg-accent rounded-full animate-float-delayed"></div>
-        <div className="absolute top-1/2 left-1/3 w-16 h-16 bg-primary/50 animate-morphing-shape"></div>
-      </div>
+    <section id="about" className="py-20 bg-white">
+      <div className="container mx-auto px-16">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <span style={{ color: colors.heading }}>Professional </span>
+            <span 
+              className="inline-block"
+              style={{
+                backgroundImage: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              {projectCategory}
+            </span>
+            <span style={{ color: colors.heading }}> You Can Trust</span>
+          </h2>
+        </div>
 
-      <div className="container mx-auto px-16 relative">
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
-          {/* Text Content - Left Side */}
-          <div className="order-2 lg:order-1 animate-text-slide-left">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 sm:mb-6">
-              Professional {projectCategory} You Can Trust
-            </h2>
-            <p className="text-base sm:text-lg text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
-               {firstPart}
-            </p>
-            <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
-              {secondPart}
-            </p>
-            
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-4 sm:gap-6">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center animate-stat-fade-up" style={{ animationDelay: `${0.2 + index * 0.1}s` }}>
-                  <div className="text-2xl sm:text-3xl font-bold text-primary mb-1 sm:mb-2">{stat.value}</div>
-                  <div className="text-muted-foreground font-medium text-sm sm:text-base">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Professional Plumber Image - Right Side */}
-          <div className="relative order-1 lg:order-2 animate-image-slide-right">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 bg-hero-gradient rounded-full transform rotate-6 scale-110 opacity-20 animate-bg-rotate"></div>
-            
-            {/* Main Image Container */}
-            <div className="relative">
-              {/* Decorative Elements */}
-              <div className="absolute -top-4 -right-4 w-16 h-16 bg-primary/30 rounded-full opacity-40 animate-float"></div>
-              <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-accent/30 rounded-full opacity-30 animate-float-delayed"></div>
-              
-              {/* Professional Plumber Image */}
-              <div className="glass-card rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105 animate-card-scale-in">
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-5 gap-8 items-start mb-16">
+          {/* Left: Image */}
+          <div className="lg:col-span-2">
+            <div className="relative group">
+              <div className="relative rounded-3xl overflow-hidden">
                 <img 
                   src={aboutImage}
-                  alt="Professional plumber working"
-                  className="w-full h-96 sm:h-[500px] object-cover"
+                  alt="Professional service"
+                  className="w-full h-[600px] object-cover"
                 />
                 
-                {/* Overlay with Professional Badge */}
-                <div className="absolute top-4 left-4 bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 backdrop-blur-sm bg-primary/90">
-                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                  Licensed Professional
-                </div>
-                
-                {/* Bottom Overlay with Stats */}
-                <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl p-4">
-                  <div className="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                      <div className="text-xl font-bold text-primary">24/7</div>
-                      <div className="text-xs text-gray-600">Availability</div>
-                    </div>
-                    <div>
-                      <div className="text-xl font-bold text-green-600">30min</div>
-                      <div className="text-xs text-gray-600">Response</div>
-                    </div>
-                    <div>
-                      <div className="text-xl font-bold text-yellow-600">100%</div>
-                      <div className="text-xs text-gray-600">Satisfaction</div>
-                    </div>
-                  </div>
+                {/* Licensed Badge */}
+                <div 
+                  className="absolute bottom-6 left-6 right-6 px-6 py-4 rounded-2xl backdrop-blur-md flex items-center justify-center gap-3"
+                  style={{
+                    backgroundColor: `${colors.primaryButton.bg}95`,
+                    border: `1px solid ${colors.primaryButton.bg}`
+                  }}
+                >
+                  <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                  <span className="text-white font-bold text-base">Licensed Professional</span>
                 </div>
               </div>
+
+              {/* Decorative Border on Hover */}
+              <div 
+                className="absolute -inset-4 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"
+                style={{
+                  background: `linear-gradient(135deg, ${colors.primaryButton.bg}30, ${colors.accent}30)`,
+                  filter: 'blur(20px)'
+                }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Right: Content */}
+          <div className="lg:col-span-3 space-y-8">
+            {/* Description */}
+            <div 
+              className="p-8 rounded-2xl space-y-4"
+              style={{
+                backgroundColor: `${colors.primaryButton.bg}08`,
+                border: `1px solid ${colors.primaryButton.bg}20`
+              }}
+            >
+              <p className="text-lg leading-relaxed text-black">
+                {firstPart}
+              </p>
+              <p className="text-lg leading-relaxed text-black">
+                {secondPart}
+              </p>
+            </div>
+
+            {/* Stats - Horizontal Layout */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {stats.map((stat, index) => (
+                <div 
+                  key={index}
+                  className="text-center p-6 rounded-xl transition-all duration-300 hover:scale-105"
+                  style={{
+                    backgroundColor: index % 2 === 0 ? colors.primaryButton.bg : colors.accent,
+                  }}
+                >
+                  {/* Icon */}
+                  {stat.iconName && (
+                    <div className="flex justify-center mb-3">
+                      <DynamicIcon
+                        iconName={stat.iconName}
+                        className="w-10 h-10 text-white"
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Value */}
+                  <div className="text-3xl font-black text-white mb-2">
+                    {stat.value}
+                  </div>
+                  
+                  {/* Label */}
+                  <div className="text-xs font-semibold text-white uppercase tracking-wide opacity-90">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigationType, useNavigate } from 'react-router-
 import { Calendar } from 'lucide-react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
-import { Phone, Clock, Star, Shield, Award, CheckCircle, Sparkles, Zap, Users, Wrench } from 'lucide-react';
+import { Phone, Clock, Star, Shield, Award, CheckCircle, Zap, Users, Wrench } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
@@ -35,15 +35,6 @@ interface Feature {
   iconName: string;
   title: string;
   subtitle: string;
-  borderClass: string;
-  hoverShadowClass: string;
-  bgGradientClass: string;
-  iconBgClass: string;
-  iconColorClass: string;
-  iconPulseClass: string;
-  titleColorClass: string;
-  topCircleClass: string;
-  bottomCircleClass: string;
 }
 
 
@@ -135,48 +126,12 @@ const Index = () => {
 
         // clean features
 
-        const classArray = [
-          {
-            borderClass: 'border-red-500/30',
-            hoverShadowClass: 'hover:shadow-red-500/20',
-            bgGradientClass: 'bg-gradient-to-br from-red-500/5 via-orange-500/5 to-red-600/5',
-            iconBgClass: 'bg-gradient-to-br from-red-500/20 to-orange-500/20',
-            iconColorClass: 'text-red-500',
-            iconPulseClass: 'bg-red-500/10',
-            titleColorClass: 'text-red-600',
-            topCircleClass: 'bg-red-500/20',
-            bottomCircleClass: 'bg-orange-500/20'
-          },
-          {
-            borderClass: 'border-primary/30',
-            hoverShadowClass: 'hover:shadow-primary/20',
-            bgGradientClass: 'bg-gradient-to-br from-primary/5 via-blue-500/5 to-primary/5',
-            iconBgClass: 'bg-gradient-to-br from-primary/20 to-blue-500/20',
-            iconColorClass: 'text-primary',
-            iconPulseClass: 'bg-primary/10',
-            titleColorClass: 'text-primary',
-            topCircleClass: 'bg-primary/20',
-            bottomCircleClass: 'bg-blue-500/20'
-          },
-          {
-            borderClass: 'border-yellow-500/30',
-            hoverShadowClass: 'hover:shadow-yellow-500/20',
-            bgGradientClass: 'bg-gradient-to-br from-yellow-500/5 via-green-500/5 to-yellow-600/5',
-            iconBgClass: 'bg-gradient-to-br from-yellow-500/20 to-green-500/20',
-            iconColorClass: 'text-yellow-500',
-            iconPulseClass: 'bg-yellow-500/10',
-            titleColorClass: 'text-yellow-600',
-            topCircleClass: 'bg-yellow-500/20',
-            bottomCircleClass: 'bg-green-500/20'
-          },
-        ];
-
+        // No more hardcoded classArray - we'll use theme colors dynamically
         const modifiedFeatures = (info.featuresSection || []).map((f, index) => ({
           serialno: f.serialno,
           iconName: strip(f.iconName),
           title: strip(f.title),
           subtitle: strip(f.subtitle),
-          ...classArray[index % classArray.length],
         }));
 
         setFeatures(modifiedFeatures);
@@ -280,18 +235,18 @@ const Index = () => {
                 </div>
 
                 {/* Main Heading */}
-                <h1 
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight"
-                  style={{ color: colors.heading }}
-                >
-                  {heroHeadingPart1}{' '}
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight">
+                  <span style={{ color: colors.heading }}>
+                    {heroHeadingPart1}
+                  </span>{' '}
                   <span 
                     className="inline-block"
                     style={{
-                      background: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
+                      backgroundImage: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
                       WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text'
+                      backgroundClip: 'text',
+                      color: 'transparent',
+                      WebkitTextFillColor: 'transparent'
                     }}
                   >
                     {heroHeadingPart2}
@@ -385,34 +340,73 @@ const Index = () => {
         </section>
 
         {/* Features Section - Separated from Hero */}
-        <section className="py-20 bg-background relative -mt-1">
+        <section className="py-20 relative -mt-1 bg-white">
           <div className="container mx-auto px-16">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {features.map((f, index) => (
-                <div
-                  key={index}
-                  className={`group relative bg-white rounded-2xl p-8 border-2 ${f.borderClass} shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2`}
-                >
-                  <div className={`absolute inset-0 ${f.bgGradientClass} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}></div>
+            {/* Cards Grid */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+              {features.map((f, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="group relative bg-white rounded-2xl p-8 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl"
+                    style={{
+                      border: `2px solid ${colors.primaryButton.bg}20`,
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                    }}
+                  >
+                    {/* Hover Border Effect */}
+                    <div 
+                      className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{
+                        border: `2px solid ${colors.primaryButton.bg}`,
+                        boxShadow: `0 0 30px ${colors.primaryButton.bg}30`
+                      }}
+                    ></div>
 
-                  <div className="relative text-center space-y-4">
-                    <div className={`mx-auto p-4 ${f.iconBgClass} rounded-xl w-fit`}>
-                      <DynamicIcon
-                        iconName={f.iconName}
-                        className={`w-10 h-10 ${f.iconColorClass}`}
-                      />
-                    </div>
-                    <div>
-                      <h3 className={`text-xl font-bold ${f.titleColorClass} mb-2`}>
-                        {f.title}
-                      </h3>
-                      <p className="text-gray-600 text-base leading-relaxed">
-                        {f.subtitle}
-                      </p>
+                    {/* Content */}
+                    <div className="relative space-y-6">
+                      {/* Icon Container */}
+                      <div className="w-fit">
+                        <div 
+                          className="p-4 rounded-xl transition-all duration-500 group-hover:scale-110"
+                          style={{
+                            background: `linear-gradient(135deg, ${colors.primaryButton.bg}15, ${colors.accent}15)`
+                          }}
+                        >
+                          <DynamicIcon
+                            iconName={f.iconName}
+                            className="w-10 h-10 transition-transform duration-500 group-hover:rotate-12"
+                            style={{ color: colors.primaryButton.bg }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Text Content */}
+                      <div className="space-y-3">
+                        <h3 
+                          className="text-xl font-bold leading-tight text-black"
+                        >
+                          {f.title}
+                        </h3>
+                        <p 
+                          className="text-base leading-relaxed text-black"
+                        >
+                          {f.subtitle}
+                        </p>
+                      </div>
+
+                      {/* Bottom Accent Line */}
+                      <div 
+                        className="h-1 rounded-full transition-all duration-500 group-hover:w-full"
+                        style={{
+                          width: '3rem',
+                          background: `linear-gradient(90deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                        }}
+                      ></div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
