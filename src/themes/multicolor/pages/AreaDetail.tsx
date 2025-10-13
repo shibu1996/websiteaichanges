@@ -4,6 +4,8 @@ import { useSEO } from '../../../hooks/useSEO';
 import { httpFile } from "../../../config.js";
 import { generateFAQSchema, generateReviewSchema, generateServicesSchema } from "../../../hooks/schemaMarkup"
 import CleaningLoader from '../../cleaning/components/CleaningLoader.js';
+import { useTheme } from '../contexts/ThemeContext';
+import ColorThemeSelector from '../components/ColorThemeSelector';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import DynamicFAIcon from '../../../extras/DynamicFAIcon.js';
@@ -21,7 +23,7 @@ import ServicesSection from '../components/ServicesSection';
 import BookingSection from '../components/BookingSection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import ProcessSection from '../components/ProcessSection';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Quote, HelpCircle, MessageSquare } from 'lucide-react';
 
 import TestimonialsSection from '../components/TestimonialsSection';
 import GuaranteeSection from '../components/GuaranteeSection';
@@ -177,6 +179,8 @@ const AreaDetail = () => {
   const [locInfo, setLocInfo] = useState<{ name: string; lat: number; lng: number } | null>(null);
   const [CTA, setCTA] = useState([]);
   const { seoData } = useSEO('/');
+  const { getThemeColors } = useTheme();
+  const colors = getThemeColors();
   const [heroImage, setHeroImage] = useState("");
   const [hero2Image, setHero2Image] = useState("");
   const [hero3Image, setHero3Image] = useState("");
@@ -244,89 +248,87 @@ const AreaDetail = () => {
     if (CTA.length === 0) return null;
     const cta = CTA[index] || CTA[0];
 
-
-
-
     return (
+      <section className="py-12 relative overflow-hidden">
+        {/* Dynamic Background */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(135deg, ${colors.gradient.from}, ${colors.gradient.to})`
+          }}
+        ></div>
+        
+        {/* Animated Background Circles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-10 left-10 w-32 h-32 rounded-full opacity-20 animate-pulse" style={{ backgroundColor: colors.accent }}></div>
+          <div className="absolute bottom-10 right-10 w-24 h-24 rounded-full opacity-30 animate-pulse" style={{ backgroundColor: colors.primaryButton.bg, animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/4 w-16 h-16 rounded-full opacity-25 animate-pulse" style={{ backgroundColor: colors.accent, animationDelay: '2s' }}></div>
+        </div>
 
+        <div className="container mx-auto px-4 sm:px-8 lg:px-16 relative z-10">
+          <div className="text-center">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 max-w-2xl mx-auto leading-tight">
+              {cta.title}
+            </h2>
+            <p className="text-xs sm:text-sm text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
+              {cta.description}
+            </p>
 
-
-      <section className="py-20 bg-hero-gradient text-primary-foreground transition-all duration-300">
-        <div className="container mx-auto px-16 text-center">
-          <h2 className="text-4xl font-bold mb-6 text-primary-foreground">
-            {cta.title}
-          </h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto text-primary-foreground/80">
-            {cta.description}
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            {/* Theme-Responsive Call Now Button */}
-            <div className="relative group">
-              <div className="absolute -inset-4 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-              <div className="absolute -inset-2 glass-card rounded-2xl animate-pulse-glow"></div>
-
-              <Button
-                size="lg"
-                className="relative overflow-hidden btn-cta-primary text-white px-10 py-8 text-xl font-bold shadow-2xl rounded-2xl btn-cta-border btn-cta-glow group animate-gradient-shift bg-[length:200%_200%]"
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
+              {/* Call Button */}
+              <a
+                href={`tel:${phoneNumber}`}
+                className="inline-flex items-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300 shadow-lg"
+                style={{
+                  backgroundColor: colors.primaryButton.bg,
+                  color: colors.primaryButton.text
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-gradient-shift bg-[length:200%_200%]"></div>
-
-                <div className="relative flex items-center">
-                  <div className="relative mr-4">
-                    <Phone className="w-7 h-7 animate-float-bounce" />
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                  </div>
-                  <a
-                    href={`tel:${phoneNumber}`}>
-                    <div className="flex flex-col items-start">
-                      <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">EMERGENCY CALL</span>
-                      <span className="text-2xl font-black tracking-wide">{phoneNumber}</span>
-                    </div>
-                  </a>
+                <Phone className="w-5 h-5" />
+                <div className="text-left">
+                  <div className="text-xs opacity-90">Call Now</div>
+                  <div className="text-sm font-bold">{phoneNumber}</div>
                 </div>
-              </Button>
-            </div>
+              </a>
 
-            {/* Secondary Button */}
-            <div className="relative group">
-              <div className="absolute -inset-2 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-
-              <Button
+              {/* Get Estimate Button */}
+              <button
                 onClick={() => navigate('/contact')}
-                size="lg"
-                variant="outline"
-                className="relative bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/30 px-10 py-8 text-xl font-bold shadow-xl rounded-2xl transform hover:scale-105 transition-all duration-300 group hover:bg-primary hover:text-white"
+                className="inline-flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300 shadow-lg"
+                style={{
+                  backgroundColor: colors.secondaryButton.bg,
+                  color: colors.secondaryButton.text,
+                  border: `2px solid ${colors.secondaryButton.border}`
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.secondaryButton.hover}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.secondaryButton.bg}
               >
-                <div className="relative flex items-center">
-                  <Calendar className="w-7 h-7 mr-4" />
-                  <div className="flex flex-col items-start">
-                    <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">BOOK ONLINE</span>
-                    <span className="text-xl font-black tracking-wide">Schedule Service</span>
-                  </div>
-                </div>
-              </Button>
+                <Wrench className="w-5 h-5" />
+                <span>Get Free Estimate</span>
+              </button>
             </div>
-          </div>
 
-          {/* Trust Indicators */}
-          <div className="mt-8 flex flex-wrap justify-center gap-6 text-primary-foreground/80">
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-              <span className="text-sm font-semibold">24/7 Available</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse"></div>
-              <span className="text-sm font-semibold">Licensed & Insured</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
-              <span className="text-sm font-semibold">Same Day Service</span>
+            {/* Trust Indicators */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-white/90">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#22C55E' }}></div>
+                <span className="text-xs font-semibold">24/7 Available</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#3B82F6' }}></div>
+                <span className="text-xs font-semibold">Licensed & Insured</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: colors.accent }}></div>
+                <span className="text-xs font-semibold">Same Day Service</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
-
     );
   };
 
@@ -760,272 +762,296 @@ const AreaDetail = () => {
             areaDescription={seoData.meta_description}
           />
           <Header />
-          <div className="bg-gray-50 py-4">
-            <div className="max-w-7xl mx-auto px-16 sm:px-6 lg:px-8">
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                      <Link to="/" className="flex items-center">
-                        <Home className="w-4 h-4 mr-1" />
-                        Home
-                      </Link>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-
-                  {segments.map((segment, index) => {
-                    const url = '/' + segments.slice(0, index + 1).join('/');
-                    const isLast = index === segments.length - 1;
-
-                    // Capitalize each segment for display (you can use humanizeString or your utility)
-                    const displayName = segment
-                      .split('-')
-                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                      .join(' ');
-
-                    return (
-                      <React.Fragment key={index}>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                          {isLast ? (
-                            <BreadcrumbPage className="font-medium text-green-600">{displayName}</BreadcrumbPage>
-                          ) : (
-                            <BreadcrumbLink asChild>
-                              <Link to={url}>{displayName}</Link>
-                            </BreadcrumbLink>
-                          )}
-                        </BreadcrumbItem>
-                      </React.Fragment>
-                    );
-                  })}
-                </BreadcrumbList>
-              </Breadcrumb>
-
-            </div>
-          </div>
           {/* Hero section */}
-
-
           <section
             id="home"
-            className="relative min-h-[80vh] md:min-h-[85vh] flex items-center justify-center py-8 px-16 transition-all duration-300 overflow-hidden"
+            className="relative min-h-screen flex items-center justify-center overflow-hidden pb-16 sm:pb-20 lg:pb-24"
             style={{
-              backgroundImage: 'ur[](https://images.unsplash.com/photo-1506744038136-46273834b4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80)',
+              backgroundImage: `url(${heroImage})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat'
+              backgroundRepeat: 'no-repeat',
+              backgroundColor: colors.surface
             }}
           >
-            {/* Background Overlay with Gradient */}
-            {/* <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-accent/80 animate-gradient-shift bg-[length:200%_200%]"></div> */}
-
-  <div
-            className="
-            absolute inset-0 bg-gradient-to-br
-            from-[hsl(0_0%_20%_/0.8)]
-            via-[hsl(0_0%_15%_/0.7)]
-            to-[hsl(220_20%_10%_/0.8)]
-            animate-gradient-shift bg-[length:200%_200%]
-          "
-          />
-            {/* Animated Background Elements */}
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="absolute top-10 left-10 w-20 h-20 bg-primary-foreground/10 rounded-full animate-float-bounce"></div>
-              <div className="absolute top-32 right-20 w-16 h-16 bg-accent-foreground/20 rounded-full animate-float-bounce" style={{ animationDelay: '1s' }}></div>
-              <div className="absolute bottom-20 left-32 w-12 h-12 bg-primary-foreground/15 animate-morphing-shape"></div>
-              <div className="absolute bottom-40 right-10 w-24 h-24 bg-accent-foreground/10 rounded-full animate-float-bounce" style={{ animationDelay: '2s' }}></div>
+            {/* Dynamic Gradient Overlay */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(135deg, ${colors.gradient.from}, ${colors.gradient.to})`,
+                mixBlendMode: colors.overlay.blend as any
+              }}
+            ></div>
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundColor: colors.overlay.color
+              }}
+            ></div>
+            
+            {/* Animated Particles */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-20 left-10 w-2 h-2 bg-primary/40 rounded-full animate-ping" style={{ backgroundColor: colors.accent }}></div>
+              <div className="absolute top-40 right-20 w-3 h-3 bg-accent/30 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg, animationDelay: '1s' }}></div>
+              <div className="absolute bottom-32 left-1/4 w-2 h-2 bg-primary/50 rounded-full animate-ping" style={{ backgroundColor: colors.accent, animationDelay: '2s' }}></div>
+              <div className="absolute bottom-20 right-1/3 w-3 h-3 bg-accent/40 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg, animationDelay: '3s' }}></div>
             </div>
 
-            <div className="container mx-auto px-16 py-8 z-10 max-w-6xl relative">
-              <div className="text-center space-y-6 animate-hero-fade-in">
+            <div className="container mx-auto px-4 sm:px-8 lg:px-16 relative z-10">
+              {/* Breadcrumb - Top Left */}
+              <div className="absolute top-6 left-4 sm:left-8 lg:left-16 z-30">
+                <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
+                  <Breadcrumb>
+                    <BreadcrumbList>
+                      <BreadcrumbItem>
+                        <BreadcrumbLink asChild>
+                          <Link to="/" className="flex items-center text-xs text-gray-600 hover:text-gray-900 transition-colors">
+                            <Home className="w-3 h-3 mr-1" />
+                            Home
+                          </Link>
+                        </BreadcrumbLink>
+                      </BreadcrumbItem>
 
-                {/* Enhanced Trust Badge */}
-                <div className="inline-flex items-center glass-card rounded-full px-6 py-3 text-primary-foreground font-semibold text-base sm:text-lg animate-badge-bounce shadow-2xl">
-                  <Star className="w-5 h-5 mr-2 fill-current animate-pulse" />
-                  <Sparkles className="w-4 h-4 mr-1 animate-pulse" />
-                  {heroHeading}
-                  <Sparkles className="w-4 h-4 ml-1 animate-pulse" />
+                      {segments.map((segment, index) => {
+                        const url = '/' + segments.slice(0, index + 1).join('/');
+                        const isLast = index === segments.length - 1;
+
+                        // Capitalize each segment for display
+                        const displayName = segment
+                          .split('-')
+                          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                          .join(' ');
+
+                        return (
+                          <React.Fragment key={index}>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                              {isLast ? (
+                                <BreadcrumbPage className="font-medium text-xs" style={{ color: colors.primaryButton.bg }}>{displayName}</BreadcrumbPage>
+                              ) : (
+                                <BreadcrumbLink asChild>
+                                  <Link to={url} className="text-xs text-gray-600 hover:text-gray-900 transition-colors">{displayName}</Link>
+                                </BreadcrumbLink>
+                              )}
+                            </BreadcrumbItem>
+                          </React.Fragment>
+                        );
+                      })}
+                    </BreadcrumbList>
+                  </Breadcrumb>
                 </div>
+              </div>
 
-                {/* Enhanced Main Headline */}
-                <div className="space-y-3 animate-heading-slide-up" style={{ animationDelay: '0.2s' }}>
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-primary-foreground leading-tight">
-                    {cityName}
-                    <span className="block md:inline text-transparent bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text animate-gradient-shift"> {projectCategory} </span>
-                    <span className="block md:inline text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-primary-foreground/90">
+              <div className="max-w-5xl mx-auto pt-16 sm:pt-20 lg:pt-24">
+                <div className="text-center lg:text-left space-y-6 relative z-20">
+
+                  {/* Badge */}
+                  <div className="inline-block mb-4">
+                    <span
+                      className="inline-flex items-center gap-2 backdrop-blur-sm rounded-full px-6 py-2.5"
+                      style={{
+                        color: colors.heading,
+                        backgroundColor: `${colors.primaryButton.bg}15`
+                      }}
+                    >
+                      <Star className="w-4 h-4" />
+                      {heroHeading}
+                    </span>
+                  </div>
+
+                  {/* Main Heading */}
+                  <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black leading-[1.1] tracking-tight">
+                    <span style={{ color: colors.heading }}>
+                      {cityName}
+                    </span>{' '}
+                    <span
+                      className="inline-block"
+                      style={{
+                        backgroundImage: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
+                        WebkitBackgroundClip: 'text',
+                        backgroundClip: 'text',
+                        color: 'transparent',
+                        WebkitTextFillColor: 'transparent'
+                      }}
+                    >
+                      {projectCategory}
+                    </span>{' '}
+                    <span style={{ color: colors.heading }}>
                       Services
                     </span>
                   </h1>
-                </div>
 
-                {/* Enhanced Subheadline */}
-                <p className="text-lg sm:text-xl md:text-2xl text-primary-foreground/90 font-medium max-w-4xl mx-auto leading-relaxed animate-subtitle-fade-in" style={{ animationDelay: '0.4s' }}>
-                  {getPageDescription()}
+                  {/* Subheading */}
+                  <p
+                    className="text-xs sm:text-sm md:text-base lg:text-lg max-w-3xl mx-auto lg:mx-0 leading-relaxed"
+                    style={{ color: colors.description }}
+                  >
+                    {getPageDescription()}
+                  </p>
 
-                </p>
+                  {/* CTA Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-4">
 
-                {/* Two Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4 animate-cta-zoom-in" style={{ animationDelay: '0.6s' }}>
-                  {/* Call Now Button */}
-                  <div className="relative group">
-                    <div className="absolute -inset-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-                    <div className="absolute -inset-1 glass-card rounded-2xl animate-pulse-glow"></div>
-
-                    <Button
-                      size="lg"
-                      className="relative overflow-hidden bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 hover:from-orange-600 hover:via-red-600 hover:to-pink-600 text-white px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold shadow-2xl rounded-2xl border-2 border-orange-400/50 transform hover:scale-105 transition-all duration-300 group animate-gradient-shift bg-[length:200%_200%]"
+                    {/* Call Button */}
+                    <a
+                      href={`tel:${phoneNumber}`}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300"
+                      style={{
+                        backgroundColor: colors.primaryButton.bg,
+                        color: colors.primaryButton.text
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 via-orange-400/20 to-red-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-gradient-shift bg-[length:200%_200%]"></div>
-
-                      <div className="relative flex items-center">
-                        <div className="relative mr-3">
-                          <Phone className="w-6 h-6 animate-float-bounce" />
-                          <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                        </div>
-                        <a
-                          href={`tel:${phoneNumber}`}>
-                          <div className="flex flex-col items-start">
-                            <span className="text-sm font-semibold opacity-90">CALL NOW</span>
-                            <span className="text-xl font-black tracking-wide">{phoneNumber}</span>
-                          </div>
-                        </a>
+                      <Phone className="w-5 h-5" />
+                      <div className="text-left">
+                        <div className="text-xs opacity-90">Call Now</div>
+                        <div className="text-sm font-bold">{phoneNumber}</div>
                       </div>
+                    </a>
 
-                      <div className="absolute top-2 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse" />
-                      </div>
-                    </Button>
-                  </div>
-
-                  {/* Get Estimate Button */}
-                  <div className="relative group">
-                    <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 via-primary to-blue-600 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-
-                    <Button
+                    {/* Get Estimate Button */}
+                    <button
                       onClick={() => navigate('/contact')}
-                      size="lg"
-                      variant="outline"
-                      className="relative bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/30 px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl font-bold shadow-xl rounded-2xl transform hover:scale-105 transition-all duration-300 group hover:bg-primary hover:text-white"
+                      className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300"
+                      style={{
+                        backgroundColor: colors.secondaryButton.bg,
+                        color: colors.secondaryButton.text,
+                        border: `2px solid ${colors.secondaryButton.border}`
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.secondaryButton.hover}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.secondaryButton.bg}
                     >
-                      <div className="relative flex items-center">
-                        <div className="relative mr-3">
-                          <Wrench className="w-6 h-6 animate-float-bounce" />
-                        </div>
-                        <div className="flex flex-col items-start">
-                          <span className="text-sm font-semibold opacity-90">FREE</span>
-                          <span className="text-xl font-black tracking-wide">Get Estimate</span>
-                        </div>
-                      </div>
-                    </Button>
+                      <Wrench className="w-5 h-5" />
+                      <span>Get Free Estimate</span>
+                    </button>
                   </div>
-                </div>
 
-                {/* White Service Cards with Theme Colors */}
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pt-6 sm:pt-8 max-w-5xl mx-auto">
-
-
-                </div>
-              </div>
-            </div>
-          </section>
-
-
-
-
-
-          <section id="about" className="py-16 sm:py-20 bg-secondary transition-colors duration-300 relative overflow-hidden">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-5">
-              <div className="absolute top-20 left-20 w-32 h-32 bg-primary rounded-full animate-float"></div>
-              <div className="absolute bottom-32 right-20 w-24 h-24 bg-accent rounded-full animate-float-delayed"></div>
-              <div className="absolute top-1/2 left-1/3 w-16 h-16 bg-primary/50 animate-morphing-shape"></div>
-            </div>
-
-            <div className="container mx-auto px-16 relative">
-              <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
-                {/* Text Content - Left Side */}
-                <div className="order-2 lg:order-1 animate-text-slide-left">
-                  <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 sm:mb-6">
-                    Professional {projectCategory} You Can Trust
-                  </h2>
-                  <p className="text-base sm:text-lg text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
-                    {firstPart}
-                  </p>
-                  <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
-                    {secondPart}
-                  </p>
-
-                  {/* Stats Grid */}
-                  <div className="grid grid-cols-2 gap-4 sm:gap-6">
-                    {stats.map((stat, index) => (
-                      <div key={index} className="text-center animate-stat-fade-up" style={{ animationDelay: `${0.2 + index * 0.1}s` }}>
-                        <div className="text-2xl sm:text-3xl font-bold text-primary mb-1 sm:mb-2">{stat.value}</div>
-                        <div className="text-muted-foreground font-medium text-sm sm:text-base">{stat.label}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Professional Plumber Image - Right Side */}
-                <div className="relative order-1 lg:order-2 animate-image-slide-right">
-                  {/* Background Pattern */}
-                  <div className="absolute inset-0 bg-hero-gradient rounded-full transform rotate-6 scale-110 opacity-20 animate-bg-rotate"></div>
-
-                  {/* Main Image Container */}
-                  <div className="relative">
-                    {/* Decorative Elements */}
-                    <div className="absolute -top-4 -right-4 w-16 h-16 bg-primary/30 rounded-full opacity-40 animate-float"></div>
-                    <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-accent/30 rounded-full opacity-30 animate-float-delayed"></div>
-
-                    {/* Professional Plumber Image */}
-                    <div className="glass-card rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105 animate-card-scale-in">
-                      <img
-                        src={hero2Image}
-                        alt="Professional plumber working"
-                        className="w-full h-96 sm:h-[500px] object-cover"
-                      />
-
-                      {/* Overlay with Professional Badge */}
-                      <div className="absolute top-4 left-4 bg-primary text-primary-foreground px-16 py-2 rounded-full text-sm font-semibold flex items-center gap-2 backdrop-blur-sm bg-primary/90">
-                        <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                        Licensed Professional
-                      </div>
-
-                      {/* Bottom Overlay with Stats */}
-                      <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl p-4">
-                        <div className="grid grid-cols-3 gap-4 text-center">
-                          <div>
-                            <div className="text-xl font-bold text-primary">24/7</div>
-                            <div className="text-xs text-gray-600">Emergency</div>
-                          </div>
-                          <div>
-                            <div className="text-xl font-bold text-green-600">30min</div>
-                            <div className="text-xs text-gray-600">Response</div>
-                          </div>
-                          <div>
-                            <div className="text-xl font-bold text-yellow-600">100%</div>
-                            <div className="text-xs text-gray-600">Satisfaction</div>
-                          </div>
-                        </div>
-                      </div>
+                  {/* Trust Indicators */}
+                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-6 pt-6">
+                    <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#22C55E' }}></div>
+                      <span className="text-xs font-semibold">24/7 Available</span>
+                    </div>
+                    <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#3B82F6' }}></div>
+                      <span className="text-xs font-semibold">Licensed & Insured</span>
+                    </div>
+                    <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: colors.accent }}></div>
+                      <span className="text-xs font-semibold">Same Day Service</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </section>
-          {/* services section */}
 
-          <section id="services" className="py-20 bg-gradient-to-b from-secondary to-background transition-colors duration-300">
-            <div className="container mx-auto px-16">
-              <div className="text-center mb-16">
-                <h2>Our {projectCategory} Services in  {cityName}</h2>
-                <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mt-6">
+
+
+
+
+          {/* About Section */}
+          <section id="about" className="py-16 bg-white">
+            <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+              {/* Section Title */}
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-4" style={{ backgroundColor: `${colors.primaryButton.bg}15` }}>
+                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg }}></div>
+                  <span className="text-sm font-semibold" style={{ color: colors.primaryButton.bg }}>About Us</span>
+                </div>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                  Professional <span style={{ color: colors.primaryButton.bg }}>{projectCategory}</span> You Can Trust
+                </h2>
+              </div>
+
+              {/* Main Content Grid */}
+              <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                {/* Image - 5 columns */}
+                <div className="lg:col-span-5 relative">
+                  <div className="relative">
+                    {/* Decorative Square */}
+                    <div className="absolute -top-4 -left-4 w-20 h-20 rounded-2xl opacity-20" style={{ backgroundColor: colors.primaryButton.bg }}></div>
+                    
+                    {/* Main Image */}
+                    <div className="relative rounded-3xl overflow-hidden h-[500px]">
+                      <img
+                        src={hero2Image}
+                        alt="Professional {projectCategory} services"
+                        className="w-full h-full object-cover"
+                      />
+                      
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                      
+                      {/* Licensed Badge */}
+                      <div className="absolute bottom-6 left-6 bg-white rounded-xl px-4 py-3 shadow-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg }}></div>
+                          <span className="text-gray-900 font-semibold text-sm">Licensed Professional</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content - 7 columns */}
+                <div className="lg:col-span-7 space-y-6">
+                  {/* Description */}
+                  <div className="space-y-6">
+                    <p className="text-xs sm:text-sm md:text-lg text-gray-700 leading-relaxed">
+                      {firstPart}
+                    </p>
+                    <p className="text-xs sm:text-sm md:text-lg text-gray-700 leading-relaxed">
+                      {secondPart}
+                    </p>
+                  </div>
+
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                    {stats.map((stat, index) => (
+                      <div key={index} className="text-center group">
+                        <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: `${colors.primaryButton.bg}15`, border: `2px solid ${colors.primaryButton.bg}30` }}>
+                          <div style={{ color: colors.primaryButton.bg }}>
+                            <DynamicFAIcon iconClass={stat.iconName} className="text-2xl" />
+                          </div>
+                        </div>
+                        <div className="text-2xl sm:text-3xl font-bold mb-1" style={{ color: colors.primaryButton.bg }}>{stat.value}</div>
+                        <div className="text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wide">{stat.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          {/* Services Section */}
+          <section id="services" className="py-16 bg-white">
+            <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+              
+              {/* Section Header */}
+              <div className="text-center mb-12">
+                <div className="inline-block mb-4">
+                  <span 
+                    className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                    style={{ 
+                      color: colors.primaryButton.bg,
+                      backgroundColor: `${colors.primaryButton.bg}15`
+                    }}
+                  >
+                    Our Services
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                  Professional <span style={{ color: colors.primaryButton.bg }}>{projectCategory}</span> Services {cityName}
+                </h2>
+                <p className="text-xs sm:text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
                   Comprehensive {projectCategory} solutions delivered by experienced professionals. We ensure quality results for every project.
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {/* Services Grid */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {projectServices.map((service, index) => {
                   const serviceName = service.service_name.toLowerCase().replace(/\s+/g, '-');
                   const servicePath = `${pathname}/services/${serviceName}`;
@@ -1033,7 +1059,6 @@ const AreaDetail = () => {
                     <Link
                       key={index}
                       to={servicePath}
-                      // target="_blank" // <-- this makes it open in a new tab
                       rel="noopener noreferrer"
                       state={{
                         serviceId: service._id,
@@ -1044,37 +1069,72 @@ const AreaDetail = () => {
                         serviceImage1: service.images[1]?.url || "https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041850.jpg",
                         serviceImage2: service.images[2]?.url || "https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041850.jpg"
                       }}
-                      className="group bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:transform hover:scale-105 cursor-pointer"
-                      style={{ cursor: "pointer" }}
+                      className="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                      style={{
+                        border: `1px solid ${colors.primaryButton.bg}15`
+                      }}
                     >
+                      {/* Image Container */}
                       <div className="relative h-48 overflow-hidden">
                         <img
                           src={service.images[0]?.url || "https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041850.jpg"}
                           alt={service.service_name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
-                        {/* <div className="absolute inset-0 bg-primary/20 group-hover:bg-primary/10 transition-colors duration-300"></div> */}
-                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
-                       
-                       
-                 
-                       
-                        <div className="absolute top-4 left-4 w-12 h-12 bg-background rounded-xl flex items-center justify-center shadow-lg">
-                          <i className={`${service.fas_fa_icon} text-primary text-xl`}></i>
+                        
+                        {/* Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                        
+                        {/* Icon */}
+                        <div 
+                          className="absolute top-4 left-4 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg backdrop-blur-md"
+                          style={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            border: `2px solid ${colors.primaryButton.bg}30`
+                          }}
+                        >
+                          <i 
+                            className={`${service.fas_fa_icon} text-xl`}
+                            style={{ color: colors.primaryButton.bg }}
+                          ></i>
                         </div>
+
+                        {/* Hover Border Effect */}
+                        <div 
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                          style={{
+                            border: `2px solid ${colors.primaryButton.bg}40`,
+                            boxShadow: `0 0 20px ${colors.primaryButton.bg}20`
+                          }}
+                        ></div>
                       </div>
-                      <div className="p-6">
-                        <h4 className="font-bold text-card-foreground mb-3 group-hover:text-primary transition-colors">
-                          {service.service_name} in {cityName}
+
+                      {/* Content */}
+                      <div className="p-6 space-y-3">
+                        <h4 
+                          className="font-bold text-lg leading-tight group-hover:transition-colors duration-300"
+                          style={{ 
+                            color: 'inherit'
+                          } as React.CSSProperties & { '--hover-color': string }}
+                        >
+                          {service.service_name} {cityName}
                         </h4>
-                        <p className="text-muted-foreground leading-relaxed">
+                        <p className="text-gray-600 leading-relaxed text-sm">
                           {getTruncatedDescription(service.service_description)}
                         </p>
+
+                        {/* Bottom Accent Line */}
+                        <div 
+                          className="h-1 rounded-full transition-all duration-500 group-hover:w-full"
+                          style={{
+                            width: '2rem',
+                            background: `linear-gradient(90deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                          }}
+                        ></div>
                       </div>
                     </Link>
                   );
                 })}
-
               </div>
             </div>
           </section>
@@ -1082,105 +1142,210 @@ const AreaDetail = () => {
 
           {renderCTA(CTA, pageType, 'slot2', phoneNumber, projectCategory)}
 
-          <section className="py-20 bg-secondary transition-colors duration-300">
-            <div className="container mx-auto px-16">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-foreground mb-4">
-                  Why Choose {projectName}?
+          {/* Why Choose Us Section */}
+          <section className="py-16 bg-gray-50">
+            <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+              
+              {/* Section Header */}
+              <div className="text-center mb-12">
+                <div className="inline-block mb-4">
+                  <span 
+                    className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                    style={{ 
+                      color: colors.primaryButton.bg,
+                      backgroundColor: `${colors.primaryButton.bg}15`
+                    }}
+                  >
+                    Why Choose Us
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                  Why Choose <span style={{ color: colors.primaryButton.bg }}>{projectName}</span>?
                 </h2>
-                <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                <p className="text-xs sm:text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
                   When you choose us, you're choosing quality, reliability, and exceptional service that's backed by years of experience and thousands of satisfied customers.
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Features Grid */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {projectWhyChooseUs.map((feature, index) => (
-                  <div key={index} className="bg-card rounded-xl p-8 shadow-sm hover:shadow-md transition-all duration-300">
-                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                      {feature.iconClass ? (
-                        <DynamicFAIcon iconClass={feature.iconClass} className="text-primary text-3xl" />
-                      ) : null}
-                    </div>
+                  <div 
+                    key={index} 
+                    className="group relative bg-white rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
+                    style={{
+                      border: `1px solid ${colors.primaryButton.bg}15`
+                    }}
+                  >
+                    {/* Hover Border Effect */}
+                    <div 
+                      className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{
+                        border: `2px solid ${colors.primaryButton.bg}40`,
+                        boxShadow: `0 0 20px ${colors.primaryButton.bg}20`
+                      }}
+                    ></div>
 
-                    <h3 className="text-xl font-semibold text-card-foreground mb-4">{feature.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                    {/* Content */}
+                    <div className="relative space-y-5">
+                      {/* Icon Container */}
+                      <div className="w-fit">
+                        <div 
+                          className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110"
+                          style={{
+                            backgroundColor: `${colors.primaryButton.bg}15`,
+                            border: `2px solid ${colors.primaryButton.bg}30`
+                          }}
+                        >
+                          {feature.iconClass ? (
+                            <div style={{ color: colors.primaryButton.bg }}>
+                              <DynamicFAIcon 
+                                iconClass={feature.iconClass} 
+                                className="text-2xl"
+                              />
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+
+                      {/* Text Content */}
+                      <div className="space-y-3">
+                        <h3 className="text-xl font-bold leading-tight text-gray-900">
+                          {feature.title}
+                        </h3>
+                        <p className="text-base leading-relaxed text-gray-600">
+                          {feature.description}
+                        </p>
+                      </div>
+
+                      {/* Bottom Accent Line */}
+                      <div 
+                        className="h-1 rounded-full transition-all duration-500 group-hover:w-full"
+                        style={{
+                          width: '3rem',
+                          background: `linear-gradient(90deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                        }}
+                      ></div>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           </section>
-          <section className="py-20 bg-gradient-to-br from-background via-secondary/30 to-background transition-colors duration-300 relative overflow-hidden">
-            {/* ...header and background stuff... */}
-            <div className="container mx-auto px-16">
-              <div className="text-center mb-20">
-                <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-6 py-3 mb-6">
-                  <Clock className="w-5 h-5 text-primary" />
-                  <span className="text-primary font-semibold">Step by Step Process</span>
+          {/* Process Section */}
+          <section className="py-16 bg-gray-50">
+            <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+              
+              {/* Section Header */}
+              <div className="text-center mb-16">
+                <div className="inline-block mb-4">
+                  <span 
+                    className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                    style={{ 
+                      color: colors.primaryButton.bg,
+                      backgroundColor: `${colors.primaryButton.bg}15`
+                    }}
+                  >
+                    Our Process
+                  </span>
                 </div>
-                {/* <h2 className="text-5xl font-bold text-foreground mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent"> */}
-                <h2 className="text-4xl font-bold text-foreground mb-8">
-
-                  Our Simple Process
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                  Our Simple <span style={{ color: colors.primaryButton.bg }}>Process</span>
                 </h2>
-                <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                <p className="text-xs sm:text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
                   Our streamlined {coloredSteps.length}-step process ensures you get professional {projectCategory} service from start to finish.
                 </p>
               </div>
-              <div className="relative">
-                <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-primary via-accent to-primary h-full hidden lg:block"></div>
-                <div className="space-y-16 lg:space-y-24">
+
+              {/* Process Flow */}
+              <div className="relative max-w-5xl mx-auto">
+                {/* Connecting Line */}
+                <div 
+                  className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full hidden lg:block"
+                  style={{
+                    background: `linear-gradient(to bottom, ${colors.primaryButton.bg}, ${colors.accent})`
+                  }}
+                ></div>
+
+                {/* Process Steps */}
+                <div className="space-y-12 lg:space-y-16">
                   {coloredSteps.map((step, index) => (
-                    <div key={index} className={`flex items-center ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} flex-col gap-8 lg:gap-16`}>
+                    <div 
+                      key={index} 
+                      className={`flex items-center ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} flex-col gap-8 lg:gap-12`}
+                    >
+                      {/* Content Card */}
                       <div className={`flex-1 ${index % 2 === 0 ? 'lg:text-right lg:pr-8' : 'lg:text-left lg:pl-8'} text-center lg:text-inherit`}>
-                        <div className={`inline-block ${step.bgColor} ${step.borderColor} border-2 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 max-w-md w-full`}>
-                          <div className="flex items-center justify-center mb-4">
-                            <div className={`w-16 h-16 bg-gradient-to-br ${step.color} rounded-full flex items-center justify-center text-white shadow-lg`}>
-                              <DynamicFAIcon iconClass={step.iconClass || ''} className="text-white text-3xl" />
+                        <div 
+                          className="inline-block rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 max-w-md w-full"
+                          style={{
+                            backgroundColor: `${colors.primaryButton.bg}08`,
+                            border: `2px solid ${colors.primaryButton.bg}20`
+                          }}
+                        >
+                          {/* Icon */}
+                          {step.iconClass && (
+                            <div className="flex justify-center mb-4">
+                              <div 
+                                className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
+                                style={{
+                                  background: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                                }}
+                              >
+                                <DynamicFAIcon 
+                                  iconClass={step.iconClass} 
+                                  className="text-2xl text-white"
+                                />
+                              </div>
                             </div>
-                          </div>
-                          <h3 className="text-2xl font-bold text-foreground mb-4">{step.title}</h3>
-                          <p className="text-muted-foreground text-lg leading-relaxed">{step.description}</p>
+                          )}
+
+                          {/* Content */}
+                          <h3 className="text-2xl font-bold text-gray-900 mb-4">{step.title}</h3>
+                          <p className="text-gray-600 text-lg leading-relaxed">{step.description}</p>
                         </div>
                       </div>
+
+                      {/* Step Number Circle */}
                       <div className="relative z-10 hidden lg:block">
-                        <div className={`w-20 h-20 bg-gradient-to-br ${step.color} rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-xl border-4 border-background`}>
+                        <div 
+                          className="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-xl border-4 border-white"
+                          style={{
+                            background: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                          }}
+                        >
                           {step.number}
                         </div>
+                        
+                        {/* Arrow */}
                         {index < coloredSteps.length - 1 && (
                           <div className="absolute top-20 left-1/2 transform -translate-x-1/2">
-                            <ArrowRight className="w-6 h-6 text-primary rotate-90" />
+                            <ArrowRight 
+                              className="w-6 h-6 rotate-90" 
+                              style={{ color: colors.primaryButton.bg }}
+                            />
                           </div>
                         )}
                       </div>
+
+                      {/* Mobile Step Number */}
                       <div className="lg:hidden">
-                        <div className={`w-16 h-16 bg-gradient-to-br ${step.color} rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg`}>
+                        <div 
+                          className="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg"
+                          style={{
+                            background: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                          }}
+                        >
                           {step.number}
                         </div>
                       </div>
+
+                      {/* Empty space for alternating layout */}
                       <div className="flex-1 hidden lg:block"></div>
                     </div>
                   ))}
                 </div>
               </div>
-              {/* ...call to action... */}
-
-
-              {/* <div className="text-center mt-20">
-                <div className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 rounded-3xl p-8 border border-primary/20">
-                  <h3 className="text-3xl font-bold text-foreground mb-4">Ready to Get Started?</h3>
-                  <p className="text-lg text-muted-foreground mb-6">
-                    Experience our professional process firsthand. Contact us today for your free estimate!
-                  </p>
-                  <button className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                    Get Free Estimate
-                  </button>
-                </div>
-              </div> */}
-
-
-
-
-
 
             </div>
           </section>
@@ -1190,18 +1355,33 @@ const AreaDetail = () => {
 
 
 
-          <section id="areas" className="py-20 bg-background transition-colors duration-300">
-            <div className="container mx-auto px-16">
-
-
+          {/* Areas Section */}
+          <section id="areas" className="py-16 bg-white">
+            <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+              
+              {/* Section Header */}
               <div className="text-center mb-12">
-                <h3 className="text-4xl font-bold text-foreground mb-8">Areas We Serve</h3>
-                <p className="text-lg text-muted-foreground mb-8">
-                  Professional {projectCategory} services throughout Our availability.
+                <div className="inline-block mb-4">
+                  <span 
+                    className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                    style={{ 
+                      color: colors.primaryButton.bg,
+                      backgroundColor: `${colors.primaryButton.bg}15`
+                    }}
+                  >
+                    Service Areas
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                  Areas We <span style={{ color: colors.primaryButton.bg }}>Serve</span>
+                </h2>
+                <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto leading-relaxed mt-6">
+                  Professional {projectCategory} throughout our availability.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              {/* Areas Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
                 {projectLocations.map((area, index) => (
                   <Link
                     key={index}
@@ -1215,142 +1395,278 @@ const AreaDetail = () => {
                       sortname: sortname,
                       _id: area._id,
                     }}
-                    className="group bg-card border border-border shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden"
+                    className="group relative bg-white rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
+                    style={{
+                      border: `1px solid ${colors.primaryButton.bg}15`
+                    }}
                   >
-                    <CardContent className="p-8 text-center">
-                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <MapPin className="w-8 h-8 text-primary" />
+                    {/* Hover Border Effect */}
+                    <div 
+                      className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{
+                        border: `2px solid ${colors.primaryButton.bg}40`,
+                        boxShadow: `0 0 20px ${colors.primaryButton.bg}20`
+                      }}
+                    ></div>
+
+                    {/* Content */}
+                    <div className="relative text-center space-y-6">
+                      {/* Icon */}
+                      <div className="flex justify-center">
+                        <div 
+                          className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-500 group-hover:scale-110"
+                          style={{
+                            background: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                          }}
+                        >
+                          <MapPin className="w-8 h-8 text-white" />
+                        </div>
                       </div>
-                      <h3 className="text-2xl font-bold text-card-foreground mb-4 group-hover:text-primary transition-colors">
+
+                      {/* Area Name */}
+                      <h3 className="text-2xl font-bold text-gray-900 group-hover:text-gray-700 transition-colors">
                         {area.name}
                       </h3>
-                      <div className="space-y-3 mb-6">
-                        <div className="flex items-center justify-center text-card-foreground">
-                          <Clock className="w-4 h-4 text-green-500 mr-2" />
-                          <span className="text-sm">Response time: Extreme</span>
+
+                      {/* Features */}
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-center gap-3">
+                          <div 
+                            className="w-8 h-8 rounded-lg flex items-center justify-center"
+                            style={{
+                              backgroundColor: `${colors.primaryButton.bg}15`
+                            }}
+                          >
+                            <Clock className="w-4 h-4" style={{ color: colors.primaryButton.bg }} />
+                          </div>
+                          <span className="text-sm text-gray-600 font-medium">Response time: Extreme</span>
                         </div>
-                        <div className="flex items-center justify-center text-card-foreground">
-                          <Shield className="w-4 h-4 text-emerald-500 mr-2" />
-                          <span className="text-sm">100% Original services</span>
+                        <div className="flex items-center justify-center gap-3">
+                          <div 
+                            className="w-8 h-8 rounded-lg flex items-center justify-center"
+                            style={{
+                              backgroundColor: `${colors.primaryButton.bg}15`
+                            }}
+                          >
+                            <Shield className="w-4 h-4" style={{ color: colors.primaryButton.bg }} />
+                          </div>
+                          <span className="text-sm text-gray-600 font-medium">100% Original services</span>
                         </div>
                       </div>
-                      <Link
-                        to={handleLocationClick(area.slug)}
-                        state={{
-                          id: area.location_id,
-                          projectId,
-                          UpcomingPage,
-                          nextPage: getNextPage(),
-                          locationName: area.name,
-                          sortname: sortname,
-                          _id: area._id,
+
+                      {/* Button */}
+                      <button
+                        className="w-full px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300 inline-flex items-center justify-center gap-2"
+                        style={{
+                          backgroundColor: colors.primaryButton.bg,
+                          color: colors.primaryButton.text
                         }}
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 w-full rounded-md inline-flex items-center justify-center"
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
                       >
-                        <Phone className="w-4 h-4 mr-2" />
+                        <Phone className="w-4 h-4" />
                         See Areas
-                      </Link>
-                    </CardContent>
+                      </button>
+
+                      {/* Bottom Accent Line */}
+                      <div 
+                        className="h-1 rounded-full transition-all duration-500 group-hover:w-full"
+                        style={{
+                          width: '3rem',
+                          background: `linear-gradient(90deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                        }}
+                      ></div>
+                    </div>
                   </Link>
                 ))}
+              </div>
+
+              {/* Bottom CTA */}
+              <div className="text-center mt-16">
+                <div 
+                  className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 rounded-2xl"
+                  style={{
+                    backgroundColor: `${colors.primaryButton.bg}08`,
+                    border: `1px solid ${colors.primaryButton.bg}20`
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: colors.primaryButton.bg }} />
+                    <span className="text-gray-900 font-semibold text-sm sm:text-base">Serving {projectLocations.length}+ Areas</span>
+                  </div>
+                  <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
+                  <div className="text-gray-600 text-sm sm:text-base">
+                    <span className="font-bold text-gray-900">24/7</span> Emergency Service
+                  </div>
+                  <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
+                  <div className="text-gray-600 text-sm sm:text-base">
+                    <span className="font-bold text-gray-900">100%</span> Coverage
+                  </div>
+                </div>
               </div>
             </div>
           </section>
 
-          <section className="py-20 bg-gradient-to-br from-secondary/30 via-background to-accent/10 transition-colors duration-300 relative overflow-hidden">
-            {/* Background Decorative Elements */}
-            <div className="absolute top-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-x-32 -translate-y-32"></div>
-            <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl translate-x-40 translate-y-40"></div>
-
-            <div className="container mx-auto px-16">
-              {/* Header Section */}
-              <div className="text-center mb-16">
-                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full px-8 py-4 mb-8 border border-primary/20">
-                  <Shield className="w-6 h-6 text-primary" />
-                  <span className="text-primary font-bold text-lg">Our Commitment</span>
+          {/* Guarantee Section */}
+          <section className="py-16 bg-white">
+            <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+              
+              {/* Section Header */}
+              <div className="text-center mb-12">
+                <div className="inline-block mb-4">
+                  <span 
+                    className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                    style={{ 
+                      color: colors.primaryButton.bg,
+                      backgroundColor: `${colors.primaryButton.bg}15`
+                    }}
+                  >
+                    Our Guarantee
+                  </span>
                 </div>
-                {/* <h2 className="text-5xl font-bold text-foreground mb-8 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent"> */}
-                <h2 className="text-4xl font-bold text-foreground mb-8">
-
-                  Our {projectCategory} Guarantee
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                  Our <span style={{ color: colors.primaryButton.bg }}>{projectCategory}</span> Guarantee
                 </h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-xs sm:text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
                   {guaranteeText}
                 </p>
               </div>
 
-              {/* Two Column Layout */}
-              <div className="grid lg:grid-cols-2 gap-16 items-center mb-16">
-                {/* Left Column - Content */}
-                <div className="space-y-8">
-                  <div className="space-y-6">
-                    <h3 className="text-3xl font-bold text-foreground leading-tight">
-                      Our Service Guarantee
-                    </h3>
-                    <p className="text-lg text-muted-foreground leading-relaxed">
-                      {guaranteeText2}
-                    </p>
-                    <p className="text-lg text-muted-foreground leading-relaxed">
+              {/* Guarantee Cards Grid */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                {coloredGuarantees.map((guarantee, index) => (
+                  <div
+                    key={index}
+                    className="group relative bg-white rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
+                    style={{
+                      border: `1px solid ${colors.primaryButton.bg}15`
+                    }}
+                  >
+                    {/* Hover Border Effect */}
+                    <div 
+                      className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{
+                        border: `2px solid ${colors.primaryButton.bg}40`,
+                        boxShadow: `0 0 20px ${colors.primaryButton.bg}20`
+                      }}
+                    ></div>
 
-                    </p>
-                  </div>
-                  {/* Highlights */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {staticHighlights.map((highlight, index) => (
-                      <div key={index} className="flex items-center gap-3 bg-background/50 rounded-xl p-4 border border-primary/10 hover:border-primary/30 transition-colors duration-300">
-                        <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
-                          <highlight.icon className="w-5 h-5 text-primary-foreground" />
-                        </div>
-                        <span className="text-foreground font-semibold">{highlight.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                {/* Right Column - Guarantee Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {coloredGuarantees.map((guarantee, index) => (
-                    <div
-                      key={index}
-                      className={`${guarantee.bgColor} rounded-2xl p-6 border-2 border-transparent hover:border-primary/20 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group`}
-                    >
-                      <div className="text-center space-y-4">
-                        <div className={`w-16 h-16 bg-gradient-to-br ${guarantee.color} rounded-xl flex items-center justify-center mx-auto shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
+                    {/* Content */}
+                    <div className="relative space-y-5">
+                      {/* Icon */}
+                      <div className="flex justify-center">
+                        <div 
+                          className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-500 group-hover:scale-110"
+                          style={{
+                            background: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                          }}
+                        >
                           {guarantee.iconClass
-                            ? <DynamicFAIcon iconClass={guarantee.iconClass} className="text-white text-3xl" />
+                            ? <DynamicFAIcon iconClass={guarantee.iconClass} className="text-white text-2xl" />
                             : <Award className="w-8 h-8 text-white" />
                           }
                         </div>
-                        <h4 className="text-xl font-bold text-foreground">{guarantee.title}</h4>
-                        <p className="text-muted-foreground leading-relaxed">{guarantee.description}</p>
                       </div>
+
+                      {/* Text Content */}
+                      <div className="text-center space-y-3">
+                        <h4 className="text-xl font-bold leading-tight text-gray-900">
+                          {guarantee.title}
+                        </h4>
+                        <p className="text-base leading-relaxed text-gray-600">
+                          {guarantee.description}
+                        </p>
+                      </div>
+
+                      {/* Bottom Accent Line */}
+                      <div 
+                        className="h-1 rounded-full transition-all duration-500 group-hover:w-full"
+                        style={{
+                          width: '3rem',
+                          background: `linear-gradient(90deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                        }}
+                      ></div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Highlights Section */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                {staticHighlights.map((highlight, index) => (
+                  <div 
+                    key={index} 
+                    className="flex items-center gap-4 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1"
+                    style={{
+                      backgroundColor: `${colors.primaryButton.bg}08`,
+                      border: `1px solid ${colors.primaryButton.bg}20`
+                    }}
+                  >
+                    <div 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center"
+                      style={{
+                        background: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                      }}
+                    >
+                      <highlight.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-gray-900 font-semibold">{highlight.text}</span>
+                  </div>
+                ))}
               </div>
 
               {/* Promise Section */}
-              <div className="bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 rounded-3xl border-2 border-primary/10 overflow-hidden relative">
+              <div 
+                className="rounded-3xl p-12 text-center relative overflow-hidden"
+                style={{
+                  backgroundColor: `${colors.primaryButton.bg}08`,
+                  border: `2px solid ${colors.primaryButton.bg}20`
+                }}
+              >
                 {/* Background Pattern */}
                 <div className="absolute inset-0 opacity-5 pointer-events-none">
-                  <div className="absolute top-8 left-8 w-20 h-20 border-2 border-primary rounded-full"></div>
-                  <div className="absolute bottom-8 right-8 w-16 h-16 border-2 border-accent rounded-lg rotate-45"></div>
-                  <div className="absolute top-1/2 left-1/4 w-12 h-12 border border-primary rounded-full"></div>
+                  <div 
+                    className="absolute top-8 left-8 w-20 h-20 border-2 rounded-full"
+                    style={{ borderColor: colors.primaryButton.bg }}
+                  ></div>
+                  <div 
+                    className="absolute bottom-8 right-8 w-16 h-16 border-2 rounded-lg rotate-45"
+                    style={{ borderColor: colors.accent }}
+                  ></div>
+                  <div 
+                    className="absolute top-1/2 left-1/4 w-12 h-12 border rounded-full"
+                    style={{ borderColor: colors.primaryButton.bg }}
+                  ></div>
                 </div>
-
-                <div className="relative p-12 text-center">
+                
+                <div className="relative">
                   <div className="mb-8">
-                    <div className="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
-                      <Heart className="w-10 h-10 text-primary-foreground" />
+                    <div 
+                      className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl"
+                      style={{
+                        background: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                      }}
+                    >
+                      <Heart className="w-10 h-10 text-white" />
                     </div>
-                    <h3 className="text-4xl font-bold text-foreground mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                    <h3 
+                      className="text-xl sm:text-2xl font-bold mb-6"
+                      style={{
+                        backgroundImage: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
+                        WebkitBackgroundClip: 'text',
+                        backgroundClip: 'text',
+                        color: 'transparent',
+                        WebkitTextFillColor: 'transparent'
+                      }}
+                    >
                       Our Promise to You
                     </h3>
                   </div>
                   <div className="max-w-4xl mx-auto">
-                    <p className="text-2xl text-foreground font-semibold leading-relaxed mb-8">
+                    <p className="text-base sm:text-lg text-gray-900 font-semibold leading-relaxed mb-8">
                       {promiseLine || `"We promise to fix your plumbing problems quickly and efficiently, so you can get back to enjoying your home without any stress or hassle!"`}
                     </p>
-                    <div className="flex flex-wrap justify-center gap-6 text-muted-foreground">
+                    <div className="flex flex-wrap justify-center gap-6 text-gray-600">
                       {staticPromisePoints.map((point, idx) => (
                         <div key={idx} className="flex items-center gap-2">
                           <CheckCircle className="w-5 h-5 text-green-500" />
@@ -1367,15 +1683,32 @@ const AreaDetail = () => {
 
 
 
-          <section className="py-20 bg-secondary transition-colors duration-300">
-            <div className="container mx-auto px-16">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-foreground mb-4">What Our Customers Say</h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Don't just take our word for it. Here's what our satisfied customers have to say about our {projectCategory} services.
+          {/* Testimonials Section */}
+          <section className="py-16 bg-gray-50">
+            <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+              
+              {/* Section Header */}
+              <div className="text-center mb-12">
+                <div className="inline-block mb-4">
+                  <span 
+                    className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                    style={{ 
+                      color: colors.primaryButton.bg,
+                      backgroundColor: `${colors.primaryButton.bg}15`
+                    }}
+                  >
+                    Customer Reviews
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                  What Our <span style={{ color: colors.primaryButton.bg }}>Customers</span> Say
+                </h2>
+                <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto leading-relaxed mt-6">
+                  Don't just take our word for it. Here's what our satisfied customers have to say about our services.
                 </p>
               </div>
 
+              {/* Testimonials Grid */}
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {projectReviews.map((testimonial, index) => {
                   const rawRating = Number(testimonial.rating) || 0;
@@ -1384,8 +1717,36 @@ const AreaDetail = () => {
                   const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
 
                   return (
-                    <div key={index} className="bg-card rounded-xl p-8 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
-                      <div className="flex items-center mb-4">
+                    <div 
+                      key={index} 
+                      className="group relative bg-white rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-2xl flex flex-col h-full"
+                      style={{
+                        border: `1px solid ${colors.primaryButton.bg}15`
+                      }}
+                    >
+                      {/* Hover Border Effect */}
+                      <div 
+                        className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style={{
+                          border: `2px solid ${colors.primaryButton.bg}40`,
+                          boxShadow: `0 0 20px ${colors.primaryButton.bg}20`
+                        }}
+                      ></div>
+
+                      {/* Quote Icon */}
+                      <div className="flex justify-center mb-6">
+                        <div 
+                          className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                          style={{
+                            background: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                          }}
+                        >
+                          <Quote className="w-6 h-6 text-white" />
+                        </div>
+                      </div>
+
+                      {/* Stars Rating */}
+                      <div className="flex items-center justify-center mb-6">
                         {[...Array(fullStars)].map((_, i) => (
                           <Star key={`full-${index}-${i}`} className="w-5 h-5 text-yellow-400 fill-current" />
                         ))}
@@ -1396,20 +1757,67 @@ const AreaDetail = () => {
                           <Star key={`empty-${index}-${i}`} className="w-5 h-5 text-gray-300 fill-current" />
                         ))}
                       </div>
-                      <p className="text-muted-foreground mb-6 leading-relaxed italic">
-                        "{testimonial.review_text}"
-                      </p>
-                      <div className="flex items-center mt-auto">
 
-                        <div>
-                          <h4 className="font-semibold text-card-foreground">
+                      {/* Review Text */}
+                      <div className="relative flex-1">
+                        <p className="text-gray-700 mb-6 leading-relaxed text-center italic">
+                          "{testimonial.review_text}"
+                        </p>
+                      </div>
+
+                      {/* Customer Name */}
+                      <div className="text-center mt-auto">
+                        <div 
+                          className="inline-block px-4 py-2 rounded-full"
+                          style={{
+                            backgroundColor: `${colors.primaryButton.bg}10`
+                          }}
+                        >
+                          <h4 className="font-bold text-gray-900">
                             {testimonial.customer_name}
                           </h4>
                         </div>
                       </div>
+
+                      {/* Bottom Accent Line */}
+                      <div 
+                        className="h-1 rounded-full transition-all duration-500 group-hover:w-full mt-4"
+                        style={{
+                          width: '3rem',
+                          background: `linear-gradient(90deg, ${colors.primaryButton.bg}, ${colors.accent})`
+                        }}
+                      ></div>
                     </div>
                   );
                 })}
+              </div>
+
+              {/* Trust Indicators */}
+              <div className="mt-16 text-center">
+                <div 
+                  className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 rounded-2xl"
+                  style={{
+                    backgroundColor: `${colors.primaryButton.bg}08`,
+                    border: `1px solid ${colors.primaryButton.bg}20`
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />
+                      ))}
+                    </div>
+                    <span className="text-gray-900 font-bold text-sm sm:text-base lg:text-lg">5.0</span>
+                  </div>
+                  <div className="hidden sm:block w-px h-6 lg:h-8 bg-gray-300"></div>
+                  <div className="text-gray-600 text-sm sm:text-base">
+                    <span className="font-bold text-gray-900">{projectReviews.length}+</span> Happy Customers
+                  </div>
+                  <div className="hidden sm:block w-px h-6 lg:h-8 bg-gray-300"></div>
+                  <div className="text-gray-600 text-sm sm:text-base">
+                    <span className="font-bold text-gray-900">100%</span> Satisfaction Rate
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -1435,47 +1843,137 @@ const AreaDetail = () => {
           {/* FAQ Section */}
 
 
-          <section className="py-20 bg-gradient-to-b from-secondary to-background transition-colors duration-300">
-            <div className="container mx-auto px-16">
-              <div className="text-center mb-16">
-                <h2 className="text-5xl font-bold text-foreground mb-6">Frequently Asked Questions</h2>
-                <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                  Got questions? We've got answers. Here are the most common questions about our professional {projectCategory} services.
+          {/* FAQ Section */}
+          <section className="py-16 bg-gray-50">
+            <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+              
+              {/* Section Header */}
+              <div className="text-center mb-12">
+                <div className="inline-block mb-4">
+                  <span 
+                    className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                    style={{ 
+                      color: colors.primaryButton.bg,
+                      backgroundColor: `${colors.primaryButton.bg}15`
+                    }}
+                  >
+                    FAQ
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                  Frequently Asked <span style={{ color: colors.primaryButton.bg }}>Questions</span>
+                </h2>
+                <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto leading-relaxed mt-6">
+                  Got questions? We've got answers. Here are the most common questions about our professional services.
                 </p>
               </div>
+
+              {/* FAQ Accordion */}
               <div className="max-w-4xl mx-auto">
                 <div className="space-y-4">
                   {projectFaqs.map((faq, index) => (
-                    <div key={index} className="bg-card rounded-2xl shadow-lg border border-border overflow-hidden">
+                    <div 
+                      key={index} 
+                      className="group bg-white rounded-3xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
+                      style={{
+                        border: `1px solid ${colors.primaryButton.bg}15`
+                      }}
+                    >
                       <button
                         onClick={() => toggleFAQ(index)}
-                        className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-secondary/50 transition-colors duration-200"
+                        className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 text-left flex items-center justify-between transition-all duration-300"
+                        style={{
+                          backgroundColor: openFAQ === index ? `${colors.primaryButton.bg}08` : 'transparent'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (openFAQ !== index) {
+                            e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}05`;
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (openFAQ !== index) {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                          }
+                        }}
                       >
-                        <h3 className="text-lg font-semibold text-card-foreground pr-4">{faq.question}</h3>
-                        {openFAQ === index ? (
-                          <ChevronUp className="w-5 h-5 text-primary flex-shrink-0" />
-                        ) : (
-                          <ChevronDown className="w-5 h-5 text-primary flex-shrink-0" />
-                        )}
+                        <div className="flex items-center gap-4 flex-1">
+                          <div 
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                            style={{
+                              backgroundColor: openFAQ === index ? colors.primaryButton.bg : `${colors.primaryButton.bg}15`
+                            }}
+                          >
+                            <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                          </div>
+                          <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 pr-4 leading-tight">
+                            {faq.question}
+                          </h3>
+                        </div>
+                        <div 
+                          className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300"
+                          style={{
+                            backgroundColor: openFAQ === index ? colors.primaryButton.bg : `${colors.primaryButton.bg}15`,
+                            transform: openFAQ === index ? 'rotate(180deg)' : 'rotate(0deg)'
+                          }}
+                        >
+                          {openFAQ === index ? (
+                            <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: colors.primaryButton.bg }} />
+                          )}
+                        </div>
                       </button>
+                      
                       {openFAQ === index && (
-                        <div className="px-8 pb-6">
-                          <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                        <div 
+                          className="px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 transition-all duration-300"
+                          style={{
+                            borderTop: `1px solid ${colors.primaryButton.bg}20`
+                          }}
+                        >
+                          <div className="pt-4">
+                            <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
+                              {faq.answer}
+                            </p>
+                          </div>
                         </div>
                       )}
                     </div>
                   ))}
                 </div>
               </div>
+
+              {/* Bottom CTA */}
+              <div className="text-center mt-16">
+                <div 
+                  className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 rounded-2xl"
+                  style={{
+                    backgroundColor: `${colors.primaryButton.bg}08`,
+                    border: `1px solid ${colors.primaryButton.bg}20`
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: colors.primaryButton.bg }} />
+                    <span className="text-gray-900 font-semibold text-sm sm:text-base">Still have questions?</span>
+                  </div>
+                  <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: colors.primaryButton.bg }} />
+                    <span className="text-gray-600 text-sm sm:text-base">
+                      <span className="font-bold text-gray-900">Call us</span> for immediate help
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
-
-
-
           </section>
 
           <Footer />
         </div>
       </div>
+      
+      {/* Color Theme Selector */}
+      <ColorThemeSelector />
     </HelmetProvider>
   );
 };

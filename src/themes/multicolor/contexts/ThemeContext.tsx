@@ -14,6 +14,8 @@ interface ColorElements {
   gradient: { from: string; to: string };
   ring: string;
   shadow: string;
+  badge: { text: string; background: string };
+  trust: { text: string; dot1: string; dot2: string; dot3: string };
 }
 
 interface ThemeContextType {
@@ -34,7 +36,9 @@ const themeColors: Record<Theme, ColorElements> = {
     accent: '#F59E0B',
     gradient: { from: '#0E1214', to: '#1F2937' },
     ring: '#F43F5E',
-    shadow: 'rgba(0,0,0,0.35)'
+    shadow: 'rgba(0,0,0,0.35)',
+    badge: { text: '#F8FAFC', background: 'rgba(225,29,72,0.15)' },
+    trust: { text: '#C7CDD6', dot1: '#22C55E', dot2: '#3B82F6', dot3: '#F59E0B' }
   },
   'indigo-sand': {
     heading: '#F8FAFC',
@@ -46,7 +50,9 @@ const themeColors: Record<Theme, ColorElements> = {
     accent: '#EAB308',
     gradient: { from: '#0F1222', to: '#111827' },
     ring: '#818CF8',
-    shadow: 'rgba(0,0,0,0.34)'
+    shadow: 'rgba(0,0,0,0.34)',
+    badge: { text: '#F8FAFC', background: 'rgba(79,70,229,0.15)' },
+    trust: { text: '#BCC6DD', dot1: '#22C55E', dot2: '#3B82F6', dot3: '#EAB308' }
   },
   'saffron-charcoal': {
     heading: '#FFFFFF',
@@ -58,7 +64,9 @@ const themeColors: Record<Theme, ColorElements> = {
     accent: '#84CC16',
     gradient: { from: '#0B0B0B', to: '#1A1A1A' },
     ring: '#FACC15',
-    shadow: 'rgba(0,0,0,0.45)'
+    shadow: 'rgba(0,0,0,0.45)',
+    badge: { text: '#FFFFFF', background: 'rgba(253,176,34,0.15)' },
+    trust: { text: '#E5E7EB', dot1: '#22C55E', dot2: '#3B82F6', dot3: '#84CC16' }
   },
   'mint-slate': {
     heading: '#FFFFFF',
@@ -70,7 +78,9 @@ const themeColors: Record<Theme, ColorElements> = {
     accent: '#60A5FA',
     gradient: { from: '#0B1412', to: '#0F1A18' },
     ring: '#34D399',
-    shadow: 'rgba(0,0,0,0.40)'
+    shadow: 'rgba(0,0,0,0.40)',
+    badge: { text: '#FFFFFF', background: 'rgba(34,197,94,0.15)' },
+    trust: { text: '#D3DEDA', dot1: '#22C55E', dot2: '#3B82F6', dot3: '#60A5FA' }
   },
   'marine-teal': {
     heading: '#FFFFFF',
@@ -82,7 +92,9 @@ const themeColors: Record<Theme, ColorElements> = {
     accent: '#A7F3D0',
     gradient: { from: '#0B1720', to: '#0F2430' },
     ring: '#22D3EE',
-    shadow: 'rgba(0,0,0,0.38)'
+    shadow: 'rgba(0,0,0,0.38)',
+    badge: { text: '#FFFFFF', background: 'rgba(14,165,164,0.15)' },
+    trust: { text: '#BDD0DB', dot1: '#22C55E', dot2: '#3B82F6', dot3: '#A7F3D0' }
   },
   'royal-plum': {
     heading: '#FFFFFF',
@@ -94,7 +106,9 @@ const themeColors: Record<Theme, ColorElements> = {
     accent: '#F59E0B',
     gradient: { from: '#0F0A16', to: '#1A1230' },
     ring: '#C084FC',
-    shadow: 'rgba(0,0,0,0.42)'
+    shadow: 'rgba(0,0,0,0.42)',
+    badge: { text: '#FFFFFF', background: 'rgba(168,85,247,0.15)' },
+    trust: { text: '#D8CCE6', dot1: '#22C55E', dot2: '#3B82F6', dot3: '#F59E0B' }
   },
   'electric-cobalt': {
     heading: '#F8FAFC',
@@ -106,7 +120,9 @@ const themeColors: Record<Theme, ColorElements> = {
     accent: '#22D3EE',
     gradient: { from: '#0A1220', to: '#0F172A' },
     ring: '#38BDF8',
-    shadow: 'rgba(0,0,0,0.40)'
+    shadow: 'rgba(0,0,0,0.40)',
+    badge: { text: '#F8FAFC', background: 'rgba(37,99,235,0.15)' },
+    trust: { text: '#B8C7D9', dot1: '#22C55E', dot2: '#3B82F6', dot3: '#22D3EE' }
   },
   'copper-forest': {
     heading: '#FFFFFF',
@@ -118,7 +134,9 @@ const themeColors: Record<Theme, ColorElements> = {
     accent: '#34D399',
     gradient: { from: '#0D1512', to: '#12201B' },
     ring: '#F59E0B',
-    shadow: 'rgba(0,0,0,0.44)'
+    shadow: 'rgba(0,0,0,0.44)',
+    badge: { text: '#FFFFFF', background: 'rgba(217,119,6,0.15)' },
+    trust: { text: '#C9D6CF', dot1: '#22C55E', dot2: '#3B82F6', dot3: '#34D399' }
   },
   'ruby-night': {
     heading: '#FFFFFF',
@@ -130,7 +148,9 @@ const themeColors: Record<Theme, ColorElements> = {
     accent: '#FB923C',
     gradient: { from: '#140A0D', to: '#1F0E13' },
     ring: '#F87171',
-    shadow: 'rgba(0,0,0,0.46)'
+    shadow: 'rgba(0,0,0,0.46)',
+    badge: { text: '#FFFFFF', background: 'rgba(220,38,38,0.15)' },
+    trust: { text: '#E2C9CF', dot1: '#22C55E', dot2: '#3B82F6', dot3: '#FB923C' }
   },
   'citrus-navy': {
     heading: '#FFFFFF',
@@ -142,7 +162,9 @@ const themeColors: Record<Theme, ColorElements> = {
     accent: '#10B981',
     gradient: { from: '#0A1224', to: '#0C1A33' },
     ring: '#FBBF24',
-    shadow: 'rgba(0,0,0,0.43)'
+    shadow: 'rgba(0,0,0,0.43)',
+    badge: { text: '#FFFFFF', background: 'rgba(245,158,11,0.15)' },
+    trust: { text: '#C9D3E6', dot1: '#22C55E', dot2: '#3B82F6', dot3: '#10B981' }
   }
 };
 
