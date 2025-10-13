@@ -73,7 +73,7 @@ const sanitize = (raw: any): string =>
 
   return (
     <section id="about" className="py-16 bg-white">
-      <div className="container mx-auto px-16">
+      <div className="container mx-auto px-4 sm:px-8 lg:px-16">
         
         {/* Section Title */}
         <div className="text-center mb-12">
@@ -88,7 +88,7 @@ const sanitize = (raw: any): string =>
               About Us
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
             Professional <span style={{ color: colors.primaryButton.bg }}>{projectCategory}</span> You Can Trust
           </h2>
         </div>
@@ -141,10 +141,10 @@ const sanitize = (raw: any): string =>
             
             {/* Description */}
             <div className="space-y-6">
-              <p className="text-xl text-gray-700 leading-relaxed">
+              <p className="text-xs sm:text-sm md:text-base text-gray-700 leading-relaxed">
                 {firstPart}
               </p>
-              <p className="text-xl text-gray-700 leading-relaxed">
+              <p className="text-xs sm:text-sm md:text-base text-gray-700 leading-relaxed">
                 {secondPart}
               </p>
             </div>

@@ -47,7 +47,7 @@ const ProcessSection = () => {
 
   return (
     <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-16">
+      <div className="container mx-auto px-4 sm:px-8 lg:px-16">
         
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -62,10 +62,10 @@ const ProcessSection = () => {
               Our Process
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
             Our Simple <span style={{ color: colors.primaryButton.bg }}>Process</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
+          <p className="text-xs sm:text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
             Our streamlined {coloredSteps.length}-step process ensures you get professional {projectCategory} service from start to finish.
           </p>
         </div>

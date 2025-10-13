@@ -62,7 +62,7 @@ const ServicesSection = ({ formattedLocationName = "" }) => {
 
   return (
     <section id="services" className="py-16 bg-white">
-      <div className="container mx-auto px-16">
+      <div className="container mx-auto px-4 sm:px-8 lg:px-16">
         
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -77,10 +77,10 @@ const ServicesSection = ({ formattedLocationName = "" }) => {
               Our Services
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
             Professional <span style={{ color: colors.primaryButton.bg }}>{projectCategory}</span> Services {formattedLocationName}
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
+          <p className="text-xs sm:text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
             Comprehensive {projectCategory} solutions delivered by experienced professionals. We ensure quality results for every project.
           </p>
         </div>

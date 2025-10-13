@@ -42,7 +42,7 @@ const TestimonialsSection = () => {
         )}
       </Helmet>
       <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-16">
+        <div className="container mx-auto px-4 sm:px-8 lg:px-16">
           
           {/* Section Header */}
           <div className="text-center mb-12">
@@ -57,10 +57,10 @@ const TestimonialsSection = () => {
                 Customer Reviews
               </span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
               What Our <span style={{ color: colors.primaryButton.bg }}>Customers</span> Say
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mt-6">
+            <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto leading-relaxed mt-6">
               Don't just take our word for it. Here's what our satisfied customers have to say about our services.
             </p>
           </div>
@@ -152,7 +152,7 @@ const TestimonialsSection = () => {
           {/* Trust Indicators */}
           <div className="mt-16 text-center">
             <div 
-              className="inline-flex items-center gap-8 px-8 py-6 rounded-2xl"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 rounded-2xl"
               style={{
                 backgroundColor: `${colors.primaryButton.bg}08`,
                 border: `1px solid ${colors.primaryButton.bg}20`
@@ -161,17 +161,17 @@ const TestimonialsSection = () => {
               <div className="flex items-center gap-2">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                    <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <span className="text-gray-900 font-bold text-lg">5.0</span>
+                <span className="text-gray-900 font-bold text-sm sm:text-base lg:text-lg">5.0</span>
               </div>
-              <div className="w-px h-8 bg-gray-300"></div>
-              <div className="text-gray-600">
+              <div className="hidden sm:block w-px h-6 lg:h-8 bg-gray-300"></div>
+              <div className="text-gray-600 text-sm sm:text-base">
                 <span className="font-bold text-gray-900">{testimonials.length}+</span> Happy Customers
               </div>
-              <div className="w-px h-8 bg-gray-300"></div>
-              <div className="text-gray-600">
+              <div className="hidden sm:block w-px h-6 lg:h-8 bg-gray-300"></div>
+              <div className="text-gray-600 text-sm sm:text-base">
                 <span className="font-bold text-gray-900">100%</span> Satisfaction Rate
               </div>
             </div>

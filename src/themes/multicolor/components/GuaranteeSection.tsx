@@ -35,7 +35,7 @@ const GuaranteeSection = () => {
   if (isLoading) {
     return (
       <section className="py-16 bg-white">
-        <div className="container mx-auto px-16">
+        <div className="container mx-auto px-4 sm:px-8 lg:px-16">
           <div className="text-center mb-12">
             <div className="animate-pulse bg-gray-200 h-12 w-64 mx-auto mb-6 rounded"></div>
             <div className="animate-pulse bg-gray-200 h-4 w-96 mx-auto rounded"></div>
@@ -52,7 +52,7 @@ const GuaranteeSection = () => {
 
   return (
     <section className="py-16 bg-white">
-      <div className="container mx-auto px-16">
+      <div className="container mx-auto px-4 sm:px-8 lg:px-16">
         
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -67,10 +67,10 @@ const GuaranteeSection = () => {
               Our Guarantee
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
             Our <span style={{ color: colors.primaryButton.bg }}>{projectCategory}</span> Guarantee
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
+          <p className="text-xs sm:text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
             {guaranteeText}
           </p>
         </div>
@@ -193,7 +193,7 @@ const GuaranteeSection = () => {
                 <Heart className="w-10 h-10 text-white" />
               </div>
               <h3 
-                className="text-4xl font-bold mb-6"
+                className="text-xl sm:text-2xl font-bold mb-6"
                 style={{
                   backgroundImage: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
                   WebkitBackgroundClip: 'text',
@@ -206,7 +206,7 @@ const GuaranteeSection = () => {
               </h3>
             </div>
             <div className="max-w-4xl mx-auto">
-              <p className="text-2xl text-gray-900 font-semibold leading-relaxed mb-8">
+              <p className="text-base sm:text-lg text-gray-900 font-semibold leading-relaxed mb-8">
                 {promiseLine || `"We promise to fix your plumbing problems quickly and efficiently, so you can get back to enjoying your home without any stress or hassle!"`}
               </p>
               <div className="flex flex-wrap justify-center gap-6 text-gray-600">

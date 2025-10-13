@@ -35,7 +35,7 @@ const WhyChooseUsSection = () => {
 
   return (
     <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-16">
+      <div className="container mx-auto px-4 sm:px-8 lg:px-16">
         
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -50,10 +50,10 @@ const WhyChooseUsSection = () => {
               Why Choose Us
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
             Why Choose <span style={{ color: colors.primaryButton.bg }}>{projectName}</span>?
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
+          <p className="text-xs sm:text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
             When you choose us, you're choosing quality, reliability, and exceptional service that's backed by years of experience and thousands of satisfied customers.
           </p>
         </div>

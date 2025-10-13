@@ -80,7 +80,7 @@ const AreasSection = () => {
 
   return (
     <section id="areas" className="py-16 bg-white">
-      <div className="container mx-auto px-16">
+      <div className="container mx-auto px-4 sm:px-8 lg:px-16">
         
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -95,10 +95,10 @@ const AreasSection = () => {
               Service Areas
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
             Areas We <span style={{ color: colors.primaryButton.bg }}>Serve</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mt-6">
+          <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto leading-relaxed mt-6">
             Professional {projectCategory} throughout our availability.
           </p>
         </div>
@@ -200,22 +200,22 @@ const AreasSection = () => {
         {/* Bottom CTA */}
         <div className="text-center mt-16">
           <div 
-            className="inline-flex items-center gap-6 px-8 py-6 rounded-2xl"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 rounded-2xl"
             style={{
               backgroundColor: `${colors.primaryButton.bg}08`,
               border: `1px solid ${colors.primaryButton.bg}20`
             }}
           >
             <div className="flex items-center gap-2">
-              <MapPin className="w-5 h-5" style={{ color: colors.primaryButton.bg }} />
-              <span className="text-gray-900 font-semibold">Serving {locations.length}+ Areas</span>
+              <MapPin className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: colors.primaryButton.bg }} />
+              <span className="text-gray-900 font-semibold text-sm sm:text-base">Serving {locations.length}+ Areas</span>
             </div>
-            <div className="w-px h-6 bg-gray-300"></div>
-            <div className="text-gray-600">
+            <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
+            <div className="text-gray-600 text-sm sm:text-base">
               <span className="font-bold text-gray-900">24/7</span> Emergency Service
             </div>
-            <div className="w-px h-6 bg-gray-300"></div>
-            <div className="text-gray-600">
+            <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
+            <div className="text-gray-600 text-sm sm:text-base">
               <span className="font-bold text-gray-900">100%</span> Coverage
             </div>
           </div>

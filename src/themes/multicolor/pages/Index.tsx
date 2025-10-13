@@ -178,7 +178,7 @@ const Index = () => {
         {/* Modern Hero Section */}
         <section
           id="home"
-          className="relative min-h-screen flex items-center justify-center overflow-hidden py-16"
+          className="relative min-h-screen flex items-center justify-center overflow-hidden py-8 sm:py-12 lg:py-16 pb-16 sm:pb-20 lg:pb-24"
           style={{
             backgroundImage: `url(${backgroundImage})`,
             backgroundSize: 'cover',
@@ -210,7 +210,7 @@ const Index = () => {
             <div className="absolute bottom-20 right-1/3 w-3 h-3 bg-accent/40 rounded-full animate-pulse" style={{ animationDelay: '3s' }}></div>
           </div>
 
-          <div className="container mx-auto px-16 relative z-10">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16 relative z-10">
             <div className="max-w-5xl mx-auto">
               <div className="text-center lg:text-left space-y-6 relative z-20">
                 
@@ -235,7 +235,7 @@ const Index = () => {
                 </div>
 
                 {/* Main Heading */}
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black leading-[1.1] tracking-tight">
                   <span style={{ color: colors.heading }}>
                     {heroHeadingPart1}
                   </span>{' '}
@@ -255,7 +255,7 @@ const Index = () => {
 
                 {/* Subheading */}
                 <p 
-                  className="text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto lg:mx-0 leading-relaxed"
+                  className="text-xs sm:text-sm md:text-base lg:text-lg max-w-3xl mx-auto lg:mx-0 leading-relaxed"
                   style={{ color: colors.description }}
                 >
                   {welcomeLine}
@@ -343,7 +343,7 @@ const Index = () => {
 
         {/* Features Section - After About */}
         <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-16">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
             {/* Cards Grid */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
               {features.map((f, index) => {
@@ -417,7 +417,7 @@ const Index = () => {
         {/* <BookingSection />*/}
 
         <section 
-          className="py-12 relative overflow-hidden"
+          className="py-16 relative overflow-hidden"
           style={{
             background: `linear-gradient(135deg, ${colors.gradient.from}, ${colors.gradient.to})`
           }}
@@ -429,14 +429,14 @@ const Index = () => {
             <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ animationDelay: '2s', backgroundColor: colors.accent }}></div>
           </div>
 
-          <div className="container mx-auto px-16 text-center relative z-10">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16 text-center relative z-10">
             
             {/* Section Header */}
             <div className="mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 max-w-2xl mx-auto leading-tight">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 max-w-2xl mx-auto leading-tight">
                 {getCTAContent(1).title}
               </h2>
-              <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-xs sm:text-sm text-white/90 max-w-2xl mx-auto leading-relaxed">
                 {getCTAContent(1).description}
               </p>
             </div>
@@ -525,7 +525,7 @@ const Index = () => {
         {/* <BookingSection /> */}
 
         <section 
-          className="py-12 relative overflow-hidden"
+          className="py-16 relative overflow-hidden"
           style={{
             background: `linear-gradient(135deg, ${colors.gradient.from}, ${colors.gradient.to})`
           }}
@@ -537,14 +537,14 @@ const Index = () => {
             <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ animationDelay: '2s', backgroundColor: colors.accent }}></div>
           </div>
 
-          <div className="container mx-auto px-16 text-center relative z-10">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16 text-center relative z-10">
             
             {/* Section Header */}
             <div className="mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 max-w-2xl mx-auto leading-tight">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 max-w-2xl mx-auto leading-tight">
                 {getCTAContent(2).title}
               </h2>
-              <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-xs sm:text-sm text-white/90 max-w-2xl mx-auto leading-relaxed">
                 {getCTAContent(2).description}
               </p>
             </div>
@@ -632,7 +632,7 @@ const Index = () => {
         {/* <BookingSection /> */}
 
         <section 
-          className="py-12 relative overflow-hidden"
+          className="py-16 relative overflow-hidden"
           style={{
             background: `linear-gradient(135deg, ${colors.gradient.from}, ${colors.gradient.to})`
           }}
@@ -644,14 +644,14 @@ const Index = () => {
             <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ animationDelay: '2s', backgroundColor: colors.accent }}></div>
           </div>
 
-          <div className="container mx-auto px-16 text-center relative z-10">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16 text-center relative z-10">
             
             {/* Section Header */}
             <div className="mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 max-w-2xl mx-auto leading-tight">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 max-w-2xl mx-auto leading-tight">
                 {getCTAContent(3).title}
               </h2>
-              <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-xs sm:text-sm text-white/90 max-w-2xl mx-auto leading-relaxed">
                 {getCTAContent(3).description}
               </p>
             </div>
