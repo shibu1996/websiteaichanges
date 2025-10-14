@@ -1,22 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import { Calendar, Clock, ArrowRight, BookOpen, Search, Filter } from 'lucide-react';
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import PageBreadcrumb from "../components/PageBreadcrumb";
 import SEOHead from "../components/SEOHead";
 import { httpFile } from "../../../config.js";
+import { useTheme } from '../contexts/ThemeContext';
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
+import { Home } from 'lucide-react';
 
 type BlogItem = { slug: string; url?: string };
 
 const Blogs = () => {
-  const breadcrumbItems = [{ label: "Blogs" }];
+  const { getThemeColors } = useTheme();
+  
+  // Fallback colors in case theme context is not loaded
+  const fallbackColors = {
+    primaryButton: { bg: '#e11d48', text: '#ffffff', hover: '#be123c' },
+    secondaryButton: { bg: 'transparent', text: '#ffffff', border: '#e11d48', hover: 'rgba(225,29,72,0.1)' },
+    accent: '#f59e0b',
+    surface: '#f8fafc',
+    gradient: { from: '#e11d48', to: '#f59e0b' },
+    heading: '#1f2937',
+    description: '#6b7280'
+  };
+  
+  const safeColors = getThemeColors() || fallbackColors;
+  
   const projectId = import.meta.env.VITE_PROJECT_ID as string | undefined;
 
   const [blogs, setBlogs] = useState<BlogItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -57,9 +75,14 @@ const Blogs = () => {
     }
   }, [projectId]);
 
+  // Filter blogs based on search term
+  const filteredBlogs = blogs.filter(blog =>
+    blog.slug.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <HelmetProvider>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen font-poppins" style={{ backgroundColor: safeColors.surface }}>
         <Helmet>
           <title>Blogs | Project Articles</title>
           <meta name="description" content="Browse the latest blog posts." />
@@ -72,42 +95,208 @@ const Blogs = () => {
           canonical={`${window.location.origin}/blogs`}
         />
         <Header />
-        <PageBreadcrumb items={breadcrumbItems} />
 
-        <section id="blogs" className="py-20 bg-gradient-to-b from-secondary to-background transition-colors duration-300">
-          <div className="container mx-auto px-16">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-                Blogs & Articles
+        {/* Hero Section */}
+        <section 
+          className="relative py-16 sm:py-20 lg:py-24 overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${safeColors.gradient.from}, ${safeColors.gradient.to})`
+          }}
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-10 left-10 w-20 h-20 rounded-full animate-pulse" style={{ backgroundColor: safeColors.accent }}></div>
+            <div className="absolute bottom-10 right-10 w-16 h-16 rounded-full animate-pulse" style={{ animationDelay: '1s', backgroundColor: safeColors.primaryButton.bg }}></div>
+            <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ animationDelay: '2s', backgroundColor: safeColors.accent }}></div>
+          </div>
+
+          {/* Breadcrumb - Top Left */}
+          <div className="absolute top-6 left-4 sm:left-8 lg:left-16 z-30">
+            <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink asChild>
+                      <Link to="/" className="flex items-center text-xs text-gray-600 hover:text-gray-900 transition-colors">
+                        <Home className="w-3 h-3 mr-1" />
+                        Home
+                      </Link>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage className="font-medium text-xs" style={{ color: safeColors.primaryButton.bg }}>Blogs</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+          </div>
+
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16 text-center relative z-10">
+            <div className="max-w-4xl mx-auto">
+              <div className="mb-8">
+                <div 
+                  className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl"
+                  style={{
+                    background: `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                  }}
+                >
+                  <BookOpen className="w-10 h-10 text-white" />
+                </div>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+                  Our Blog & Articles
+                </h1>
+                <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto">
+                  Discover insights, tips, and expert advice from our team of professionals
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Search and Filter Section */}
+        <section className="py-8 bg-white">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            <div className="max-w-2xl mx-auto">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search blogs..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300"
+                  style={{
+                    '--tw-ring-color': safeColors.primaryButton.bg
+                  } as React.CSSProperties}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Blogs Section */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold mb-4" style={{ backgroundColor: `${safeColors.primaryButton.bg}15`, color: safeColors.primaryButton.bg }}>
+                Latest Articles
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Explore Our Content
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Explore the latest blog posts from our platform.
+              <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
+                Stay updated with the latest insights and expert advice from our team
               </p>
             </div>
 
-            {loading && <p className="text-muted-foreground">Loading blogs…</p>}
+            {/* Loading State */}
+            {loading && (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: safeColors.primaryButton.bg }}></div>
+                <p style={{ color: safeColors.description }}>Loading blogs...</p>
+              </div>
+            )}
 
+            {/* Error State */}
             {error && !loading && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: `${safeColors.primaryButton.bg}15` }}>
+                  <BookOpen className="w-8 h-8" style={{ color: safeColors.primaryButton.bg }} />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Blogs</h3>
               <p className="text-red-600 font-medium">{error}</p>
+              </div>
             )}
 
+            {/* No Blogs State */}
             {!loading && !error && blogs.length === 0 && (
-              <p className="text-muted-foreground">No blogs found.</p>
+              <div className="text-center py-12">
+                <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: `${safeColors.primaryButton.bg}15` }}>
+                  <BookOpen className="w-8 h-8" style={{ color: safeColors.primaryButton.bg }} />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Blogs Found</h3>
+                <p className="text-gray-600">We're working on adding new content. Please check back later.</p>
+              </div>
             )}
 
-            {!loading && !error && blogs.length > 0 && (
-              <ol className="list-decimal list-inside space-y-2">
-                {blogs.map((blog, index) => (
-                  <li key={blog.slug}>
+            {/* No Search Results */}
+            {!loading && !error && blogs.length > 0 && filteredBlogs.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: `${safeColors.primaryButton.bg}15` }}>
+                  <Search className="w-8 h-8" style={{ color: safeColors.primaryButton.bg }} />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Results Found</h3>
+                <p className="text-gray-600">Try adjusting your search terms.</p>
+              </div>
+            )}
+
+            {/* Blogs Grid */}
+            {!loading && !error && filteredBlogs.length > 0 && (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredBlogs.map((blog, index) => (
                     <Link
+                    key={blog.slug}
                       to={blog.url || `/blog/${blog.slug}`}
-                      className="text-primary underline"
-                    >
-                      {blog.slug.replace(/-/g, " ")}
+                    className="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                    style={{
+                      border: `1px solid ${safeColors.primaryButton.bg}15`
+                    }}
+                  >
+                    {/* Blog Card Content */}
+                    <div className="p-6 space-y-4">
+                      {/* Blog Icon */}
+                      <div className="flex justify-center">
+                        <div 
+                          className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-500 group-hover:scale-110"
+                          style={{
+                            background: `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                          }}
+                        >
+                          <BookOpen className="w-6 h-6 text-white" />
+                        </div>
+                      </div>
+
+                      {/* Blog Title */}
+                      <div className="text-center space-y-3">
+                        <h3 className="text-lg font-bold leading-tight text-gray-900 group-hover:transition-colors duration-300">
+                          {blog.slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase())}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Read our latest insights and expert advice
+                        </p>
+                      </div>
+
+                      {/* Read More Button */}
+                      <div className="flex items-center justify-center pt-2">
+                        <div className="flex items-center gap-2 text-sm font-semibold transition-all duration-300 group-hover:gap-3" style={{ color: safeColors.primaryButton.bg }}>
+                          Read More
+                          <ArrowRight className="w-4 h-4" />
+                        </div>
+                      </div>
+
+                      {/* Bottom Accent Line */}
+                      <div 
+                        className="h-1 rounded-full transition-all duration-500 group-hover:w-full"
+                        style={{
+                          width: '3rem',
+                          background: `linear-gradient(90deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                        }}
+                      ></div>
+                    </div>
                     </Link>
-                  </li>
                 ))}
-              </ol>
+              </div>
+            )}
+
+            {/* Results Count */}
+            {!loading && !error && blogs.length > 0 && (
+              <div className="text-center mt-8">
+                <p className="text-sm text-gray-600">
+                  Showing {filteredBlogs.length} of {blogs.length} articles
+                </p>
+              </div>
             )}
           </div>
         </section>

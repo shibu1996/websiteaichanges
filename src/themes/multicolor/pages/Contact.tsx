@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import PageBreadcrumb from '../components/PageBreadcrumb';
 import ContactHero from '../components/contact/ContactHero';
 import ContactForm from '../components/contact/ContactForm';
 import ContactInfo from '../components/contact/ContactInfo';
@@ -19,6 +18,8 @@ import { generateFAQSchema, generateReviewSchema, generateServicesSchema } from 
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { useTheme } from '../contexts/ThemeContext';
 import ColorThemeSelector from '../components/ColorThemeSelector';
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
+import { Home } from 'lucide-react';
 
 const Contact = () => {
   const breadcrumbItems = [
@@ -172,10 +173,25 @@ const Contact = () => {
             <div className="absolute bottom-20 right-1/3 w-3 h-3 bg-accent/40 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg, animationDelay: '3s' }}></div>
           </div>
 
-          {/* Breadcrumb */}
-          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 lg:top-4 lg:left-6 z-30">
-            <div className="px-1 py-0.5">
-              <PageBreadcrumb items={breadcrumbItems} />
+          {/* Breadcrumb - Top Left */}
+          <div className="absolute top-6 left-4 sm:left-8 lg:left-16 z-30">
+            <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink asChild>
+                      <Link to="/" className="flex items-center text-xs text-gray-600 hover:text-gray-900 transition-colors">
+                        <Home className="w-3 h-3 mr-1" />
+                        Home
+                      </Link>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage className="font-medium text-xs" style={{ color: colors.primaryButton.bg }}>Contact Us</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
             </div>
           </div>
 
