@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { ChevronDown, ChevronUp, MessageSquare, Calendar, ArrowRight } from 'lucide-react';
+import { ChevronDown, ChevronUp, MessageSquare, Calendar, ArrowRight, Quote, HelpCircle, Heart } from 'lucide-react';
 import { generateFAQSchema, generateReviewSchema, generateServicesSchema } from "../../../hooks/schemaMarkup"
 
 import Header from '../components/Header';
@@ -46,7 +46,19 @@ interface Testimonial {
 
 const DrainCleaning = () => {
   const { getThemeColors } = useTheme();
-  const colors = getThemeColors();
+  
+  // Fallback colors in case theme context is not loaded
+  const fallbackColors = {
+    primaryButton: { bg: '#e11d48', text: '#ffffff', hover: '#be123c' },
+    secondaryButton: { bg: 'transparent', text: '#ffffff', border: '#e11d48', hover: 'rgba(225,29,72,0.1)' },
+    accent: '#f59e0b',
+    surface: '#f8fafc',
+    gradient: { from: '#e11d48', to: '#f59e0b' },
+    heading: '#1f2937',
+    description: '#6b7280'
+  };
+  
+  const safeColors = getThemeColors() || fallbackColors;
   
   const breadcrumbItems = [
     { label: "Services", href: "/services" },
@@ -420,9 +432,19 @@ const DrainCleaning = () => {
   }));
 
 
+  // Simple loading state
+  if (!displayServiceName && !aboutService) {
+    return (
+      <div className="min-h-screen font-poppins flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: safeColors.primaryButton.bg }}></div>
+          <p style={{ color: safeColors.description }}>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-
-
     <HelmetProvider>
       <Helmet>
         <title>{`${seoData?.meta_title} ${locationName}`}</title>
@@ -461,68 +483,12 @@ const DrainCleaning = () => {
           serviceUrl={`${window.location.origin}/services/drain-cleaning`}
         />
         <Header />
-        <div className="bg-gray-50 py-4">
-          <div className="max-w-7xl mx-auto px-16 sm:px-6 lg:px-8">
-
-
-            <Breadcrumb>
-              <BreadcrumbList>
-                {/* Home */}
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/" className="flex items-center">
-                      <Home className="w-4 h-4 mr-1" />
-                      Home
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-
-                {/* Dynamic segments */}
-                {(() => {
-                  const segments = location.pathname.split('/').filter(Boolean); // remove empty strings
-
-                  // Build cumulative URLs for each segment
-                  let cumulativePath = '';
-                  return segments.map((segment, index) => {
-                    cumulativePath += `/${segment}`;
-                    const isLast = index === segments.length - 1;
-
-                    // Display: humanize string, unless it's 'services' (capitalize)
-                    const displayName = segment === 'services'
-                      ? 'Services'
-                      : humanizeString(segment);
-
-                    return (
-                      <React.Fragment key={index}>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                          {isLast ? (
-                            <BreadcrumbPage className="font-medium text-green-600">
-                              {displayName}
-                            </BreadcrumbPage>
-                          ) : (
-                            <BreadcrumbLink asChild>
-                              <Link to={cumulativePath}>{displayName}</Link>
-                            </BreadcrumbLink>
-                          )}
-                        </BreadcrumbItem>
-                      </React.Fragment>
-                    );
-                  });
-                })()}
-              </BreadcrumbList>
-            </Breadcrumb>
-
-
-
-          </div>
-        </div>
         {/* Hero Section */}
         <section
           id="home"
           className="relative min-h-screen flex items-center overflow-hidden pb-16 sm:pb-20 lg:pb-24"
           style={{
-            backgroundColor: colors.surface
+            backgroundColor: safeColors.surface
           }}
         >
           {/* Left Side - Content */}
@@ -531,30 +497,30 @@ const DrainCleaning = () => {
               {/* Breadcrumb - Top Left */}
               <div className="absolute top-6 left-4 sm:left-8 lg:left-16 z-30">
                 <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
-                  <Breadcrumb>
-                    <BreadcrumbList>
-                      <BreadcrumbItem>
-                        <BreadcrumbLink asChild>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
                           <Link to="/" className="flex items-center text-xs text-gray-600 hover:text-gray-900 transition-colors">
                             <Home className="w-3 h-3 mr-1" />
-                            Home
-                          </Link>
-                        </BreadcrumbLink>
-                      </BreadcrumbItem>
-                      <BreadcrumbSeparator />
-                      <BreadcrumbItem>
-                        <BreadcrumbLink asChild>
+                      Home
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink asChild>
                           <Link to="/services" className="text-xs text-gray-600 hover:text-gray-900 transition-colors">Services</Link>
-                        </BreadcrumbLink>
-                      </BreadcrumbItem>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
                       <BreadcrumbSeparator />
                       <BreadcrumbItem>
-                        <BreadcrumbPage className="font-medium text-xs" style={{ color: colors.primaryButton.bg }}>{displayServiceName}</BreadcrumbPage>
+                        <BreadcrumbPage className="font-medium text-xs" style={{ color: safeColors.primaryButton.bg }}>{displayServiceName}</BreadcrumbPage>
                       </BreadcrumbItem>
-                    </BreadcrumbList>
-                  </Breadcrumb>
-                </div>
-              </div>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </div>
 
               <div className="pt-16 sm:pt-20 lg:pt-24">
                 <div className="text-center lg:text-left space-y-6 relative z-20">
@@ -563,25 +529,25 @@ const DrainCleaning = () => {
                   <div className="inline-block mb-4">
                     <span
                       className="inline-flex items-center gap-2 backdrop-blur-sm rounded-full px-6 py-2.5"
-                      style={{
-                        color: colors.heading,
-                        backgroundColor: `${colors.primaryButton.bg}15`
+          style={{
+                        color: safeColors.heading,
+                        backgroundColor: `${safeColors.primaryButton.bg}15`
                       }}
                     >
                       <Star className="w-4 h-4" />
-                      Professional {displayServiceName} Solutions
+                Professional {displayServiceName} Solutions
                     </span>
-                  </div>
+              </div>
 
                   {/* Main Heading */}
                   <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black leading-[1.1] tracking-tight">
-                    <span style={{ color: colors.heading }}>
-                      {locationName}
+                    <span style={{ color: safeColors.heading }}>
+                  {locationName}
                     </span>{' '}
                     <span
                       className="inline-block"
                       style={{
-                        backgroundImage: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
+                        backgroundImage: `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`,
                         WebkitBackgroundClip: 'text',
                         backgroundClip: 'text',
                         color: 'transparent',
@@ -589,16 +555,16 @@ const DrainCleaning = () => {
                       }}
                     >
                       {displayServiceName}
-                    </span>
-                  </h1>
+                  </span>
+                </h1>
 
                   {/* Subheading */}
                   <p
                     className="text-xs sm:text-sm md:text-base lg:text-lg max-w-3xl mx-auto lg:mx-0 leading-relaxed"
-                    style={{ color: colors.description }}
+                    style={{ color: safeColors.description }}
                   >
-                    {displayServiceDescription}
-                  </p>
+                {displayServiceDescription}
+              </p>
 
                   {/* CTA Buttons */}
                   <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-4">
@@ -608,11 +574,11 @@ const DrainCleaning = () => {
                       href={`tel:${phoneNumber}`}
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300"
                       style={{
-                        backgroundColor: colors.primaryButton.bg,
-                        color: colors.primaryButton.text
+                        backgroundColor: safeColors.primaryButton.bg,
+                        color: safeColors.primaryButton.text
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = safeColors.primaryButton.hover}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = safeColors.primaryButton.bg}
                     >
                       <Phone className="w-5 h-5" />
                       <div className="text-left">
@@ -626,37 +592,37 @@ const DrainCleaning = () => {
                       onClick={() => navigate('/contact')}
                       className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300"
                       style={{
-                        backgroundColor: colors.secondaryButton.bg,
-                        color: colors.secondaryButton.text,
-                        border: `2px solid ${colors.secondaryButton.border}`
+                        backgroundColor: safeColors.secondaryButton.bg,
+                        color: safeColors.secondaryButton.text,
+                        border: `2px solid ${safeColors.secondaryButton.border}`
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.secondaryButton.hover}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.secondaryButton.bg}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = safeColors.secondaryButton.hover}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = safeColors.secondaryButton.bg}
                     >
                       <Wrench className="w-5 h-5" />
                       <span>Get Free Estimate</span>
                     </button>
-                  </div>
+                        </div>
 
                   {/* Trust Indicators */}
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-6 pt-6">
-                    <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                    <div className="flex items-center gap-2" style={{ color: safeColors.description }}>
                       <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#22C55E' }}></div>
                       <span className="text-xs font-semibold">24/7 Available</span>
-                    </div>
-                    <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                        </div>
+                    <div className="flex items-center gap-2" style={{ color: safeColors.description }}>
                       <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#3B82F6' }}></div>
                       <span className="text-xs font-semibold">Licensed & Insured</span>
-                    </div>
-                    <div className="flex items-center gap-2" style={{ color: colors.description }}>
-                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: colors.accent }}></div>
+                      </div>
+                    <div className="flex items-center gap-2" style={{ color: safeColors.description }}>
+                      <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: safeColors.accent }}></div>
                       <span className="text-xs font-semibold">Same Day Service</span>
-                    </div>
+                      </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+                </div>
 
           {/* Right Side - Image */}
           <div className="hidden lg:flex w-1/2 relative min-h-screen items-center justify-center p-8">
@@ -676,38 +642,38 @@ const DrainCleaning = () => {
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: `linear-gradient(135deg, ${colors.gradient.from}20, ${colors.gradient.to}20)`
+                    background: `linear-gradient(135deg, ${safeColors.gradient.from}20, ${safeColors.gradient.to}20)`
                   }}
                 ></div>
               </div>
               
               {/* Decorative Elements */}
-              <div className="absolute -top-4 -right-4 w-20 h-20 rounded-2xl opacity-20" style={{ backgroundColor: colors.primaryButton.bg }}></div>
-              <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-xl opacity-15" style={{ backgroundColor: colors.accent }}></div>
+              <div className="absolute -top-4 -right-4 w-20 h-20 rounded-2xl opacity-20" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
+              <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-xl opacity-15" style={{ backgroundColor: safeColors.accent }}></div>
               
               {/* Floating Badge */}
               <div className="absolute top-6 right-6 bg-white rounded-xl px-4 py-3 shadow-lg">
                 <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg }}></div>
+                  <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
                   <span className="text-gray-900 font-semibold text-sm">Professional Service</span>
-                </div>
-              </div>
-            </div>
+                      </div>
+                      </div>
+                    </div>
             
             {/* Animated Particles */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute top-20 right-10 w-2 h-2 bg-primary/40 rounded-full animate-ping" style={{ backgroundColor: colors.accent }}></div>
-              <div className="absolute top-40 right-20 w-3 h-3 bg-accent/30 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg, animationDelay: '1s' }}></div>
-              <div className="absolute bottom-32 right-1/4 w-2 h-2 bg-primary/50 rounded-full animate-ping" style={{ backgroundColor: colors.accent, animationDelay: '2s' }}></div>
-              <div className="absolute bottom-20 right-1/3 w-3 h-3 bg-accent/40 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg, animationDelay: '3s' }}></div>
-            </div>
-          </div>
+              <div className="absolute top-20 right-10 w-2 h-2 bg-primary/40 rounded-full animate-ping" style={{ backgroundColor: safeColors.accent }}></div>
+              <div className="absolute top-40 right-20 w-3 h-3 bg-accent/30 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '1s' }}></div>
+              <div className="absolute bottom-32 right-1/4 w-2 h-2 bg-primary/50 rounded-full animate-ping" style={{ backgroundColor: safeColors.accent, animationDelay: '2s' }}></div>
+              <div className="absolute bottom-20 right-1/3 w-3 h-3 bg-accent/40 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '3s' }}></div>
+                </div>
+              </div>
 
           {/* Mobile Background Image */}
           <div
             className="lg:hidden absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: displayServiceImage ? `url(${displayServiceImage})` : `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
+              backgroundImage: displayServiceImage ? `url(${displayServiceImage})` : `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`,
               zIndex: -1
             }}
           >
@@ -715,7 +681,7 @@ const DrainCleaning = () => {
             <div
               className="absolute inset-0"
               style={{
-                background: `linear-gradient(135deg, ${colors.gradient.from}CC, ${colors.gradient.to}CC)`
+                background: `linear-gradient(135deg, ${safeColors.gradient.from}CC, ${safeColors.gradient.to}CC)`
               }}
             ></div>
           </div>
@@ -723,109 +689,207 @@ const DrainCleaning = () => {
         {/* <DrainCleaningAbout /> */}
 
 
-        <section className="py-20 bg-background relative overflow-hidden">
+        {/* About Section */}
+        <section 
+          className="py-16 relative overflow-hidden bg-white"
+        >
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-10 left-10 w-32 h-32 bg-primary rounded-full animate-float"></div>
-            <div className="absolute bottom-20 right-20 w-24 h-24 bg-accent rounded-full animate-float-delayed"></div>
+            <div className="absolute top-10 left-10 w-20 h-20 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
+            <div className="absolute bottom-10 right-10 w-16 h-16 rounded-lg rotate-45 animate-pulse" style={{ backgroundColor: safeColors.accent, animationDelay: '1s' }}></div>
+            <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '2s' }}></div>
           </div>
 
-          <div className="container mx-auto px-16 relative z-10">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16 relative z-10">
             <div className="max-w-7xl mx-auto">
-              <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="grid lg:grid-cols-2 gap-12 items-center">
+                
                 {/* Content Column */}
-                <div className="space-y-8">
+                <div className="space-y-6">
                   <div className="text-center lg:text-left">
-                    <h2 className="mb-6 animate-heading-slide-up">
+                    <div className="inline-block mb-4">
+                      <span 
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                        style={{
+                          color: safeColors.primaryButton.bg,
+                          backgroundColor: `${safeColors.primaryButton.bg}15`
+                        }}
+                      >
+                        <Wrench className="w-4 h-4" />
+                        Professional Service
+                      </span>
+                    </div>
+                    <h2 
+                      className="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-gray-900"
+                    >
                       About Our Professional {displayServiceName} Services
                     </h2>
-                    <p className="text-xl text-muted-foreground mb-8 animate-subtitle-fade-in" style={{ animationDelay: '0.2s' }}>
+                    <p 
+                      className="text-xs sm:text-sm leading-relaxed text-gray-600"
+                    >
                       {aboutService}
                     </p>
                   </div>
-
-
-
-                  {/* Feature Grid */}
-
                 </div>
 
                 {/* Image Column */}
-                <div className="lg:order-first animate-image-slide-right" style={{ animationDelay: '0.3s' }}>
+                <div className="lg:order-first">
                   <div className="relative">
                     {/* Main Image */}
-                    <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+                    <div className="relative overflow-hidden rounded-2xl shadow-lg">
                       <img
                         src={ProjectBaseImage}
                         alt="Professional plumber performing drain cleaning service with modern equipment"
-                        className="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-700"
+                        className="w-full h-[400px] object-cover hover:scale-105 transition-transform duration-500"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent"></div>
+                      <div 
+                        className="absolute inset-0"
+                        style={{
+                          background: `linear-gradient(135deg, ${safeColors.primaryButton.bg}20, transparent)`
+                        }}
+                      ></div>
                     </div>
 
                     {/* Floating Stats Cards */}
-                    <div className="absolute -bottom-8 -left-8 bg-card border border-border rounded-xl p-4 shadow-lg animate-float">
+                    <div 
+                      className="absolute -bottom-4 -left-4 bg-white rounded-xl p-4 shadow-lg border-2"
+                      style={{
+                        borderColor: `${safeColors.primaryButton.bg}30`
+                      }}
+                    >
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-primary">15+</div>
-                        <div className="text-sm text-muted-foreground">Years Experience</div>
+                        <div 
+                          className="text-xl font-bold text-gray-900"
+                        >
+                          15+
+                        </div>
+                        <div 
+                          className="text-xs text-gray-600"
+                        >
+                          Years Experience
+                        </div>
                       </div>
                     </div>
 
-                    <div className="absolute -top-8 -right-8 bg-card border border-border rounded-xl p-4 shadow-lg animate-float-delayed">
+                    <div 
+                      className="absolute -top-4 -right-4 bg-white rounded-xl p-4 shadow-lg border-2"
+                      style={{
+                        borderColor: `${safeColors.accent}30`
+                      }}
+                    >
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-primary">24/7</div>
-                        <div className="text-sm text-muted-foreground">Emergency Service</div>
+                        <div 
+                          className="text-xl font-bold text-gray-900"
+                        >
+                          24/7
                       </div>
+                        <div 
+                          className="text-xs text-gray-600"
+                        >
+                          Emergency Service
                     </div>
-
-                    {/* Background decoration */}
-                    <div className="absolute -z-10 top-8 left-8 w-full h-full bg-primary/10 rounded-2xl"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-
-
+            </div>
+          </div>
         </section>
 
 
 
-        <section className="py-20 bg-muted/30 relative overflow-hidden">
-          <div className="container mx-auto px-16">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-
-              {/* Left: text (centered vertically) */}
-              <div className="prose prose-lg max-w-none animate-text-slide-left" style={{ animationDelay: '0.4s' }}>
-                <h4 className="mb-4">Comprehensive Service Coverage</h4>
-                <p className="mb-6">{comprehensiveCoverageText}</p>
+        {/* Service Coverage Section */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <div className="inline-block mb-4">
+                <span 
+                  className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                  style={{ 
+                    color: safeColors.primaryButton.bg,
+                    backgroundColor: `${safeColors.primaryButton.bg}15`
+                  }}
+                >
+                  Service Coverage
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                Comprehensive <span style={{ color: safeColors.primaryButton.bg }}>{displayServiceName}</span> Solutions
+              </h2>
+              <p 
+                className="text-sm sm:text-base max-w-3xl mx-auto leading-relaxed mt-4 text-gray-600"
+              >
+                {comprehensiveCoverageText}
+              </p>
               </div>
 
-              {/* Right: features grid */}
-              <div className="animate-image-slide-right" style={{ animationDelay: '0.3s' }}>
-                <div className="grid sm:grid-cols-2 gap-4 animate-card-fade-up" style={{ animationDelay: '0.6s' }}>
-                  {projectWhyChooseUs.map((feature, index) => (
+            {/* Cards Grid */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+              {projectWhyChooseUs.map((feature, index) => {
+                return (
                     <div
                       key={index}
-                      className="flex items-start space-x-3 p-4 rounded-lg bg-card border border-border hover:shadow-md transition-all duration-300 group"
-                    >
-                      <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                        <DynamicFAIcon iconClass={feature.iconClass || ''} className="text-black w-18 h-18" />
+                    className="group relative bg-white rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
+                    style={{
+                      border: `1px solid ${safeColors.primaryButton.bg}15`
+                    }}
+                  >
+                    {/* Hover Border Effect */}
+                    <div 
+                      className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{
+                        border: `2px solid ${safeColors.primaryButton.bg}40`,
+                        boxShadow: `0 0 20px ${safeColors.primaryButton.bg}20`
+                      }}
+                    ></div>
+
+                    {/* Content */}
+                    <div className="relative space-y-5">
+                      {/* Icon Container */}
+                      <div className="w-fit">
+                        <div 
+                          className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110"
+                          style={{
+                            backgroundColor: `${safeColors.primaryButton.bg}15`,
+                            border: `2px solid ${safeColors.primaryButton.bg}30`
+                          }}
+                        >
+                          {feature.iconClass ? (
+                            <div style={{ color: safeColors.primaryButton.bg }}>
+                              <DynamicFAIcon 
+                                iconClass={feature.iconClass} 
+                                className="text-2xl"
+                              />
                       </div>
-                      <div>
-                        <h5 className="font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
+                          ) : null}
+                        </div>
+                      </div>
+
+                      {/* Text Content */}
+                      <div className="space-y-3">
+                        <h3 className="text-xl font-bold leading-tight text-gray-900">
                           {feature.title}
-                        </h5>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
+                        </h3>
+                        <p className="text-base leading-relaxed text-gray-600">
                           {feature.description}
                         </p>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
+                      {/* Bottom Accent Line */}
+                      <div 
+                        className="h-1 rounded-full transition-all duration-500 group-hover:w-full"
+                        style={{
+                          width: '3rem',
+                          background: `linear-gradient(90deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                        }}
+                      ></div>
+                    </div>
+                </div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -841,121 +905,341 @@ const DrainCleaning = () => {
 
 
 
-        <section className="py-20 bg-muted/30 relative overflow-hidden">
-          <div className="container mx-auto px-16">
-            <div className="text-center mb-16">
-              <h2 className="mb-6 animate-heading-slide-up">
+        {/* Services Section */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <div className="inline-block mb-4">
+                <span 
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                  style={{
+                    color: safeColors.primaryButton.bg,
+                    backgroundColor: `${safeColors.primaryButton.bg}15`
+                  }}
+                >
+                  <Wrench className="w-4 h-4" />
+                  Complete Solutions
+                </span>
+              </div>
+              <h2 
+                className="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-gray-900"
+              >
                 Our Complete {projectCategory} Services
               </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto animate-subtitle-fade-in" style={{ animationDelay: '0.2s' }}>
-                Comprehensive {projectCategory} solutions for every need. for all kind of services related to {projectCategory} we've got you covered.
+              <p 
+                className="text-xs sm:text-sm max-w-3xl mx-auto leading-relaxed text-gray-600"
+              >
+                Comprehensive {projectCategory} solutions for every need. For all kinds of services related to {projectCategory} we've got you covered.
               </p>
             </div>
-            <div className="grid lg:grid-cols-2 xl:grid-cols-4 gap-8 mb-12">
+            {/* Services Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
+              
               {/* Residential Services */}
-              <Card className="bg-card border-border shadow-lg hover:shadow-xl transition-all duration-300 group animate-card-scale-in overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="text-center mb-6">
-                    <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                      {/* You can put a home icon here if you want */}
-                      <DynamicFAIcon iconClass="fas fa-home" className="w-18 h-18 text-green-600" />
+              <div 
+                className="group relative bg-white rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-3 shadow-lg hover:shadow-2xl"
+                style={{
+                  border: `2px solid ${safeColors.primaryButton.bg}20`
+                }}
+              >
+                {/* Header Section */}
+                <div 
+                  className="p-6 text-center relative overflow-hidden"
+                  style={{
+                    background: `linear-gradient(135deg, ${safeColors.primaryButton.bg}10, ${safeColors.accent}10)`
+                  }}
+                >
+                  {/* Background Pattern */}
+                  <div className="absolute inset-0 opacity-5">
+                    <div 
+                      className="absolute top-4 right-4 w-8 h-8 rounded-full animate-pulse" 
+                      style={{ backgroundColor: safeColors.primaryButton.bg }}
+                    ></div>
+                    <div 
+                      className="absolute bottom-4 left-4 w-6 h-6 rounded-lg rotate-45 animate-pulse" 
+                      style={{ backgroundColor: safeColors.accent, animationDelay: '1s' }}
+                    ></div>
                     </div>
-                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors">
+
+                  {/* Icon */}
+                  <div className="relative mb-4">
+                    <div 
+                      className="w-16 h-16 rounded-full mx-auto flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-12"
+                      style={{
+                        backgroundColor: safeColors.primaryButton.bg,
+                        boxShadow: `0 8px 25px ${safeColors.primaryButton.bg}30`
+                      }}
+                    >
+                      <DynamicFAIcon 
+                        iconClass="fas fa-home" 
+                        className="w-8 h-8 text-white"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">
                       Residential Services
                     </h3>
+                  <p className="text-sm text-gray-600">
+                    Home & Family Solutions
+                  </p>
                   </div>
-                  <div className="space-y-3">
+
+                {/* Services List */}
+                <div className="p-6 space-y-3">
                     {residentialServices.map((item, idx) => (
-                      <div key={idx} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-all duration-200 group/item">
-                        <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center group-hover/item:bg-primary/20 transition-colors">
-                          <DynamicFAIcon iconClass={item.iconClass} className="w-5 h-5 text-primary" />
+                    <div key={idx} className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-all duration-300 group/item">
+                      <div 
+                        className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
+                        style={{
+                          backgroundColor: `${safeColors.primaryButton.bg}15`,
+                          border: `2px solid ${safeColors.primaryButton.bg}30`
+                        }}
+                      >
+                        <DynamicFAIcon 
+                          iconClass={item.iconClass} 
+                          className="w-5 h-5"
+                        />
                         </div>
-                        <span className="text-sm font-medium text-foreground group-hover/item:text-primary transition-colors leading-tight">
+                      <span className="text-sm font-medium text-gray-700 group-hover/item:text-gray-900 transition-colors">
                           {item.title}
                         </span>
                       </div>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
+
+              </div>
 
               {/* Commercial Services */}
-              <Card className="bg-card border-border shadow-lg hover:shadow-xl transition-all duration-300 group animate-card-scale-in overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="text-center mb-6">
-                    <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                      <DynamicFAIcon iconClass="fas fa-building" className="w-18 h-18  text-blue-600" />
+              <div 
+                className="group relative bg-white rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-3 shadow-lg hover:shadow-2xl"
+                style={{
+                  border: `2px solid ${safeColors.accent}20`
+                }}
+              >
+                {/* Header Section */}
+                <div 
+                  className="p-6 text-center relative overflow-hidden"
+                  style={{
+                    background: `linear-gradient(135deg, ${safeColors.accent}10, ${safeColors.primaryButton.bg}10)`
+                  }}
+                >
+                  {/* Background Pattern */}
+                  <div className="absolute inset-0 opacity-5">
+                    <div 
+                      className="absolute top-4 right-4 w-8 h-8 rounded-full animate-pulse" 
+                      style={{ backgroundColor: safeColors.accent }}
+                    ></div>
+                    <div 
+                      className="absolute bottom-4 left-4 w-6 h-6 rounded-lg rotate-45 animate-pulse" 
+                      style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '1s' }}
+                    ></div>
                     </div>
-                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors">
+
+                  {/* Icon */}
+                  <div className="relative mb-4">
+                    <div 
+                      className="w-16 h-16 rounded-full mx-auto flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-12"
+                      style={{
+                        backgroundColor: safeColors.accent,
+                        boxShadow: `0 8px 25px ${safeColors.accent}30`
+                      }}
+                    >
+                      <DynamicFAIcon 
+                        iconClass="fas fa-building" 
+                        className="w-8 h-8 text-white"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">
                       Commercial Services
                     </h3>
+                  <p className="text-sm text-gray-600">
+                    Business & Industrial Solutions
+                  </p>
                   </div>
-                  <div className="space-y-3">
+
+                {/* Services List */}
+                <div className="p-6 space-y-3">
                     {commercialServices.map((item, idx) => (
-                      <div key={idx} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-all duration-200 group/item">
-                        <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center group-hover/item:bg-primary/20 transition-colors">
-                          <DynamicFAIcon iconClass={item.iconClass} className="w-5 h-5 text-primary" />
+                    <div key={idx} className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-all duration-300 group/item">
+                      <div 
+                        className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
+                        style={{
+                          backgroundColor: `${safeColors.accent}15`,
+                          border: `2px solid ${safeColors.accent}30`
+                        }}
+                      >
+                        <DynamicFAIcon 
+                          iconClass={item.iconClass} 
+                          className="w-5 h-5"
+                        />
                         </div>
-                        <span className="text-sm font-medium text-foreground group-hover/item:text-primary transition-colors leading-tight">
+                      <span className="text-sm font-medium text-gray-700 group-hover/item:text-gray-900 transition-colors">
                           {item.title}
                         </span>
                       </div>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
+
+              </div>
 
               {/* Professional Methods */}
-              <Card className="bg-card border-border shadow-lg hover:shadow-xl transition-all duration-300 group animate-card-scale-in overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="text-center mb-6">
-                    <div className="w-16 h-16 bg-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                      <DynamicFAIcon iconClass="fas fa-tools" className="w-18 h-18 text-yellow-600" />
+              <div 
+                className="group relative bg-white rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-3 shadow-lg hover:shadow-2xl"
+                style={{
+                  border: `2px solid ${safeColors.primaryButton.bg}20`
+                }}
+              >
+                {/* Header Section */}
+                <div 
+                  className="p-6 text-center relative overflow-hidden"
+                  style={{
+                    background: `linear-gradient(135deg, ${safeColors.primaryButton.bg}10, ${safeColors.accent}10)`
+                  }}
+                >
+                  {/* Background Pattern */}
+                  <div className="absolute inset-0 opacity-5">
+                    <div 
+                      className="absolute top-4 right-4 w-8 h-8 rounded-full animate-pulse" 
+                      style={{ backgroundColor: safeColors.primaryButton.bg }}
+                    ></div>
+                    <div 
+                      className="absolute bottom-4 left-4 w-6 h-6 rounded-lg rotate-45 animate-pulse" 
+                      style={{ backgroundColor: safeColors.accent, animationDelay: '1s' }}
+                    ></div>
                     </div>
-                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors">
+
+                  {/* Icon */}
+                  <div className="relative mb-4">
+                    <div 
+                      className="w-16 h-16 rounded-full mx-auto flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-12"
+                      style={{
+                        backgroundColor: safeColors.primaryButton.bg,
+                        boxShadow: `0 8px 25px ${safeColors.primaryButton.bg}30`
+                      }}
+                    >
+                      <DynamicFAIcon 
+                        iconClass="fas fa-tools" 
+                        className="w-8 h-8 text-white"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">
                       Professional Methods
                     </h3>
+                  <p className="text-sm text-gray-600">
+                    Advanced Techniques & Tools
+                  </p>
                   </div>
-                  <div className="space-y-3">
+
+                {/* Services List */}
+                <div className="p-6 space-y-3">
                     {professionalMethods.map((item, idx) => (
-                      <div key={idx} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-all duration-200 group/item">
-                        <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center group-hover/item:bg-primary/20 transition-colors">
-                          <DynamicFAIcon iconClass={item.iconClass} className="w-5 h-5 text-primary" />
+                    <div key={idx} className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-all duration-300 group/item">
+                      <div 
+                        className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
+                        style={{
+                          backgroundColor: `${safeColors.primaryButton.bg}15`,
+                          border: `2px solid ${safeColors.primaryButton.bg}30`
+                        }}
+                      >
+                        <DynamicFAIcon 
+                          iconClass={item.iconClass} 
+                          className="w-5 h-5"
+                        />
                         </div>
-                        <span className="text-sm font-medium text-foreground group-hover/item:text-primary transition-colors leading-tight">
+                      <span className="text-sm font-medium text-gray-700 group-hover/item:text-gray-900 transition-colors">
                           {item.title}
                         </span>
                       </div>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
+
+              </div>
 
               {/* Premium Options */}
-              <Card className="bg-card border-border shadow-lg hover:shadow-xl transition-all duration-300 group animate-card-scale-in overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="text-center mb-6">
-                    <div className="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                      <DynamicFAIcon iconClass="fas fa-gem" className="w-18 h-18  text-purple-600" />
+              <div 
+                className="group relative bg-white rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-3 shadow-lg hover:shadow-2xl"
+                style={{
+                  border: `2px solid ${safeColors.accent}20`
+                }}
+              >
+                {/* Header Section */}
+                <div 
+                  className="p-6 text-center relative overflow-hidden"
+                  style={{
+                    background: `linear-gradient(135deg, ${safeColors.accent}10, ${safeColors.primaryButton.bg}10)`
+                  }}
+                >
+                  {/* Background Pattern */}
+                  <div className="absolute inset-0 opacity-5">
+                    <div 
+                      className="absolute top-4 right-4 w-8 h-8 rounded-full animate-pulse" 
+                      style={{ backgroundColor: safeColors.accent }}
+                    ></div>
+                    <div 
+                      className="absolute bottom-4 left-4 w-6 h-6 rounded-lg rotate-45 animate-pulse" 
+                      style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '1s' }}
+                    ></div>
                     </div>
-                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors">
+
+                  {/* Icon */}
+                  <div className="relative mb-4">
+                    <div 
+                      className="w-16 h-16 rounded-full mx-auto flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-12"
+                      style={{
+                        backgroundColor: safeColors.accent,
+                        boxShadow: `0 8px 25px ${safeColors.accent}30`
+                      }}
+                    >
+                      <DynamicFAIcon 
+                        iconClass="fas fa-gem" 
+                        className="w-8 h-8 text-white"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">
                       Premium Options
                     </h3>
+                  <p className="text-sm text-gray-600">
+                    Luxury & High-End Solutions
+                  </p>
                   </div>
-                  <div className="space-y-3">
+
+                {/* Services List */}
+                <div className="p-6 space-y-3">
                     {premiumOptions.map((item, idx) => (
-                      <div key={idx} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50 transition-all duration-200 group/item">
-                        <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center group-hover/item:bg-primary/20 transition-colors">
-                          <DynamicFAIcon iconClass={item.iconClass} className="w-5 h-5 text-primary" />
+                    <div key={idx} className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-all duration-300 group/item">
+                      <div 
+                        className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover/item:scale-110"
+                        style={{
+                          backgroundColor: `${safeColors.accent}15`,
+                          border: `2px solid ${safeColors.accent}30`
+                        }}
+                      >
+                        <DynamicFAIcon 
+                          iconClass={item.iconClass} 
+                          className="w-5 h-5"
+                        />
                         </div>
-                        <span className="text-sm font-medium text-foreground group-hover/item:text-primary transition-colors leading-tight">
+                      <span className="text-sm font-medium text-gray-700 group-hover/item:text-gray-900 transition-colors">
                           {item.title}
                         </span>
                       </div>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
+
+              </div>
             </div>
 
 
@@ -990,78 +1274,95 @@ const DrainCleaning = () => {
 
 
   {cta2 && (
-              <section className="py-20 bg-hero-gradient text-primary-foreground transition-all duration-300">
-                <div className="container mx-auto px-16 text-center">
-                  <h2 className="text-4xl font-bold mb-6 text-primary-foreground">
+        <section 
+          className="py-16 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${safeColors.gradient.from}, ${safeColors.gradient.to})`
+          }}
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-10 left-10 w-20 h-20 rounded-full animate-pulse" style={{ backgroundColor: safeColors.accent }}></div>
+            <div className="absolute bottom-10 right-10 w-16 h-16 rounded-full animate-pulse" style={{ animationDelay: '1s', backgroundColor: safeColors.primaryButton.bg }}></div>
+            <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ animationDelay: '2s', backgroundColor: safeColors.accent }}></div>
+          </div>
+
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16 text-center relative z-10">
+            
+            {/* Section Header */}
+            <div className="mb-12">
+              <h2 
+                className="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-white"
+              >
                     {cta2.title}
                   </h2>
-                  <p className="text-xl mb-8 max-w-3xl mx-auto text-primary-foreground/80">
+              <p 
+                className="text-xs sm:text-sm text-white/90 max-w-3xl mx-auto"
+              >
                     {cta2.description}
                   </p>
+            </div>
 
-                  <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                    {/* Theme-Responsive Call Now Button */}
-                    <div className="relative group">
-                      <div className="absolute -inset-4 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-                      <div className="absolute -inset-2 glass-card rounded-2xl animate-pulse-glow"></div>
-
-                      <Button
-                        size="lg"
-                        className="relative overflow-hidden btn-cta-primary text-white px-10 py-8 text-xl font-bold shadow-2xl rounded-2xl btn-cta-border btn-cta-glow group animate-gradient-shift bg-[length:200%_200%]"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-gradient-shift bg-[length:200%_200%]"></div>
-
-                        <div className="relative flex items-center">
-                          <div className="relative mr-4">
-                            <Phone className="w-7 h-7 animate-float-bounce" />
-                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              
+              {/* Call Button */}
+              <a 
+                href={`tel:${phoneNumber}`}
+                className="group relative px-6 py-4 rounded-xl transition-all duration-300 hover:scale-105"
+                style={{
+                  backgroundColor: safeColors.primaryButton.bg,
+                  color: safeColors.primaryButton.text
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = safeColors.primaryButton.hover}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = safeColors.primaryButton.bg}
+              >
+                <div className="flex items-center gap-3">
+                  <Phone className="w-5 h-5" />
+                  <div className="text-left">
+                    <div className="text-xs font-semibold">Call Now</div>
+                    <div className="text-sm font-bold">{phoneNumber}</div>
                           </div>
-                          <div className="flex flex-col items-start">
-                            <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">EMERGENCY CALL</span>
-                            <a
-                              href={`tel:${phoneNumber}`}>
-                              <span className="text-2xl font-black tracking-wide">{phoneNumber}</span></a>
                           </div>
-                        </div>
-                      </Button>
-                    </div>
+              </a>
 
-                    {/* Secondary Button */}
-                    <div className="relative group">
-                      <div className="absolute -inset-2 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-
-                      <Button
-                        size="lg"
-                        variant="outline"
-                        className="relative bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/30 px-10 py-8 text-xl font-bold shadow-xl rounded-2xl transform hover:scale-105 transition-all duration-300 group hover:bg-primary hover:text-white"
-                      >
+              {/* Book Button */}
                         <Link
-                          to="/contact">
-                          <div className="relative flex items-center">
-                            <Calendar className="w-7 h-7 mr-4" />
-                            <div className="flex flex-col items-start">
-                              <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">BOOK ONLINE</span>
-                              <span className="text-xl font-black tracking-wide">Schedule Service</span>
+                to="/contact"
+                className="group relative px-6 py-4 rounded-xl transition-all duration-300 hover:scale-105 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30"
+              >
+                <div className="flex items-center gap-3">
+                  <Calendar className="w-5 h-5" />
+                  <div className="text-left">
+                    <div className="text-xs font-semibold">Book Online</div>
+                    <div className="text-sm font-bold">Schedule Service</div>
                             </div>
                           </div>
                         </Link>
-                      </Button>
-                    </div>
                   </div>
 
                   {/* Trust Indicators */}
-                  <div className="mt-8 flex flex-wrap justify-center gap-6 text-primary-foreground/80">
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                      <span className="text-sm font-semibold">24/7 Available</span>
+            <div className="flex flex-wrap justify-center gap-6 text-white/90">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: safeColors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">24/7 Available</span>
                     </div>
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse"></div>
-                      <span className="text-sm font-semibold">Licensed & Insured</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: safeColors.primaryButton.bg }}
+                ></div>
+                <span className="text-xs font-semibold">Licensed & Insured</span>
                     </div>
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
-                      <span className="text-sm font-semibold">Same Day Service</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: safeColors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">Same Day Service</span>
                     </div>
                   </div>
                 </div>
@@ -1085,73 +1386,118 @@ const DrainCleaning = () => {
 
 
 
-        <section className="py-20 bg-gradient-to-br from-background via-secondary/30 to-background transition-colors duration-300 relative overflow-hidden">
+        <section className="py-16 bg-gray-50">
           {/* ...header and background stuff... */}
-          <div className="container mx-auto px-16">
-            <div className="text-center mb-20">
-              <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-6 py-3 mb-6">
-                <Clock className="w-5 h-5 text-primary" />
-                <span className="text-primary font-semibold">  Our Simple {displayServiceName} Process {inlocationName}</span>
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            
+            {/* Section Header */}
+            <div className="text-center mb-16">
+              <div className="inline-block mb-4">
+                <span 
+                  className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                  style={{ 
+                    color: safeColors.primaryButton.bg,
+                    backgroundColor: `${safeColors.primaryButton.bg}15`
+                  }}
+                >
+                  Our Process
+                </span>
               </div>
-              {/* <h2 className="text-5xl font-bold text-foreground mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent"> */}
-              <h2 className="text-4xl font-bold text-foreground mb-8">
-
-                Our Simple Process
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                Our Simple <span style={{ color: safeColors.primaryButton.bg }}>Process</span>
               </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xs sm:text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
                 Our streamlined {coloredSteps.length}-step process ensures you get professional {projectCategory} service from start to finish.
               </p>
             </div>
-            <div className="relative">
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-primary via-accent to-primary h-full hidden lg:block"></div>
-              <div className="space-y-16 lg:space-y-24">
+            {/* Process Flow */}
+            <div className="relative max-w-5xl mx-auto">
+              {/* Connecting Line */}
+              <div 
+                className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full hidden lg:block"
+                style={{
+                  background: `linear-gradient(to bottom, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                }}
+              ></div>
+
+              {/* Process Steps */}
+              <div className="space-y-12 lg:space-y-16">
                 {coloredSteps.map((step, index) => (
-                  <div key={index} className={`flex items-center ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} flex-col gap-8 lg:gap-16`}>
+                  <div 
+                    key={index} 
+                    className={`flex items-center ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} flex-col gap-8 lg:gap-12`}
+                  >
+                    {/* Content Card */}
                     <div className={`flex-1 ${index % 2 === 0 ? 'lg:text-right lg:pr-8' : 'lg:text-left lg:pl-8'} text-center lg:text-inherit`}>
-                      <div className={`inline-block ${step.bgColor} ${step.borderColor} border-2 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 max-w-md w-full`}>
-                        <div className="flex items-center justify-center mb-4">
-                          <div className={`w-16 h-16 bg-gradient-to-br ${step.color} rounded-full flex items-center justify-center text-white shadow-lg`}>
-                            <DynamicFAIcon iconClass={step.iconClass || ''} className="text-white text-3xl" />
+                      <div 
+                        className="inline-block rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 max-w-md w-full"
+                        style={{
+                          backgroundColor: `${safeColors.primaryButton.bg}08`,
+                          border: `2px solid ${safeColors.primaryButton.bg}20`
+                        }}
+                      >
+                        {/* Icon */}
+                        {step.iconClass && (
+                          <div className="flex justify-center mb-4">
+                            <div 
+                              className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
+                              style={{
+                                background: `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                              }}
+                            >
+                              <DynamicFAIcon 
+                                iconClass={step.iconClass} 
+                                className="text-2xl text-white"
+                              />
                           </div>
                         </div>
-                        <h3 className="text-2xl font-bold text-foreground mb-4">{step.stepName}</h3>
-                        <p className="text-muted-foreground text-lg leading-relaxed">{step.serviceDescription}</p>
+                        )}
+
+                        {/* Content */}
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4">{step.stepName}</h3>
+                        <p className="text-gray-600 text-lg leading-relaxed">{step.serviceDescription}</p>
                       </div>
                     </div>
+                    {/* Step Number Circle */}
                     <div className="relative z-10 hidden lg:block">
-                      <div className={`w-20 h-20 bg-gradient-to-br ${step.color} rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-xl border-4 border-background`}>
+                      <div 
+                        className="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-xl border-4 border-white"
+                        style={{
+                          background: `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                        }}
+                      >
                         {step.number}
                       </div>
+                      
+                      {/* Arrow */}
                       {index < coloredSteps.length - 1 && (
                         <div className="absolute top-20 left-1/2 transform -translate-x-1/2">
-                          <ArrowRight className="w-6 h-6 text-primary rotate-90" />
+                          <ArrowRight 
+                            className="w-6 h-6 rotate-90" 
+                            style={{ color: safeColors.primaryButton.bg }}
+                          />
                         </div>
                       )}
                     </div>
+
+                    {/* Mobile Step Number */}
                     <div className="lg:hidden">
-                      <div className={`w-16 h-16 bg-gradient-to-br ${step.color} rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg`}>
+                      <div 
+                        className="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg"
+                        style={{
+                          background: `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                        }}
+                      >
                         {step.number}
                       </div>
                     </div>
+
+                    {/* Empty space for alternating layout */}
                     <div className="flex-1 hidden lg:block"></div>
                   </div>
                 ))}
               </div>
             </div>
-            {/* ...call to action... */}
-
-
-            {/* <div className="text-center mt-20">
-                        <div className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 rounded-3xl p-8 border border-primary/20">
-                          <h3 className="text-3xl font-bold text-foreground mb-4">Ready to Get Started?</h3>
-                          <p className="text-lg text-muted-foreground mb-6">
-                            Experience our professional process firsthand. Contact us today for your free estimate!
-                          </p>
-                          <button className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                            Get Free Estimate
-                          </button>
-                        </div>
-                      </div> */}
 
 
 
@@ -1162,76 +1508,185 @@ const DrainCleaning = () => {
         </section>
         {/* <WhyChooseUsSimple /> */}
 
-        <section className="py-20 bg-muted/20">
-          <div className="container mx-auto px-16">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-foreground mb-4"> Why Choose {displayServiceName} by {projectName}  {inlocationName}?</h2>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <div className="inline-block mb-4">
+                <span 
+                  className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                  style={{ 
+                    color: safeColors.primaryButton.bg,
+                    backgroundColor: `${safeColors.primaryButton.bg}15`
+                  }}
+                >
+                  Why Choose Us
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                Why Choose <span style={{ color: safeColors.primaryButton.bg }}>{displayServiceName}</span> by {projectName} {inlocationName}?
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
                 We're committed to providing exceptional {displayServiceName} services with professional expertise and customer satisfaction.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Features Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {projectWhyChooseUs.map((feature, index) => (
-                <Card key={index} className="bg-card border border-border shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <CardContent className="p-8 text-center">
-                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div 
+                  key={index} 
+                  className="group relative bg-white rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
+                  style={{
+                    border: `1px solid ${safeColors.primaryButton.bg}15`
+                  }}
+                >
+                  {/* Hover Border Effect */}
+                  <div 
+                    className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                      border: `2px solid ${safeColors.primaryButton.bg}40`,
+                      boxShadow: `0 0 20px ${safeColors.primaryButton.bg}20`
+                    }}
+                  ></div>
+
+                  {/* Content */}
+                  <div className="relative space-y-5">
+                    {/* Icon Container */}
+                    <div className="w-fit">
+                      <div 
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110"
+                        style={{
+                          backgroundColor: `${safeColors.primaryButton.bg}15`,
+                          border: `2px solid ${safeColors.primaryButton.bg}30`
+                        }}
+                      >
+                        {feature.iconClass ? (
                       <DynamicFAIcon
-                        iconClass={feature.iconClass || ''}
-                        className="w-18 h-18 text-primary"
+                            iconClass={feature.iconClass} 
+                            className="text-2xl"
                       />
+                        ) : null}
                     </div>
-                    <h3 className="text-2xl font-bold text-card-foreground mb-4">{feature.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
             </div>
 
+                    {/* Text Content */}
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-bold leading-tight text-gray-900">
+                        {feature.title}
+                      </h3>
+                      <p className="text-base leading-relaxed text-gray-600">
+                        {feature.description}
+                      </p>
+                    </div>
+
+                    {/* Bottom Accent Line */}
+                    <div 
+                      className="h-1 rounded-full transition-all duration-500 group-hover:w-full"
+                      style={{
+                        width: '3rem',
+                        background: `linear-gradient(90deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
 
         {/* <DrainCleaningGuarantee /> */}
 
-        <section className="py-20 bg-muted/30">
-          <div className="container mx-auto px-16">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-                Our {displayServiceName} Guarantee {inlocationName}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <div className="inline-block mb-4">
+                <span 
+                  className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                  style={{ 
+                    color: safeColors.primaryButton.bg,
+                    backgroundColor: `${safeColors.primaryButton.bg}15`
+                  }}
+                >
+                  Our Guarantee
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                Our <span style={{ color: safeColors.primaryButton.bg }}>{displayServiceName}</span> Guarantee {inlocationName}
               </h2>
-              <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+              <p className="text-xs sm:text-sm text-gray-600 max-w-3xl mx-auto leading-relaxed mt-6">
                 {guaranteeText}
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+            {/* Guarantee Cards Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {guarantees.map((guarantee, index) => (
-                <Card key={index} className="bg-card border-border shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  <CardContent className="p-6">
-                    <div className="text-center">
-                      <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r ${guarantee.gradient} mb-4`}>
+                <div
+                  key={index}
+                  className="group relative bg-white rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-2xl"
+                  style={{
+                    border: `1px solid ${safeColors.primaryButton.bg}15`
+                  }}
+                >
+                  {/* Hover Border Effect */}
+                  <div 
+                    className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                      border: `2px solid ${safeColors.primaryButton.bg}40`,
+                      boxShadow: `0 0 20px ${safeColors.primaryButton.bg}20`
+                    }}
+                  ></div>
+
+                  {/* Content */}
+                  <div className="relative space-y-5">
+                    {/* Icon */}
+                    <div className="flex justify-center">
+                      <div 
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-500 group-hover:scale-110"
+                        style={{
+                          background: `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                        }}
+                      >
                         <DynamicFAIcon
                           iconClass={guarantee.iconClass || ''}
-                          className="w-18 h-18 text-white"
+                          className="text-white text-2xl"
                         />
-
-
-
                       </div>
-
-
-
-
-
-
-
-
-                      <h3 className="text-xl font-bold text-foreground mb-3">{guarantee.title}</h3>
-                      <p className="text-muted-foreground leading-relaxed">{guarantee.description}</p>
                     </div>
-                  </CardContent>
-                </Card>
+
+                    {/* Text Content */}
+                    <div className="text-center space-y-3">
+
+
+
+
+
+
+
+
+                      <h4 className="text-xl font-bold leading-tight text-gray-900">
+                        {guarantee.title}
+                      </h4>
+                      <p className="text-base leading-relaxed text-gray-600">
+                        {guarantee.description}
+                      </p>
+                    </div>
+
+                    {/* Bottom Accent Line */}
+                    <div 
+                      className="h-1 rounded-full transition-all duration-500 group-hover:w-full"
+                      style={{
+                        width: '3rem',
+                        background: `linear-gradient(90deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                      }}
+                    ></div>
+                  </div>
+                </div>
               ))}
             </div>
 
@@ -1243,20 +1698,62 @@ const DrainCleaning = () => {
         {/* <DrainCleaningPromise /> */}
 
 
-        <section className="py-20 bg-background">
-          <div className="container mx-auto px-16">
-            <div className="max-w-4xl mx-auto text-center">
-              <Card className="bg-primary/5 border-primary/20">
-                <CardContent className="p-8">
-                  <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-6">
-                    Our Promise to You
-                  </h2>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    {promiseLine}
-
-                  </p>
-                </CardContent>
-              </Card>
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            <div className="max-w-4xl mx-auto">
+              <div 
+                className="rounded-3xl p-12 text-center relative overflow-hidden"
+                style={{
+                  backgroundColor: `${safeColors.primaryButton.bg}08`,
+                  border: `2px solid ${safeColors.primaryButton.bg}20`
+                }}
+              >
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-5 pointer-events-none">
+                  <div 
+                    className="absolute top-8 left-8 w-20 h-20 border-2 rounded-full"
+                    style={{ borderColor: safeColors.primaryButton.bg }}
+                  ></div>
+                  <div 
+                    className="absolute bottom-8 right-8 w-16 h-16 border-2 rounded-lg rotate-45"
+                    style={{ borderColor: safeColors.accent }}
+                  ></div>
+                  <div 
+                    className="absolute top-1/2 left-1/4 w-12 h-12 border rounded-full"
+                    style={{ borderColor: safeColors.primaryButton.bg }}
+                  ></div>
+                </div>
+                
+                <div className="relative">
+                  <div className="mb-8">
+                    <div 
+                      className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl"
+                      style={{
+                        background: `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                      }}
+                    >
+                      <Heart className="w-10 h-10 text-white" />
+                    </div>
+                    <h3 
+                      className="text-xl sm:text-2xl font-bold mb-6"
+                      style={{
+                        backgroundImage: `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`,
+                        WebkitBackgroundClip: 'text',
+                        backgroundClip: 'text',
+                        color: 'transparent',
+                        WebkitTextFillColor: 'transparent'
+                      }}
+                    >
+                      Our Promise to You
+                    </h3>
+                  </div>
+                  <div className="max-w-4xl mx-auto">
+                    <p className="text-base sm:text-lg text-gray-900 font-semibold leading-relaxed">
+                      {promiseLine || `"We promise to fix your plumbing problems quickly and efficiently, so you can get back to enjoying your home without any stress or hassle!"`}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -1265,92 +1762,125 @@ const DrainCleaning = () => {
         <DrainCleaningRelated serviceId={serviceId} cta3={cta3} phoneNumber={phoneNumber} locationUrl={locationUrl} />
 
   {cta3 && (
-              <section className="py-20 bg-hero-gradient text-primary-foreground transition-all duration-300">
-                <div className="container mx-auto px-16 text-center">
-                  <h2 className="text-4xl font-bold mb-6 text-primary-foreground">
+        <section 
+          className="py-16 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${safeColors.gradient.from}, ${safeColors.gradient.to})`
+          }}
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-10 left-10 w-20 h-20 rounded-full animate-pulse" style={{ backgroundColor: safeColors.accent }}></div>
+            <div className="absolute bottom-10 right-10 w-16 h-16 rounded-full animate-pulse" style={{ animationDelay: '1s', backgroundColor: safeColors.primaryButton.bg }}></div>
+            <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ animationDelay: '2s', backgroundColor: safeColors.accent }}></div>
+          </div>
+
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16 text-center relative z-10">
+            
+            {/* Section Header */}
+            <div className="mb-12">
+              <h2 
+                className="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-white"
+              >
                     {cta3.title}
                   </h2>
-                  <p className="text-xl mb-8 max-w-3xl mx-auto text-primary-foreground/80">
+              <p 
+                className="text-xs sm:text-sm text-white/90 max-w-3xl mx-auto"
+              >
                     {cta3.description}
                   </p>
+            </div>
 
-                  <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                    {/* Theme-Responsive Call Now Button */}
-                    <div className="relative group">
-                      <div className="absolute -inset-4 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-                      <div className="absolute -inset-2 glass-card rounded-2xl animate-pulse-glow"></div>
-
-                      <Button
-                        size="lg"
-                        className="relative overflow-hidden btn-cta-primary text-white px-10 py-8 text-xl font-bold shadow-2xl rounded-2xl btn-cta-border btn-cta-glow group animate-gradient-shift bg-[length:200%_200%]"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-gradient-shift bg-[length:200%_200%]"></div>
-
-                        <div className="relative flex items-center">
-                          <div className="relative mr-4">
-                            <Phone className="w-7 h-7 animate-float-bounce" />
-                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              
+              {/* Call Button */}
+              <a 
+                href={`tel:${phoneNumber}`}
+                className="group relative px-6 py-4 rounded-xl transition-all duration-300 hover:scale-105"
+                style={{
+                  backgroundColor: safeColors.primaryButton.bg,
+                  color: safeColors.primaryButton.text
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = safeColors.primaryButton.hover}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = safeColors.primaryButton.bg}
+              >
+                <div className="flex items-center gap-3">
+                  <Phone className="w-5 h-5" />
+                  <div className="text-left">
+                    <div className="text-xs font-semibold">Call Now</div>
+                    <div className="text-sm font-bold">{phoneNumber}</div>
                           </div>
-                          <div className="flex flex-col items-start">
-                            <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">EMERGENCY CALL</span>
-                            <a
-                              href={`tel:${phoneNumber}`}>
-                              <span className="text-2xl font-black tracking-wide">{phoneNumber}</span></a>
                           </div>
-                        </div>
-                      </Button>
-                    </div>
+              </a>
 
-                    {/* Secondary Button */}
-                    <div className="relative group">
-                      <div className="absolute -inset-2 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-
-                      <Button
-                        size="lg"
-                        variant="outline"
-                        className="relative bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/30 px-10 py-8 text-xl font-bold shadow-xl rounded-2xl transform hover:scale-105 transition-all duration-300 group hover:bg-primary hover:text-white"
-                      >
+              {/* Book Button */}
                         <Link
-                          to="/contact">
-                          <div className="relative flex items-center">
-                            <Calendar className="w-7 h-7 mr-4" />
-                            <div className="flex flex-col items-start">
-                              <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">BOOK ONLINE</span>
-                              <span className="text-xl font-black tracking-wide">Schedule Service</span>
+                to="/contact"
+                className="group relative px-6 py-4 rounded-xl transition-all duration-300 hover:scale-105 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30"
+              >
+                <div className="flex items-center gap-3">
+                  <Calendar className="w-5 h-5" />
+                  <div className="text-left">
+                    <div className="text-xs font-semibold">Book Online</div>
+                    <div className="text-sm font-bold">Schedule Service</div>
                             </div>
                           </div>
                         </Link>
-                      </Button>
-                    </div>
                   </div>
 
                   {/* Trust Indicators */}
-                  <div className="mt-8 flex flex-wrap justify-center gap-6 text-primary-foreground/80">
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                      <span className="text-sm font-semibold">24/7 Available</span>
+            <div className="flex flex-wrap justify-center gap-6 text-white/90">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: safeColors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">24/7 Available</span>
                     </div>
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse"></div>
-                      <span className="text-sm font-semibold">Licensed & Insured</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: safeColors.primaryButton.bg }}
+                ></div>
+                <span className="text-xs font-semibold">Licensed & Insured</span>
                     </div>
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
-                      <span className="text-sm font-semibold">Same Day Service</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: safeColors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">Same Day Service</span>
                     </div>
                   </div>
                 </div>
               </section>
             )}
-        <section className="py-20 bg-secondary transition-colors duration-300">
-          <div className="container mx-auto px-16">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-foreground mb-4">What Our Customers Say</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <div className="inline-block mb-4">
+                <span 
+                  className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                  style={{ 
+                    color: safeColors.primaryButton.bg,
+                    backgroundColor: `${safeColors.primaryButton.bg}15`
+                  }}
+                >
+                  Customer Reviews
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                What Our <span style={{ color: safeColors.primaryButton.bg }}>Customers</span> Say
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto leading-relaxed mt-6">
                 Don't just take our word for it. Here's what our satisfied customers have to say about our {projectCategory} services.
               </p>
             </div>
 
+            {/* Testimonials Grid */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projectReviews.map((testimonial, index) => {
                 const rawRating = Number(testimonial.rating) || 0;
@@ -1359,8 +1889,36 @@ const DrainCleaning = () => {
                 const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
 
                 return (
-                  <div key={index} className="bg-card rounded-xl p-8 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
-                    <div className="flex items-center mb-4">
+                  <div 
+                    key={index} 
+                    className="group relative bg-white rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 shadow-lg hover:shadow-2xl flex flex-col h-full"
+                    style={{
+                      border: `1px solid ${safeColors.primaryButton.bg}15`
+                    }}
+                  >
+                    {/* Hover Border Effect */}
+                    <div 
+                      className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{
+                        border: `2px solid ${safeColors.primaryButton.bg}40`,
+                        boxShadow: `0 0 20px ${safeColors.primaryButton.bg}20`
+                      }}
+                    ></div>
+
+                    {/* Quote Icon */}
+                    <div className="flex justify-center mb-6">
+                      <div 
+                        className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                        style={{
+                          background: `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                        }}
+                      >
+                        <Quote className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+
+                    {/* Stars Rating */}
+                    <div className="flex items-center justify-center mb-6">
                       {[...Array(fullStars)].map((_, i) => (
                         <Star key={`full-${index}-${i}`} className="w-5 h-5 text-yellow-400 fill-current" />
                       ))}
@@ -1371,142 +1929,285 @@ const DrainCleaning = () => {
                         <Star key={`empty-${index}-${i}`} className="w-5 h-5 text-gray-300 fill-current" />
                       ))}
                     </div>
-                    <p className="text-muted-foreground mb-6 leading-relaxed italic">
+
+                    {/* Review Text */}
+                    <div className="relative flex-1">
+                      <p className="text-gray-700 mb-6 leading-relaxed text-center italic">
                       "{testimonial.review_text}"
                     </p>
-                    <div className="flex items-center mt-auto">
+                    </div>
 
-                      <div>
-                        <h4 className="font-semibold text-card-foreground">
+                    {/* Customer Name */}
+                    <div className="text-center mt-auto">
+                      <div 
+                        className="inline-block px-4 py-2 rounded-full"
+                        style={{
+                          backgroundColor: `${safeColors.primaryButton.bg}10`
+                        }}
+                      >
+                        <h4 className="font-bold text-gray-900">
                           {testimonial.customer_name}
                         </h4>
                       </div>
                     </div>
+
+                    {/* Bottom Accent Line */}
+                    <div 
+                      className="h-1 rounded-full transition-all duration-500 group-hover:w-full mt-4"
+                      style={{
+                        width: '3rem',
+                        background: `linear-gradient(90deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                      }}
+                    ></div>
                   </div>
                 );
               })}
             </div>
+
+            {/* Trust Indicators */}
+            <div className="mt-16 text-center">
+              <div 
+                className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 rounded-2xl"
+                style={{
+                  backgroundColor: `${safeColors.primaryButton.bg}08`,
+                  border: `1px solid ${safeColors.primaryButton.bg}20`
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                  <span className="text-gray-900 font-bold text-sm sm:text-base lg:text-lg">5.0</span>
+                </div>
+                <div className="hidden sm:block w-px h-6 lg:h-8 bg-gray-300"></div>
+                <div className="text-gray-600 text-sm sm:text-base">
+                  <span className="font-bold text-gray-900">{projectReviews.length}+</span> Happy Customers
+                </div>
+                <div className="hidden sm:block w-px h-6 lg:h-8 bg-gray-300"></div>
+                <div className="text-gray-600 text-sm sm:text-base">
+                  <span className="font-bold text-gray-900">100%</span> Satisfaction Rate
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
-        <section className="py-20 bg-gradient-to-b from-secondary to-background transition-colors duration-300">
-          <div className="container mx-auto px-16">
-            <div className="text-center mb-16">
-              <h2 className="text-5xl font-bold text-foreground mb-6">Frequently Asked Questions</h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16">
+            
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <div className="inline-block mb-4">
+                <span 
+                  className="text-sm font-bold uppercase tracking-wider px-4 py-2 rounded-full"
+                  style={{ 
+                    color: safeColors.primaryButton.bg,
+                    backgroundColor: `${safeColors.primaryButton.bg}15`
+                  }}
+                >
+                  FAQ
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 max-w-3xl mx-auto leading-tight">
+                Frequently Asked <span style={{ color: safeColors.primaryButton.bg }}>Questions</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto leading-relaxed mt-6">
                 Got questions? We've got answers. Here are the most common questions about our {displayServiceName} services.
               </p>
             </div>
 
+            {/* FAQ Accordion */}
             <div className="max-w-4xl mx-auto">
               <div className="space-y-4">
                 {projectFaqs.map((faq, index) => (
-                  <div key={index} className="bg-card rounded-2xl shadow-lg border border-border overflow-hidden">
+                  <div 
+                    key={index} 
+                    className="group bg-white rounded-3xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
+                    style={{
+                      border: `1px solid ${safeColors.primaryButton.bg}15`
+                    }}
+                  >
                     <button
                       onClick={() => toggleFAQ(index)}
-                      className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-secondary/50 transition-colors duration-200"
+                      className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 text-left flex items-center justify-between transition-all duration-300"
+                      style={{
+                        backgroundColor: openFAQ === index ? `${safeColors.primaryButton.bg}08` : 'transparent'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (openFAQ !== index) {
+                          e.currentTarget.style.backgroundColor = `${safeColors.primaryButton.bg}05`;
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (openFAQ !== index) {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }
+                      }}
                     >
-                      <h3 className="text-lg font-semibold text-card-foreground pr-4">{faq.question}</h3>
+                      <div className="flex items-center gap-4 flex-1">
+                        <div 
+                          className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                          style={{
+                            backgroundColor: openFAQ === index ? safeColors.primaryButton.bg : `${safeColors.primaryButton.bg}15`
+                          }}
+                        >
+                          <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                        </div>
+                        <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 pr-4 leading-tight">
+                          {faq.question}
+                        </h3>
+                      </div>
+                      <div 
+                        className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300"
+                        style={{
+                          backgroundColor: openFAQ === index ? safeColors.primaryButton.bg : `${safeColors.primaryButton.bg}15`,
+                          transform: openFAQ === index ? 'rotate(180deg)' : 'rotate(0deg)'
+                        }}
+                      >
                       {openFAQ === index ? (
-                        <ChevronUp className="w-5 h-5 text-primary flex-shrink-0" />
+                          <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-primary flex-shrink-0" />
+                          <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: safeColors.primaryButton.bg }} />
                       )}
+                      </div>
                     </button>
+                    
                     {openFAQ === index && (
-                      <div className="px-8 pb-6">
-                        <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                      <div 
+                        className="px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 transition-all duration-300"
+                        style={{
+                          borderTop: `1px solid ${safeColors.primaryButton.bg}20`
+                        }}
+                      >
+                        <div className="pt-4">
+                          <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
+                            {faq.answer}
+                          </p>
+                        </div>
                       </div>
                     )}
                   </div>
                 ))}
               </div>
-
-              {/* Enhanced CTA Section */}
-
-
-
             </div>
 
-          
+            {/* Bottom CTA */}
+            <div className="text-center mt-16">
+              <div 
+                className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 rounded-2xl"
+                style={{
+                  backgroundColor: `${safeColors.primaryButton.bg}08`,
+                  border: `1px solid ${safeColors.primaryButton.bg}20`
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: safeColors.primaryButton.bg }} />
+                  <span className="text-gray-900 font-semibold text-sm sm:text-base">Still have questions?</span>
           </div>
-
-
+                <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
+                <div className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: safeColors.primaryButton.bg }} />
+                  <span className="text-gray-600 text-sm sm:text-base">
+                    <span className="font-bold text-gray-900">Call us</span> for immediate help
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
           {cta1 && (
-              <section className="py-20 bg-hero-gradient text-primary-foreground transition-all duration-300">
-                <div className="container mx-auto px-16 text-center">
-                  <h2 className="text-4xl font-bold mb-6 text-primary-foreground">
+        <section 
+          className="py-16 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${safeColors.gradient.from}, ${safeColors.gradient.to})`
+          }}
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-10 left-10 w-20 h-20 rounded-full animate-pulse" style={{ backgroundColor: safeColors.accent }}></div>
+            <div className="absolute bottom-10 right-10 w-16 h-16 rounded-full animate-pulse" style={{ animationDelay: '1s', backgroundColor: safeColors.primaryButton.bg }}></div>
+            <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ animationDelay: '2s', backgroundColor: safeColors.accent }}></div>
+          </div>
+
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16 text-center relative z-10">
+            
+            {/* Section Header */}
+            <div className="mb-12">
+              <h2 
+                className="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-white"
+              >
                     {cta1.title}
                   </h2>
-                  <p className="text-xl mb-8 max-w-3xl mx-auto text-primary-foreground/80">
+              <p 
+                className="text-xs sm:text-sm text-white/90 max-w-3xl mx-auto"
+              >
                     {cta1.description}
                   </p>
+            </div>
 
-                  <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                    {/* Theme-Responsive Call Now Button */}
-                    <div className="relative group">
-                      <div className="absolute -inset-4 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-                      <div className="absolute -inset-2 glass-card rounded-2xl animate-pulse-glow"></div>
-
-                      <Button
-                        size="lg"
-                        className="relative overflow-hidden btn-cta-primary text-white px-10 py-8 text-xl font-bold shadow-2xl rounded-2xl btn-cta-border btn-cta-glow group animate-gradient-shift bg-[length:200%_200%]"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-gradient-shift bg-[length:200%_200%]"></div>
-
-                        <div className="relative flex items-center">
-                          <div className="relative mr-4">
-                            <Phone className="w-7 h-7 animate-float-bounce" />
-                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              
+              {/* Call Button */}
+              <a 
+                href={`tel:${phoneNumber}`}
+                className="group relative px-6 py-4 rounded-xl transition-all duration-300 hover:scale-105"
+                style={{
+                  backgroundColor: safeColors.primaryButton.bg,
+                  color: safeColors.primaryButton.text
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = safeColors.primaryButton.hover}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = safeColors.primaryButton.bg}
+              >
+                <div className="flex items-center gap-3">
+                  <Phone className="w-5 h-5" />
+                  <div className="text-left">
+                    <div className="text-xs font-semibold">Call Now</div>
+                    <div className="text-sm font-bold">{phoneNumber}</div>
                           </div>
-                          <div className="flex flex-col items-start">
-                            <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">EMERGENCY CALL</span>
-                            <a
-                              href={`tel:${phoneNumber}`}>
-                              <span className="text-2xl font-black tracking-wide">{phoneNumber}</span></a>
                           </div>
-                        </div>
-                      </Button>
-                    </div>
+              </a>
 
-                    {/* Secondary Button */}
-                    <div className="relative group">
-                      <div className="absolute -inset-2 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-
-                      <Button
-                        size="lg"
-                        variant="outline"
-                        className="relative bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/30 px-10 py-8 text-xl font-bold shadow-xl rounded-2xl transform hover:scale-105 transition-all duration-300 group hover:bg-primary hover:text-white"
-                      >
+              {/* Book Button */}
                         <Link
-                          to="/contact">
-                          <div className="relative flex items-center">
-                            <Calendar className="w-7 h-7 mr-4" />
-                            <div className="flex flex-col items-start">
-                              <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">BOOK ONLINE</span>
-                              <span className="text-xl font-black tracking-wide">Schedule Service</span>
+                to="/contact"
+                className="group relative px-6 py-4 rounded-xl transition-all duration-300 hover:scale-105 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30"
+              >
+                <div className="flex items-center gap-3">
+                  <Calendar className="w-5 h-5" />
+                  <div className="text-left">
+                    <div className="text-xs font-semibold">Book Online</div>
+                    <div className="text-sm font-bold">Schedule Service</div>
                             </div>
                           </div>
                         </Link>
-                      </Button>
-                    </div>
                   </div>
 
                   {/* Trust Indicators */}
-                  <div className="mt-8 flex flex-wrap justify-center gap-6 text-primary-foreground/80">
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                      <span className="text-sm font-semibold">24/7 Available</span>
+            <div className="flex flex-wrap justify-center gap-6 text-white/90">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: safeColors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">24/7 Available</span>
                     </div>
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse"></div>
-                      <span className="text-sm font-semibold">Licensed & Insured</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: safeColors.primaryButton.bg }}
+                ></div>
+                <span className="text-xs font-semibold">Licensed & Insured</span>
                     </div>
-                    <div className="flex items-center">
-                      <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
-                      <span className="text-sm font-semibold">Same Day Service</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: safeColors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">Same Day Service</span>
                     </div>
                   </div>
                 </div>
