@@ -29,6 +29,19 @@ const About = () => {
   const { getThemeColors } = useTheme();
   const colors = getThemeColors();
   
+  // Fallback colors in case theme is not loaded
+  const fallbackColors = {
+    heading: '#1F2937',
+    description: '#6B7280',
+    surface: '#F9FAFB',
+    primaryButton: { bg: '#3B82F6', text: '#FFFFFF', hover: '#2563EB' },
+    secondaryButton: { bg: 'transparent', text: '#1F2937', border: '#3B82F6', hover: '#F3F4F6' },
+    accent: '#F59E0B',
+    gradient: { from: '#3B82F6', to: '#1D4ED8' }
+  };
+  
+  const safeColors = colors || fallbackColors;
+  
   const breadcrumbItems = [
     { label: "About" }
   ];
@@ -168,6 +181,18 @@ const About = () => {
 
   let title = `About ${projectCategory} Service - ${projectName}`
 
+  // Simple loading state
+  if (!projectName && !aboutHeroText) {
+    return (
+      <div className="min-h-screen font-poppins flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: safeColors.primaryButton.bg }}></div>
+          <p style={{ color: safeColors.description }}>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen font-poppins">
       <SEOHead
@@ -185,9 +210,9 @@ const About = () => {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative min-h-screen flex items-center overflow-hidden pb-16 sm:pb-20 lg:pb-24"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden py-8 sm:py-12 lg:py-16 pb-16 sm:pb-20 lg:pb-24"
         style={{
-          backgroundColor: colors.surface
+          backgroundColor: safeColors.surface
         }}
       >
         {/* Left Side - Content */}
@@ -208,12 +233,12 @@ const About = () => {
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                      <BreadcrumbPage className="font-medium text-xs" style={{ color: colors.primaryButton.bg }}>About Us</BreadcrumbPage>
+                      <BreadcrumbPage className="font-medium text-xs" style={{ color: safeColors.primaryButton.bg }}>About Us</BreadcrumbPage>
                     </BreadcrumbItem>
                   </BreadcrumbList>
                 </Breadcrumb>
               </div>
-            </div>
+        </div>
 
             <div className="pt-16 sm:pt-20 lg:pt-24">
               <div className="text-center lg:text-left space-y-6 relative z-20">
@@ -223,24 +248,24 @@ const About = () => {
                   <span
                     className="inline-flex items-center gap-2 backdrop-blur-sm rounded-full px-6 py-2.5"
                     style={{
-                      color: colors.heading,
-                      backgroundColor: `${colors.primaryButton.bg}15`
+                      color: safeColors.heading,
+                      backgroundColor: `${safeColors.primaryButton.bg}15`
                     }}
                   >
                     <Star className="w-4 h-4" />
-                    Your Trusted {projectCategory} Partners
+              Your Trusted {projectCategory} Partners
                   </span>
-                </div>
+            </div>
 
                 {/* Main Heading */}
                 <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black leading-[1.1] tracking-tight">
-                  <span style={{ color: colors.heading }}>
-                    About
+                  <span style={{ color: safeColors.heading }}>
+                About
                   </span>{' '}
                   <span
                     className="inline-block"
                     style={{
-                      backgroundImage: `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
+                      backgroundImage: `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`,
                       WebkitBackgroundClip: 'text',
                       backgroundClip: 'text',
                       color: 'transparent',
@@ -249,15 +274,15 @@ const About = () => {
                   >
                     {projectName}
                   </span>
-                </h1>
+              </h1>
 
                 {/* Subheading */}
                 <p
                   className="text-xs sm:text-sm md:text-base lg:text-lg max-w-3xl mx-auto lg:mx-0 leading-relaxed"
-                  style={{ color: colors.description }}
+                  style={{ color: safeColors.description }}
                 >
-                  {aboutHeroText}
-                </p>
+              {aboutHeroText}
+            </p>
 
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-4">
@@ -267,11 +292,11 @@ const About = () => {
                     href={`tel:${phoneNumber}`}
                     className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300"
                     style={{
-                      backgroundColor: colors.primaryButton.bg,
-                      color: colors.primaryButton.text
+                      backgroundColor: safeColors.primaryButton.bg,
+                      color: safeColors.primaryButton.text
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = safeColors.primaryButton.hover}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = safeColors.primaryButton.bg}
                   >
                     <Phone className="w-5 h-5" />
                     <div className="text-left">
@@ -290,12 +315,12 @@ const About = () => {
                     }}
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-base transition-all duration-300"
                     style={{
-                      backgroundColor: colors.secondaryButton.bg,
-                      color: colors.secondaryButton.text,
-                      border: `2px solid ${colors.secondaryButton.border}`
+                      backgroundColor: safeColors.secondaryButton.bg,
+                      color: safeColors.secondaryButton.text,
+                      border: `2px solid ${safeColors.secondaryButton.border}`
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.secondaryButton.hover}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.secondaryButton.bg}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = safeColors.secondaryButton.hover}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = safeColors.secondaryButton.bg}
                   >
                     <Users className="w-5 h-5" />
                     <span>Learn Our Story</span>
@@ -304,23 +329,23 @@ const About = () => {
 
                 {/* Trust Indicators */}
                 <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-6 pt-6">
-                  <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                  <div className="flex items-center gap-2" style={{ color: safeColors.description }}>
                     <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#22C55E' }}></div>
                     <span className="text-xs font-semibold">24/7 Available</span>
-                  </div>
-                  <div className="flex items-center gap-2" style={{ color: colors.description }}>
+                    </div>
+                  <div className="flex items-center gap-2" style={{ color: safeColors.description }}>
                     <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#3B82F6' }}></div>
                     <span className="text-xs font-semibold">Licensed & Insured</span>
                   </div>
-                  <div className="flex items-center gap-2" style={{ color: colors.description }}>
-                    <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: colors.accent }}></div>
+                  <div className="flex items-center gap-2" style={{ color: safeColors.description }}>
+                    <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: safeColors.accent }}></div>
                     <span className="text-xs font-semibold">Same Day Service</span>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+                    </div>
+                    </div>
+                  </div>
 
         {/* Right Side - Image */}
         <div className="hidden lg:flex w-1/2 relative min-h-screen items-center justify-center p-8">
@@ -340,19 +365,19 @@ const About = () => {
               <div
                 className="absolute inset-0"
                 style={{
-                  background: `linear-gradient(135deg, ${colors.gradient.from}20, ${colors.gradient.to}20)`
+                  background: `linear-gradient(135deg, ${safeColors.gradient.from}20, ${safeColors.gradient.to}20)`
                 }}
               ></div>
             </div>
             
             {/* Decorative Elements */}
-            <div className="absolute -top-4 -right-4 w-20 h-20 rounded-2xl opacity-20" style={{ backgroundColor: colors.primaryButton.bg }}></div>
-            <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-xl opacity-15" style={{ backgroundColor: colors.accent }}></div>
+            <div className="absolute -top-4 -right-4 w-20 h-20 rounded-2xl opacity-20" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
+            <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-xl opacity-15" style={{ backgroundColor: safeColors.accent }}></div>
             
             {/* Floating Badge */}
             <div className="absolute top-6 right-6 bg-white rounded-xl px-4 py-3 shadow-lg">
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg }}></div>
+                <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
                 <span className="text-gray-900 font-semibold text-sm">About Us</span>
               </div>
             </div>
@@ -360,10 +385,10 @@ const About = () => {
           
           {/* Animated Particles */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-20 right-10 w-2 h-2 bg-primary/40 rounded-full animate-ping" style={{ backgroundColor: colors.accent }}></div>
-            <div className="absolute top-40 right-20 w-3 h-3 bg-accent/30 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg, animationDelay: '1s' }}></div>
-            <div className="absolute bottom-32 right-1/4 w-2 h-2 bg-primary/50 rounded-full animate-ping" style={{ backgroundColor: colors.accent, animationDelay: '2s' }}></div>
-            <div className="absolute bottom-20 right-1/3 w-3 h-3 bg-accent/40 rounded-full animate-pulse" style={{ backgroundColor: colors.primaryButton.bg, animationDelay: '3s' }}></div>
+            <div className="absolute top-20 right-10 w-2 h-2 bg-primary/40 rounded-full animate-ping" style={{ backgroundColor: safeColors.accent }}></div>
+            <div className="absolute top-40 right-20 w-3 h-3 bg-accent/30 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '1s' }}></div>
+            <div className="absolute bottom-32 right-1/4 w-2 h-2 bg-primary/50 rounded-full animate-ping" style={{ backgroundColor: safeColors.accent, animationDelay: '2s' }}></div>
+            <div className="absolute bottom-20 right-1/3 w-3 h-3 bg-accent/40 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '3s' }}></div>
           </div>
         </div>
 
@@ -371,7 +396,7 @@ const About = () => {
         <div
           className="lg:hidden absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: heroImage ? `url(${heroImage})` : `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})`,
+            backgroundImage: heroImage ? `url(${heroImage})` : `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`,
             zIndex: -1
           }}
         >
@@ -379,254 +404,718 @@ const About = () => {
           <div
             className="absolute inset-0"
             style={{
-              background: `linear-gradient(135deg, ${colors.gradient.from}CC, ${colors.gradient.to}CC)`
+              background: `linear-gradient(135deg, ${safeColors.gradient.from}CC, ${safeColors.gradient.to}CC)`
             }}
           ></div>
         </div>
       </section>
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-16">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+      {/* Our Mission & Vision Section */}
+      <section 
+        className="py-16 relative overflow-hidden bg-white"
+      >
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-20 w-32 h-32 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
+          <div className="absolute bottom-20 right-20 w-24 h-24 rounded-lg rotate-45 animate-pulse" style={{ backgroundColor: safeColors.accent, animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/3 w-16 h-16 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '2s' }}></div>
+        </div>
+
+        <div className="container mx-auto px-4 sm:px-8 lg:px-16 relative z-10">
+          
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="inline-block mb-4">
+              <span 
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                style={{
+                  color: safeColors.primaryButton.bg,
+                  backgroundColor: `${safeColors.primaryButton.bg}15`
+                }}
+              >
+                <Target className="w-4 h-4" />
+                Our Foundation
+              </span>
+            </div>
+          <h2 
+            className="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-gray-900"
+          >
               Our Mission & Vision
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p 
+            className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto leading-relaxed"
+          >
               Driving our commitment to excellence in professional {projectCategory} services
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-            {/* Mission */}
-            <Card className="bg-card border-border shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardContent className="p-8">
+          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            
+            {/* Mission Card */}
+            <div 
+              className="relative group bg-white border-2 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300"
+              style={{
+                borderColor: `${safeColors.primaryButton.bg}30`
+              }}
+            >
+              {/* Card Background Pattern */}
+              <div className="absolute inset-0 opacity-5 rounded-3xl overflow-hidden">
+                <div className="absolute top-4 right-4 w-16 h-16 rounded-full" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
+                <div className="absolute bottom-4 left-4 w-12 h-12 rounded-lg rotate-45" style={{ backgroundColor: safeColors.accent }}></div>
+              </div>
+
+              <div className="relative p-8">
+                {/* Header */}
                 <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
-                    <Target className="w-6 h-6 text-primary" />
+                  <div 
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center mr-4 shadow-lg"
+                    style={{
+                      background: `linear-gradient(135deg, ${safeColors.primaryButton.bg}, ${safeColors.accent})`
+                    }}
+                  >
+                    <Target className="w-7 h-7 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-foreground">Our Mission</h3>
+                  <div>
+                  <h3 
+                    className="text-lg sm:text-xl font-bold text-gray-900"
+                  >
+                    Our Mission
+                  </h3>
+                    <div 
+                      className="w-12 h-1 rounded-full mt-2"
+                      style={{ backgroundColor: safeColors.primaryButton.bg }}
+                    ></div>
+                  </div>
                 </div>
-                <p className="text-muted-foreground mb-6 leading-relaxed">
+
+                {/* Mission Description */}
+                  <p 
+                    className="text-xs sm:text-sm leading-relaxed mb-6 text-gray-600"
+                  >
                   {missionLine}
                 </p>
-                <ul className="space-y-3">
+
+                {/* Mission Points */}
+                <ul className="space-y-4">
                   {missionSubHeadings.map((heading, i) => (
-                    <li key={i} className="flex items-center text-foreground">
-                      <CheckCircle className="w-5 h-5 text-primary mr-3 flex-shrink-0" />
-                      <span>{heading}</span>
+                    <li key={i} className="flex items-start">
+                      <div 
+                        className="w-6 h-6 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0"
+                        style={{ backgroundColor: `${safeColors.primaryButton.bg}20` }}
+                      >
+                        <CheckCircle className="w-4 h-4" style={{ color: safeColors.primaryButton.bg }} />
+                      </div>
+                      <span 
+                        className="text-xs sm:text-sm text-gray-800"
+                      >
+                        {heading}
+                      </span>
                     </li>
                   ))}
                 </ul>
-              </CardContent>
-            </Card>
 
-            {/* Vision */}
-            <Card className="bg-card border-border shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardContent className="p-8">
+                {/* Decorative Element */}
+                <div className="absolute top-6 right-6 w-20 h-20 rounded-full opacity-10" style={{ backgroundColor: safeColors.accent }}></div>
+              </div>
+            </div>
+
+            {/* Vision Card */}
+            <div 
+              className="relative group bg-white border-2 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300"
+              style={{
+                borderColor: `${safeColors.accent}30`
+              }}
+            >
+              {/* Card Background Pattern */}
+              <div className="absolute inset-0 opacity-5 rounded-3xl overflow-hidden">
+                <div className="absolute top-4 right-4 w-16 h-16 rounded-full" style={{ backgroundColor: safeColors.accent }}></div>
+                <div className="absolute bottom-4 left-4 w-12 h-12 rounded-lg rotate-45" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
+              </div>
+
+              <div className="relative p-8">
+                {/* Header */}
                 <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mr-4">
-                    <Eye className="w-6 h-6 text-primary" />
+                  <div 
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center mr-4 shadow-lg"
+                    style={{
+                      background: `linear-gradient(135deg, ${safeColors.accent}, ${safeColors.primaryButton.bg})`
+                    }}
+                  >
+                    <Eye className="w-7 h-7 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-foreground">Our Vision</h3>
+                  <div>
+                  <h3 
+                    className="text-lg sm:text-xl font-bold text-gray-900"
+                  >
+                    Our Vision
+                  </h3>
+                    <div 
+                      className="w-12 h-1 rounded-full mt-2"
+                      style={{ backgroundColor: safeColors.accent }}
+                    ></div>
+                  </div>
                 </div>
-                <p className="text-muted-foreground mb-6 leading-relaxed">
+
+                {/* Vision Description */}
+                  <p 
+                    className="text-xs sm:text-sm leading-relaxed mb-6 text-gray-600"
+                  >
                   {visionLine}
                 </p>
-                <ul className="space-y-3">
+
+                {/* Vision Points */}
+                <ul className="space-y-4">
                   {visionSubHeadings.map((heading, i) => (
-                    <li key={i} className="flex items-center text-foreground">
-                      <CheckCircle className="w-5 h-5 text-primary mr-3 flex-shrink-0" />
-                      <span>{heading}</span>
+                    <li key={i} className="flex items-start">
+                      <div 
+                        className="w-6 h-6 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0"
+                        style={{ backgroundColor: `${safeColors.accent}20` }}
+                      >
+                        <CheckCircle className="w-4 h-4" style={{ color: safeColors.accent }} />
+                      </div>
+                      <span 
+                        className="text-xs sm:text-sm text-gray-800"
+                      >
+                        {heading}
+                      </span>
                     </li>
                   ))}
                 </ul>
-              </CardContent>
-            </Card>
+
+                {/* Decorative Element */}
+                <div className="absolute top-6 right-6 w-20 h-20 rounded-full opacity-10" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Accent */}
+          <div className="flex justify-center mt-12">
+            <div 
+              className="w-24 h-1 rounded-full"
+              style={{
+                background: `linear-gradient(90deg, ${safeColors.primaryButton.bg}, ${safeColors.accent}, ${safeColors.primaryButton.bg})`
+              }}
+            ></div>
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-16">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+      {/* Our Core Values Section */}
+      <section 
+        className="py-16 relative overflow-hidden"
+        style={{ backgroundColor: safeColors.surface }}
+      >
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-10 left-10 w-20 h-20 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
+          <div className="absolute bottom-10 right-10 w-16 h-16 rounded-lg rotate-45 animate-pulse" style={{ backgroundColor: safeColors.accent, animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '2s' }}></div>
+        </div>
+
+        <div className="container mx-auto px-4 sm:px-8 lg:px-16 relative z-10">
+          
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="inline-block mb-4">
+              <span 
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                style={{
+                  color: safeColors.heading,
+                  backgroundColor: `${safeColors.accent}15`
+                }}
+              >
+                <Sparkles className="w-4 h-4" />
+                What We Stand For
+              </span>
+            </div>
+          <h2 
+            className="text-lg sm:text-xl md:text-2xl font-bold mb-4"
+            style={{ color: safeColors.heading }}
+          >
               Our Core Values
             </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          <p 
+            className="text-xs sm:text-sm max-w-3xl mx-auto leading-relaxed"
+            style={{ color: safeColors.description }}
+          >
               {coreValuesIntro}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {coloredCoreValues.map((value, index) => (
-              <Card key={index} className="bg-card border-border shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <CardContent className="p-6">
-                  <div className="text-center">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r ${value.gradient} mb-4 mx-auto`}>
-                      <DynamicFAIcon iconClass={value.iconClass || ''} className="text-white w-18 h-18" />
+              <div 
+                key={index} 
+                className="group relative"
+                style={{
+                  backgroundColor: `${safeColors.surface}95`,
+                  border: `1px solid ${safeColors.primaryButton.bg}20`,
+                  borderRadius: '1.5rem'
+                }}
+              >
+                {/* Card Background Pattern */}
+                <div className="absolute inset-0 opacity-5 rounded-3xl overflow-hidden">
+                  <div 
+                    className="absolute top-4 right-4 w-12 h-12 rounded-full" 
+                    style={{ backgroundColor: safeColors.primaryButton.bg }}
+                  ></div>
+                  <div 
+                    className="absolute bottom-4 left-4 w-8 h-8 rounded-lg rotate-45" 
+                    style={{ backgroundColor: safeColors.accent }}
+                  ></div>
+                </div>
+
+                <div className="relative p-6 text-center">
+                  {/* Icon */}
+                  <div className="relative mb-6">
+                    <div 
+                      className="inline-flex items-center justify-center w-16 h-16 rounded-full mx-auto transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 bg-white"
+                      style={{
+                        border: `3px solid ${safeColors.primaryButton.bg}30`,
+                        boxShadow: `0 4px 20px ${safeColors.primaryButton.bg}25`
+                      }}
+                    >
+                      <DynamicFAIcon 
+                        iconClass={value.iconClass || ''} 
+                        className="w-7 h-7" 
+                      />
                     </div>
-                    <h3 className="text-xl font-bold text-foreground mb-3">{value.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{value.description}</p>
+                    {/* Decorative Dots */}
+                    <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: safeColors.accent }}></div>
+                    <div className="absolute -bottom-1 -left-1 w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '1s' }}></div>
                   </div>
-                </CardContent>
-              </Card>
 
+                  {/* Content */}
+                <h3 
+                  className="text-base sm:text-lg font-bold mb-3"
+                  style={{ color: safeColors.heading }}
+                >
+                  {value.title}
+                </h3>
+                <p 
+                  className="text-xs sm:text-sm leading-relaxed"
+                  style={{ color: safeColors.description }}
+                >
+                  {value.description}
+                </p>
 
+                  {/* Bottom Accent Line */}
+                  <div 
+                    className="w-12 h-1 rounded-full mx-auto mt-4 opacity-60"
+                    style={{ backgroundColor: safeColors.primaryButton.bg }}
+                  ></div>
+
+                  {/* Hover Effect */}
+                  <div 
+                    className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+                    style={{ backgroundColor: safeColors.primaryButton.bg }}
+                  ></div>
+                </div>
+              </div>
             ))}
+          </div>
+
+          {/* Bottom Accent */}
+          <div className="flex justify-center mt-12">
+            <div 
+              className="w-24 h-1 rounded-full"
+              style={{
+                background: `linear-gradient(90deg, ${safeColors.primaryButton.bg}, ${safeColors.accent}, ${safeColors.primaryButton.bg})`
+              }}
+            ></div>
           </div>
         </div>
       </section>
 
 
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-16">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+      {/* What Makes Us Different Section */}
+      <section 
+        className="py-16 relative overflow-hidden bg-white"
+      >
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-20 w-32 h-32 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
+          <div className="absolute bottom-20 right-20 w-24 h-24 rounded-lg rotate-45 animate-pulse" style={{ backgroundColor: safeColors.accent, animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/3 w-16 h-16 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '2s' }}></div>
+        </div>
+
+        <div className="container mx-auto px-4 sm:px-8 lg:px-16 relative z-10">
+          
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="inline-block mb-4">
+              <span 
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                style={{
+                  color: safeColors.primaryButton.bg,
+                  backgroundColor: `${safeColors.primaryButton.bg}15`
+                }}
+              >
+                <Star className="w-4 h-4" />
+                Our Unique Edge
+              </span>
+            </div>
+            <h2 
+              className="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-gray-900"
+            >
               What Makes Us Different
             </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            <p 
+              className="text-xs sm:text-sm max-w-3xl mx-auto leading-relaxed text-gray-600"
+            >
               Our unique advantages that set us apart from other {projectCategory} services
             </p>
           </div>
 
           {/* Commitment Section */}
           <div className="max-w-4xl mx-auto mb-16">
-            <Card className="bg-card border-border shadow-lg">
-              <CardContent className="p-8 text-center">
-                <h3 className="text-2xl font-bold text-foreground mb-4">Our Commitment to Excellence</h3>
-                <p className="text-muted-foreground leading-relaxed mb-6">
+            <div 
+              className="relative group bg-white border-2 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300"
+              style={{
+                borderColor: `${safeColors.accent}30`
+              }}
+            >
+              {/* Card Background Pattern */}
+              <div className="absolute inset-0 opacity-5 rounded-3xl overflow-hidden">
+                <div className="absolute top-4 right-4 w-16 h-16 rounded-full" style={{ backgroundColor: safeColors.accent }}></div>
+                <div className="absolute bottom-4 left-4 w-12 h-12 rounded-lg rotate-45" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
+              </div>
+
+              <div className="relative p-8 text-center">
+                <div className="flex items-center justify-center mb-6">
+                  <div 
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center mr-4 shadow-lg"
+                    style={{
+                      background: `linear-gradient(135deg, ${safeColors.accent}, ${safeColors.primaryButton.bg})`
+                    }}
+                  >
+                    <Award className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 
+                    className="text-xl sm:text-2xl font-bold text-gray-900"
+                  >
+                    Our Commitment to Excellence
+                  </h3>
+                </div>
+                <p 
+                  className="text-sm sm:text-base leading-relaxed text-gray-600"
+                >
                   {commitment}
                 </p>
-
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Differences Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {whatMakesUsDifferent.map((diff, index) => (
-              <Card
+              <div 
                 key={index}
-                className="bg-card border-border shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                className="group relative bg-white border-2 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
+                style={{
+                  borderColor: `${safeColors.primaryButton.bg}20`
+                }}
               >
-                <CardContent className="p-6">
-                  <div className="text-center">
-                    <div
-                      className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
-                      style={{ backgroundColor: diff.color }}
+                {/* Card Background Pattern */}
+                <div className="absolute inset-0 opacity-5 rounded-3xl overflow-hidden">
+                  <div 
+                    className="absolute top-4 right-4 w-12 h-12 rounded-full" 
+                    style={{ backgroundColor: safeColors.primaryButton.bg }}
+                  ></div>
+                  <div 
+                    className="absolute bottom-4 left-4 w-8 h-8 rounded-lg rotate-45" 
+                    style={{ backgroundColor: safeColors.accent }}
+                  ></div>
+                </div>
+
+                <div className="relative p-6 text-center">
+                  {/* Icon */}
+                  <div className="relative mb-6">
+                    <div 
+                      className="inline-flex items-center justify-center w-16 h-16 rounded-full mx-auto transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 bg-white"
+                      style={{
+                        border: `3px solid ${safeColors.primaryButton.bg}30`,
+                        boxShadow: `0 4px 20px ${safeColors.primaryButton.bg}25`
+                      }}
                     >
-                      <DynamicFAIcon iconClass={diff.iconClass || ''} className="w-18 h-18 text-white" />
+                      <DynamicFAIcon 
+                        iconClass={diff.iconClass || ''} 
+                        className="w-7 h-7" 
+                      />
                     </div>
-                    <h3 className="text-xl font-bold text-foreground mb-3">{diff.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{diff.description}</p>
+                    {/* Decorative Dots */}
+                    <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: safeColors.accent }}></div>
+                    <div className="absolute -bottom-1 -left-1 w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '1s' }}></div>
                   </div>
-                </CardContent>
-              </Card>
+
+                  {/* Content */}
+                  <h3 
+                    className="text-base sm:text-lg font-bold mb-3 text-gray-900"
+                  >
+                    {diff.title}
+                  </h3>
+                  <p 
+                    className="text-xs sm:text-sm leading-relaxed text-gray-600"
+                  >
+                    {diff.description}
+                  </p>
+
+                  {/* Bottom Accent Line */}
+                  <div 
+                    className="w-12 h-1 rounded-full mx-auto mt-4 opacity-60"
+                    style={{ backgroundColor: safeColors.primaryButton.bg }}
+                  ></div>
+
+                  {/* Hover Effect */}
+                  <div 
+                    className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+                    style={{ backgroundColor: safeColors.primaryButton.bg }}
+                  ></div>
+                </div>
+              </div>
             ))}
           </div>
 
+          {/* Bottom Accent */}
+          <div className="flex justify-center mt-12">
+            <div 
+              className="w-24 h-1 rounded-full"
+              style={{
+                background: `linear-gradient(90deg, ${safeColors.primaryButton.bg}, ${safeColors.accent}, ${safeColors.primaryButton.bg})`
+              }}
+            ></div>
+          </div>
         </div>
       </section>
 
 
 
 
-      <section className="py-20 bg-muted/20">
-        <div className="container mx-auto px-16">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Why Choose {projectName}?</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+      {/* Why Choose Us Section */}
+      <section 
+        className="py-16 relative overflow-hidden"
+        style={{ backgroundColor: safeColors.surface }}
+      >
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-10 left-10 w-20 h-20 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
+          <div className="absolute bottom-10 right-10 w-16 h-16 rounded-lg rotate-45 animate-pulse" style={{ backgroundColor: safeColors.accent, animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/3 w-12 h-12 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '2s' }}></div>
+        </div>
+
+        <div className="container mx-auto px-4 sm:px-8 lg:px-16 relative z-10">
+          
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="inline-block mb-4">
+              <span 
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold"
+                style={{
+                  color: safeColors.heading,
+                  backgroundColor: `${safeColors.accent}15`
+                }}
+              >
+                <Shield className="w-4 h-4" />
+                Your Trusted Choice
+              </span>
+            </div>
+            <h2 
+              className="text-lg sm:text-xl md:text-2xl font-bold mb-4"
+              style={{ color: safeColors.heading }}
+            >
+              Why Choose {projectName}?
+            </h2>
+            <p 
+              className="text-xs sm:text-sm max-w-3xl mx-auto leading-relaxed"
+              style={{ color: safeColors.description }}
+            >
               We're committed to providing exceptional {projectCategory} services with professional expertise and customer satisfaction.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {whyChooseUsAboutPage.map((feature, index) => {
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {whyChooseUsAboutPage.map((feature, index) => (
+              <div 
+                key={index} 
+                className="group relative"
+                style={{
+                  backgroundColor: `${safeColors.surface}95`,
+                  border: `1px solid ${safeColors.primaryButton.bg}20`,
+                  borderRadius: '1.5rem'
+                }}
+              >
+                {/* Card Background Pattern */}
+                <div className="absolute inset-0 opacity-5 rounded-3xl overflow-hidden">
+                  <div 
+                    className="absolute top-4 right-4 w-12 h-12 rounded-full" 
+                    style={{ backgroundColor: safeColors.primaryButton.bg }}
+                  ></div>
+                  <div 
+                    className="absolute bottom-4 left-4 w-8 h-8 rounded-lg rotate-45" 
+                    style={{ backgroundColor: safeColors.accent }}
+                  ></div>
+                </div>
 
-              return (
-                <Card key={index} className="bg-card border border-border shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <CardContent className="p-8 text-center">
-                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <DynamicFAIcon iconClass={feature.iconClass || ''} className="w-18 h-18 text-primary" />
+                <div className="relative p-6 text-center">
+                  {/* Icon */}
+                  <div className="relative mb-6">
+                    <div 
+                      className="inline-flex items-center justify-center w-16 h-16 rounded-full mx-auto transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 bg-white"
+                      style={{
+                        border: `3px solid ${safeColors.primaryButton.bg}30`,
+                        boxShadow: `0 4px 20px ${safeColors.primaryButton.bg}25`
+                      }}
+                    >
+                      <DynamicFAIcon 
+                        iconClass={feature.iconClass || ''} 
+                        className="w-7 h-7" 
+                      />
                     </div>
-                    <h3 className="text-2xl font-bold text-card-foreground mb-4">{feature.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    {/* Decorative Dots */}
+                    <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: safeColors.accent }}></div>
+                    <div className="absolute -bottom-1 -left-1 w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '1s' }}></div>
+                  </div>
+
+                  {/* Content */}
+                  <h3 
+                    className="text-base sm:text-lg font-bold mb-3"
+                    style={{ color: safeColors.heading }}
+                  >
+                    {feature.title}
+                  </h3>
+                  <p 
+                    className="text-xs sm:text-sm leading-relaxed"
+                    style={{ color: safeColors.description }}
+                  >
+                    {feature.description}
+                  </p>
+
+                  {/* Bottom Accent Line */}
+                  <div 
+                    className="w-12 h-1 rounded-full mx-auto mt-4 opacity-60"
+                    style={{ backgroundColor: safeColors.primaryButton.bg }}
+                  ></div>
+
+                  {/* Hover Effect */}
+                  <div 
+                    className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+                    style={{ backgroundColor: safeColors.primaryButton.bg }}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom Accent */}
+          <div className="flex justify-center mt-12">
+            <div 
+              className="w-24 h-1 rounded-full"
+              style={{
+                background: `linear-gradient(90deg, ${safeColors.primaryButton.bg}, ${safeColors.accent}, ${safeColors.primaryButton.bg})`
+              }}
+            ></div>
           </div>
         </div>
       </section>
 
       <FAQSection />
       {CTA && (
-        <section className="py-20 bg-hero-gradient text-primary-foreground transition-all duration-300">
-          <div className="container mx-auto px-16 text-center">
-            <h2 className="text-4xl font-bold mb-6 text-primary-foreground">
+        <section 
+          className="py-16 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${safeColors.gradient.from}, ${safeColors.gradient.to})`
+          }}
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-20 left-20 w-32 h-32 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg }}></div>
+            <div className="absolute bottom-20 right-20 w-24 h-24 rounded-lg rotate-45 animate-pulse" style={{ backgroundColor: safeColors.accent, animationDelay: '1s' }}></div>
+            <div className="absolute top-1/2 left-1/3 w-16 h-16 rounded-full animate-pulse" style={{ backgroundColor: safeColors.primaryButton.bg, animationDelay: '2s' }}></div>
+          </div>
+
+          <div className="container mx-auto px-4 sm:px-8 lg:px-16 relative z-10 text-center">
+            
+            {/* Section Header */}
+            <div className="mb-8">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 max-w-2xl mx-auto leading-tight">
               {getCTAContent(3).title}
             </h2>
-            <p className="text-xl mb-8 max-w-3xl mx-auto text-primary-foreground/80">
+              <p className="text-xs sm:text-sm text-white/90 max-w-2xl mx-auto leading-relaxed">
               {getCTAContent(3).description}
             </p>
+            </div>
 
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              {/* Theme-Responsive Call Now Button */}
-              <div className="relative group">
-                <div className="absolute -inset-4 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-                <div className="absolute -inset-2 glass-card rounded-2xl animate-pulse-glow"></div>
-
-                <Button
-                  size="lg"
-                  className="relative overflow-hidden btn-cta-primary text-white px-10 py-8 text-xl font-bold shadow-2xl rounded-2xl btn-cta-border btn-cta-glow group animate-gradient-shift bg-[length:200%_200%]"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-gradient-shift bg-[length:200%_200%]"></div>
-
-                  <div className="relative flex items-center">
-                    <div className="relative mr-4">
-                      <Phone className="w-7 h-7 animate-float-bounce" />
-                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              
+              {/* Call Button */}
+              <a
+                href={`tel:${phoneNumber}`}
+                className="group relative inline-flex items-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:-translate-y-1 shadow-lg"
+                style={{
+                  backgroundColor: safeColors.primaryButton.bg,
+                  color: safeColors.primaryButton.text
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = safeColors.primaryButton.hover}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = safeColors.primaryButton.bg}
+              >
+                <div className="relative">
+                  <Phone className="w-5 h-5" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                     </div>
-                    <div className="flex flex-col items-start">
-                      <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">EMERGENCY CALL</span>
-                      <span className="text-2xl font-black tracking-wide">{phoneNumber}</span>
+                <div className="text-left">
+                  <div className="text-xs font-semibold opacity-90 uppercase tracking-wide">Emergency Call</div>
+                  <div className="text-sm font-bold">{phoneNumber}</div>
                     </div>
-                  </div>
-                </Button>
-              </div>
+              </a>
 
-              {/* Secondary Button */}
-              <div className="relative group">
-                <div className="absolute -inset-2 bg-gradient-to-r from-primary/40 via-primary/60 to-primary/40 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500 animate-border-dance bg-[length:300%_300%]"></div>
-
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="relative bg-white/95 backdrop-blur-sm text-primary border-2 border-primary/30 px-10 py-8 text-xl font-bold shadow-xl rounded-2xl transform hover:scale-105 transition-all duration-300 group hover:bg-primary hover:text-white"
-                >
-                  <div className="relative flex items-center">
-                    <Calendar className="w-7 h-7 mr-4" />
-                    <div className="flex flex-col items-start">
-                      <span className="text-sm font-semibold opacity-90 uppercase tracking-wide">BOOK ONLINE</span>
-                      <span className="text-xl font-black tracking-wide">{email}</span>
+              {/* Book Online Button */}
+              <a
+                href={`mailto:${email}`}
+                className="group relative inline-flex items-center gap-3 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:-translate-y-1 shadow-lg backdrop-blur-md"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  color: safeColors.primaryButton.bg,
+                  border: `2px solid ${safeColors.primaryButton.bg}30`
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = safeColors.primaryButton.bg;
+                  e.currentTarget.style.color = safeColors.primaryButton.text;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                  e.currentTarget.style.color = safeColors.primaryButton.bg;
+                }}
+              >
+                <Calendar className="w-5 h-5" />
+                <div className="text-left">
+                  <div className="text-xs font-semibold opacity-90 uppercase tracking-wide">Book Online</div>
+                  <div className="text-sm font-bold">Schedule Service</div>
                     </div>
-                  </div>
-                </Button>
-              </div>
+              </a>
             </div>
 
             {/* Trust Indicators */}
-            <div className="mt-8 flex flex-wrap justify-center gap-6 text-primary-foreground/80">
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-sm font-semibold">24/7 Available</span>
+            <div className="flex flex-wrap justify-center gap-6 text-white/90">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: safeColors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">24/7 Available</span>
               </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-sm font-semibold">Licensed & Insured</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: safeColors.primaryButton.bg }}
+                ></div>
+                <span className="text-xs font-semibold">Licensed & Insured</span>
               </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-sm font-semibold">Same Day Service</span>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: safeColors.accent }}
+                ></div>
+                <span className="text-xs font-semibold">Same Day Service</span>
               </div>
             </div>
           </div>
