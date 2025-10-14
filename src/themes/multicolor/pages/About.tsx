@@ -204,7 +204,7 @@ const About = () => {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative min-h-screen flex items-center justify-center overflow-hidden py-8 sm:py-12 lg:py-16 pb-16 sm:pb-20 lg:pb-24"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden py-4 sm:py-8 lg:py-12 pb-12 sm:pb-16 lg:pb-20"
         style={{
           backgroundColor: safeColors.surface
         }}
@@ -213,7 +213,7 @@ const About = () => {
         <div className="w-full lg:w-1/2 relative z-10">
           <div className="container mx-auto px-4 sm:px-8 lg:px-16">
             {/* Breadcrumb - Top Left */}
-            <div className="absolute top-6 left-4 sm:left-8 lg:left-16 z-30">
+            <div className="absolute top-2 left-4 sm:left-8 lg:left-16 z-30">
               <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg">
                 <Breadcrumb>
                   <BreadcrumbList>
@@ -234,7 +234,7 @@ const About = () => {
               </div>
         </div>
 
-            <div className="pt-16 sm:pt-20 lg:pt-24">
+            <div className="pt-20 sm:pt-24 lg:pt-28">
               <div className="text-center lg:text-left space-y-6 relative z-20">
 
                 {/* Badge */}
