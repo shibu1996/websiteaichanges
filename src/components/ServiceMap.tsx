@@ -2,10 +2,10 @@ import React from 'react';
 import MapboxMap from './MapboxMap';
 
 interface ServiceMapProps {
-  theme: 'plumbing' | 'hvac' | 'roofing' | 'painting' | 'cleaning';
+  theme: 'cleaning' | 'multicolor';
 }
 
-const ServiceMap = ({ theme }: { theme: 'plumbing' | 'hvac' | 'cleaning' | 'painting' | 'roofing' }) => {
+const ServiceMap = ({ theme }: { theme: 'cleaning' | 'multicolor' }) => {
   const locations = [
     {
       name: 'Los Angeles',
@@ -71,16 +71,10 @@ const ServiceMap = ({ theme }: { theme: 'plumbing' | 'hvac' | 'cleaning' | 'pain
 
   const getThemeGradient = () => {
     switch (theme) {
-      case 'plumbing':
-        return 'bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent';
-      case 'hvac':
-        return 'bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent';
-      case 'roofing':
-        return 'bg-gradient-to-r from-slate-600 to-gray-600 bg-clip-text text-transparent';
-      case 'painting':
-        return 'bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent';
       case 'cleaning':
         return 'bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent';
+      case 'multicolor':
+        return 'bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent';
       default:
         return 'bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent';
     }
@@ -88,16 +82,10 @@ const ServiceMap = ({ theme }: { theme: 'plumbing' | 'hvac' | 'cleaning' | 'pain
 
   const getThemeColors = (theme: string) => {
     switch (theme) {
-      case 'plumbing':
-        return { primary: '#3B82F6', secondary: '#1E40AF' };
-      case 'hvac':
-        return { primary: '#EA580C', secondary: '#DC2626' };
       case 'cleaning':
         return { primary: '#10B981', secondary: '#059669' };
-      case 'painting':
-        return { primary: '#8B5CF6', secondary: '#EC4899' };
-      case 'roofing':
-        return { primary: '#78716C', secondary: '#57534E' };
+      case 'multicolor':
+        return { primary: '#3B82F6', secondary: '#1E40AF' };
       default:
         return { primary: '#3B82F6', secondary: '#1E40AF' };
     }

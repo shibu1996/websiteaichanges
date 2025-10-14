@@ -7,18 +7,6 @@ import { useSEO } from '../hooks/useSEO';
 // Cleaning Theme
 import CleaningTermsConditionsPage from '../themes/cleaning/pages/CleaningTermsConditions';
 
-// Plumbing Theme
-import PlumbingTermsConditions from '../themes/plumbing/pages/PlumbingTermsConditions';
-
-// Roofing Theme
-import RoofingTermsConditions from '../themes/roofing/pages/RoofingTermsConditions';
-
-// HVAC Theme
-import HVACTermsConditions from '../themes/hvac/pages/HVACTermsConditions';
-
-// Painting Theme
-import PaintingTermsConditionsPage from '../themes/painting/pages/PaintingTermsConditions';
-
 import MultiColorTermsConditionsPage from '../themes/multicolor/pages/TermsConditons'
 
 const ThemeTermsConditions = () => {
@@ -28,15 +16,7 @@ const ThemeTermsConditions = () => {
     switch (currentTheme) {
       case 'cleaning':
         return <CleaningTermsConditionsPage />;
-      case 'plumbing':
-        return <PlumbingTermsConditions />;
-      case 'roofing':
-        return <RoofingTermsConditions />;
-      case 'hvac':
-        return <HVACTermsConditions />;
-      case 'painting':
-        return <PaintingTermsConditionsPage />;
-           case 'multicolor':
+                                   case 'multicolor':
         return <MultiColorTermsConditionsPage />;
       default:
         return <MultiColorTermsConditionsPage />;

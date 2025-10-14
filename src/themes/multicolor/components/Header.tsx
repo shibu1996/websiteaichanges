@@ -42,37 +42,13 @@ const Header = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  // Header should not show full page loading, just show skeleton
-  if (isLoading) {
-    return (
-      <header 
-        className="sticky top-0 z-50 transition-colors duration-300 font-poppins backdrop-blur-md"
-        style={{
-          backgroundColor: 'white',
-          borderBottom: `1px solid ${colors.primaryButton.bg}20`,
-          boxShadow: `0 4px 20px ${colors.primaryButton.bg}10`
-        }}
-      >
-        <div className="container mx-auto px-4 sm:px-8 lg:px-16">
-          <div className="flex items-center justify-between py-4">
-            <div 
-              className="animate-pulse h-8 w-48 rounded"
-              style={{ backgroundColor: `${colors.primaryButton.bg}20` }}
-            ></div>
-            <div 
-              className="animate-pulse h-8 w-32 rounded"
-              style={{ backgroundColor: `${colors.accent}20` }}
-            ></div>
-          </div>
-        </div>
-      </header>
-    );
-  }
+  // Show skeleton loading state without changing header structure
+  const showSkeleton = isLoading;
 
   return (
     <>
       <header 
-        className="sticky top-0 z-50 transition-all duration-300 font-poppins backdrop-blur-md"
+        className="sticky top-0 z-50 transition-colors duration-200 font-poppins backdrop-blur-md"
         style={{
           backgroundColor: 'white',
           borderBottom: `1px solid ${colors.primaryButton.bg}20`,
@@ -80,33 +56,57 @@ const Header = () => {
         }}
       >
       <div className="container mx-auto px-4 sm:px-8 lg:px-16">
-        <div className="flex items-center justify-between py-3">
+        <div className="flex items-center justify-between py-3 min-h-[64px]">
           
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-3 group min-w-[200px]">
             <div 
               className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300"
               style={{
                 backgroundColor: colors.primaryButton.bg
               }}
             >
-              <i className={`fas ${projectFasFA} text-white text-sm`}></i>
+              {showSkeleton ? (
+                <div className="animate-pulse w-4 h-4 bg-white/50 rounded"></div>
+              ) : (
+                <i className={`fas ${projectFasFA} text-white text-sm`}></i>
+              )}
             </div>
             <div>
-              <h1 
-                className="text-lg font-bold"
-                style={{ color: '#1f2937' }}
-              >
-                {projectName}
-              </h1>
-              <p className="text-xs hidden sm:block" style={{ color: '#6b7280' }}>
-                {projectSlogan}
-              </p>
+              {showSkeleton ? (
+                <>
+                  <div className="animate-pulse h-5 w-32 bg-gray-300 rounded mb-1"></div>
+                  <div className="animate-pulse h-3 w-24 bg-gray-200 rounded hidden sm:block"></div>
+                </>
+              ) : (
+                <>
+                  <h1 
+                    className="text-lg font-bold"
+                    style={{ color: '#1f2937' }}
+                  >
+                    {projectName}
+                  </h1>
+                  <p className="text-xs hidden sm:block" style={{ color: '#6b7280' }}>
+                    {projectSlogan}
+                  </p>
+                </>
+              )}
           </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1">
+          <nav className="hidden lg:flex items-center space-x-1 min-w-[400px] justify-center">
+            {showSkeleton ? (
+              <>
+                <div className="animate-pulse h-8 w-16 bg-gray-300 rounded"></div>
+                <div className="animate-pulse h-8 w-20 bg-gray-300 rounded"></div>
+                <div className="animate-pulse h-8 w-24 bg-gray-300 rounded"></div>
+                <div className="animate-pulse h-8 w-20 bg-gray-300 rounded"></div>
+                <div className="animate-pulse h-8 w-24 bg-gray-300 rounded"></div>
+                <div className="animate-pulse h-8 w-20 bg-gray-300 rounded"></div>
+              </>
+            ) : (
+              <>
             <Link 
               to="/" 
               className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
@@ -282,13 +282,43 @@ const Header = () => {
             >
               Blogs
             </Link>
+              </>
+            )}
           </nav>
 
           {/* Contact Button */}
-          <div className="hidden lg:flex items-center">
+          <div className="hidden lg:flex items-center min-w-[120px] justify-end">
+            {showSkeleton ? (
+              <div className="animate-pulse h-10 w-32 bg-gray-300 rounded-lg flex items-center justify-center">
+                <div className="animate-pulse w-4 h-4 bg-gray-400 rounded"></div>
+              </div>
+            ) : (
+              <a 
+                href={`tel:${phoneNumber}`}
+                className="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2"
+                style={{
+                  backgroundColor: colors.primaryButton.bg,
+                  color: colors.primaryButton.text
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
+              >
+                  <Phone className="w-4 h-4" />
+                <span className="hidden xl:inline">{phoneNumber}</span>
+                <span className="xl:hidden">Call</span>
+                </a>
+            )}
+          </div>
+
+          {/* Mobile Call Button */}
+          {showSkeleton ? (
+            <div className="lg:hidden animate-pulse h-10 w-20 bg-gray-300 rounded-lg flex items-center justify-center">
+              <div className="animate-pulse w-4 h-4 bg-gray-400 rounded"></div>
+            </div>
+          ) : (
             <a 
               href={`tel:${phoneNumber}`}
-              className="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2"
+              className="lg:hidden px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2"
               style={{
                 backgroundColor: colors.primaryButton.bg,
                 color: colors.primaryButton.text
@@ -296,26 +326,10 @@ const Header = () => {
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
             >
-                <Phone className="w-4 h-4" />
-              <span className="hidden xl:inline">{phoneNumber}</span>
-              <span className="xl:hidden">Call</span>
-              </a>
-          </div>
-
-          {/* Mobile Call Button */}
-          <a 
-            href={`tel:${phoneNumber}`}
-            className="lg:hidden px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2"
-            style={{
-              backgroundColor: colors.primaryButton.bg,
-              color: colors.primaryButton.text
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
-          >
-            <Phone className="w-4 h-4" />
-            <span className="hidden sm:inline">Call</span>
-          </a>
+              <Phone className="w-4 h-4" />
+              <span className="hidden sm:inline">Call</span>
+            </a>
+          )}
         </div>
       </div>
       </header>

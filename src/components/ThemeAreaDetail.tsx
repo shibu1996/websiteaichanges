@@ -8,17 +8,7 @@ import { useSEO } from '../hooks/useSEO';
 // Cleaning Theme
 import CleaningAreaDetail from '../themes/cleaning/pages/CleaningAreaDetail';
 
-// Plumbing Theme
-import PlumbingAreaDetail from '../themes/plumbing/pages/PlumbingAreaDetail';
-
-// Roofing Theme
-import RoofingAreaDetail from '../themes/roofing/pages/RoofingAreaDetail';
-
-// HVAC Theme (using Areas as fallback)
-import HVACAreas from '../themes/hvac/pages/HVACAreas';
-
-// Painting Theme
-import PaintingAreaDetail from '../themes/painting/pages/PaintingAreaDetail';
+// Removed deleted theme imports
 
 import MultiColorAreaDetail from '../themes/multicolor/pages/AreaDetail'
 
@@ -30,15 +20,7 @@ const ThemeAreaDetail = () => {
     switch (currentTheme) {
       case 'cleaning':
         return <CleaningAreaDetail />;
-      case 'plumbing':
-        return <PlumbingAreaDetail />;
-      case 'roofing':
-        return <RoofingAreaDetail />;
-      case 'hvac':
-        return <HVACAreas />;
-      case 'painting':
-        return <PaintingAreaDetail />;
-         case 'multicolor':
+                                 case 'multicolor':
         return <MultiColorAreaDetail />;
       default:
         return <CleaningAreaDetail />;

@@ -35,16 +35,7 @@ import NotFound from "./pages/NotFound";
 // Theme-specific legal pages
 import CleaningTermsConditions from "./themes/cleaning/pages/CleaningTermsConditions";
 import CleaningPrivacyPolicy from "./themes/cleaning/pages/CleaningPrivacyPolicy";
-import PlumbingTermsConditions from "./themes/plumbing/pages/PlumbingTermsConditions";
-import PlumbingPrivacyPolicy from "./themes/plumbing/pages/PlumbingPrivacyPolicy";
-import HVACTermsConditions from "./themes/hvac/pages/HVACTermsConditions";
-import HVACPrivacyPolicy from "./themes/hvac/pages/HVACPrivacyPolicy";
-import RoofingTermsConditions from "./themes/roofing/pages/RoofingTermsConditions";
-import RoofingPrivacyPolicy from "./themes/roofing/pages/RoofingPrivacyPolicy";
-import PaintingTermsConditions from "./themes/painting/pages/PaintingTermsConditions";
-import PaintingPrivacyPolicy from "./themes/painting/pages/PaintingPrivacyPolicy";
 import MultiBlog from "./themes/multicolor/pages/multiblog"
-import PlumbingMaps from "./themes/plumbing/pages/PlumbingMaps";
 import ListBlogs from "./themes/multicolor/pages/ListBlogs"
 
 // import themess from "./cleaning.css"
@@ -57,10 +48,6 @@ import { ThemeProvider } from "./themes/multicolor/contexts/ThemeContext";
 
 export type ThemeType =
   | 'cleaning'
-  | 'plumbing'
-  | 'roofing'
-  | 'hvac'
-  | 'painting'
   | 'multicolor';
 
 // 2) Declare and export a mutable theme variable
@@ -70,14 +57,25 @@ const cleaningcss = "../src/cleaningcss.css"
 
 const App = () => {
 
-  const [theme, setTheme] = useState<'cleaning' | 'plumbing' | 'roofing' | 'hvac' | 'painting' | 'multicolor' | null>(null);
+  const [theme, setTheme] = useState<'cleaning' | 'multicolor' | null>(null);
 const [themeSubColor, setThemeSubColor] = useState<string | null>(null);  // New state for themeSubColor
 
 useEffect(() => {
-  const projectId = import.meta.env.VITE_PROJECT_ID;
+  const projectId = import.meta.env.VITE_PROJECT_ID || 'default';
+  console.log('Project ID:', projectId);
+  
+  // For development, use multicolor theme as default
+  if (!import.meta.env.VITE_PROJECT_ID) {
+    console.log('No project ID found, using multicolor theme as default');
+    setTheme('multicolor');
+    setThemeSubColor('multicolor');
+    return;
+  }
+  
   httpFile
     .post<{ theme: ThemeType, themeSubColor: string }>('/webapp/v1/theme', { projectId })
     .then(({ data }) => {
+      console.log('Theme API response:', data);
       const fetchedTheme = data.theme;
       const fetchedThemeSubColor = data.themeSubColor;
 
@@ -91,11 +89,21 @@ useEffect(() => {
 
       currentTheme = fetchedTheme;  // Dynamically export the fetched theme
     })
-    .catch(console.error);
+    .catch((error) => {
+      console.error('Theme API error:', error);
+      // Fallback to multicolor theme on error
+      setTheme('multicolor');
+      setThemeSubColor('multicolor');
+    });
 }, []);
 
 
-  if (!theme) return <div></div>;
+  if (!theme) {
+    console.log('Theme not loaded yet...');
+    return null; // Don't show loading message
+  }
+  
+  console.log('Current theme:', theme);
 
 
 
@@ -105,8 +113,9 @@ useEffect(() => {
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <Helmet>
-          {/* Will load /themes/cleaning.css, /themes/plumbing.css, etc. */}
-          <link rel="stylesheet" href={`../src/${theme}.css`} />
+          {/* Load theme-specific CSS */}
+          {theme === 'cleaning' && <link rel="stylesheet" href="/src/cleaning.css" />}
+          {theme === 'multicolor' && <link rel="stylesheet" href="/src/multicolor.css" />}
         </Helmet>
 
 
@@ -148,8 +157,6 @@ useEffect(() => {
                   <Route path="/terms-conditions" element={<ThemeTermsConditions />} />
                   <Route path="/cities/:slug" element={<CityDetail />} />
                   <Route path="/states/:slug" element={<StateDetail />} />
-                  <Route path="/maps" element={<PlumbingMaps />} />
-
                   {/* Theme-specific Legal Pages */}
                   <Route path="/terms-conditions" element={<CleaningTermsConditions />} />
                   <Route path="/privacy-policy" element={<CleaningPrivacyPolicy />} />
@@ -159,16 +166,8 @@ useEffect(() => {
                   <Route path="/disclaimer" element={<Disclaimer />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
-                  <Route path="/plumbing/terms-conditions" element={<PlumbingTermsConditions />} />
                   <Route path="/blog/:slug" element={<MultiBlog />} />
                   <Route path="/ListBlogs" element={<ListBlogs />} />
-                  <Route path="/plumbing/privacy-policy" element={<PlumbingPrivacyPolicy />} />
-                  <Route path="/hvac/terms-conditions" element={<HVACTermsConditions />} />
-                  <Route path="/hvac/privacy-policy" element={<HVACPrivacyPolicy />} />
-                  <Route path="/roofing/terms-conditions" element={<RoofingTermsConditions />} />
-                  <Route path="/roofing/privacy-policy" element={<RoofingPrivacyPolicy />} />
-                  <Route path="/painting/terms-conditions" element={<PaintingTermsConditions />} />
-                  <Route path="/painting/privacy-policy" element={<PaintingPrivacyPolicy />} />
                   {/* Catch-all route */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

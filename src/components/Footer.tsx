@@ -1,9 +1,20 @@
 
 import React from 'react';
-import PlumbingFooter from '../themes/plumbing/components/PlumbingFooter';
+import { currentTheme } from '../App';
+
+// Import available theme footers
+import CleaningFooter from '../themes/cleaning/components/CleaningFooter';
+import MulticolorFooter from '../themes/multicolor/components/Footer';
 
 const Footer = () => {
-  return <PlumbingFooter />;
+  switch (currentTheme) {
+    case 'cleaning':
+      return <CleaningFooter />;
+    case 'multicolor':
+      return <MulticolorFooter />;
+    default:
+      return <CleaningFooter />;
+  }
 };
 
 export default Footer;

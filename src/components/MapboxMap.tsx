@@ -15,7 +15,7 @@ interface MapboxMapProps {
   }>;
   areaName: string;
   className?: string;
-  theme: 'plumbing' | 'hvac' | 'cleaning' | 'painting' | 'roofing';
+  theme: 'cleaning' | 'multicolor';
   centerCoordinates?: [number, number];
   zoom?: number;
 }
@@ -99,16 +99,10 @@ const MapboxMap = ({
 
   const getThemeColors = (theme: string) => {
     switch (theme) {
-      case 'plumbing':
-        return { primary: '#3B82F6', secondary: '#1E40AF', bg: 'from-blue-500 to-blue-600' };
-      case 'hvac':
-        return { primary: '#EA580C', secondary: '#DC2626', bg: 'from-orange-500 to-red-600' };
       case 'cleaning':
         return { primary: '#10B981', secondary: '#059669', bg: 'from-green-500 to-emerald-600' };
-      case 'painting':
-        return { primary: '#8B5CF6', secondary: '#EC4899', bg: 'from-purple-500 to-pink-600' };
-      case 'roofing':
-        return { primary: '#78716C', secondary: '#57534E', bg: 'from-gray-600 to-stone-600' };
+      case 'multicolor':
+        return { primary: '#3B82F6', secondary: '#1E40AF', bg: 'from-blue-500 to-blue-600' };
       default:
         return { primary: '#3B82F6', secondary: '#1E40AF', bg: 'from-blue-500 to-blue-600' };
     }

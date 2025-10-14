@@ -8,17 +8,7 @@ import { useSEO } from '../hooks/useSEO';
 // Cleaning Theme
 import CleaningState from '../themes/cleaning/pages/CleaningState';
 
-// Plumbing Theme
-import PlumbingState from '../themes/plumbing/pages/PlumbingState';
-
-// Roofing Theme
-import RoofingState from '../themes/roofing/pages/RoofingState';
-
-// HVAC Theme
-import HVACState from '../themes/hvac/pages/HVACState';
-
-// Painting Theme
-import PaintingState from '../themes/painting/pages/PaintingState';
+// Removed deleted themes: plumbing, roofing, hvac, painting
 import MultiColor from '../themes/multicolor/pages/Areas'
 
 const ThemeState = () => {
@@ -29,14 +19,7 @@ const ThemeState = () => {
     switch (currentTheme) {
       case 'cleaning':
         return <CleaningState />;
-      case 'plumbing':
-        return <PlumbingState />;
-      case 'roofing':
-        return <RoofingState />;
-      case 'hvac':
-        return <HVACState />;
-      case 'painting':
-        return <PaintingState />;
+      // Removed deleted theme cases
          case 'multicolor':
         return <MultiColor />;
       default:

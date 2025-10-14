@@ -8,18 +8,6 @@ import { useSEO } from '../hooks/useSEO';
 // Cleaning Theme
 import CleaningCity from '../themes/cleaning/pages/CleaningCity';
 
-// Plumbing Theme
-import PlumbingCity from '../themes/plumbing/pages/PlumbingCity';
-
-// Roofing Theme
-import RoofingCity from '../themes/roofing/pages/RoofingCity';
-
-// HVAC Theme
-import HVACCity from '../themes/hvac/pages/HVACCity';
-
-// Painting Theme
-import PaintingCity from '../themes/painting/pages/PaintingCity';
-
 const ThemeCity = () => {
   const location = useLocation();
   const { seoData } = useSEO(location.pathname);
@@ -28,15 +16,7 @@ const ThemeCity = () => {
     switch (currentTheme) {
       case 'cleaning':
         return <CleaningCity />;
-      case 'plumbing':
-        return <PlumbingCity />;
-      case 'roofing':
-        return <RoofingCity />;
-      case 'hvac':
-        return <HVACCity />;
-      case 'painting':
-        return <PaintingCity />;
-      default:
+                              default:
         return <CleaningCity />;
     }
   };
