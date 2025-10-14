@@ -627,6 +627,10 @@ const DrainCleaning = () => {
                   src={displayServiceImage || '/placeholder.svg'}
                   alt="Professional Services"
                   className="w-full h-[500px] object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  width="600"
+                  height="500"
                   onError={(e) => {
                     e.currentTarget.src = '/placeholder.svg';
                   }}

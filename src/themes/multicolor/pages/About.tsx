@@ -350,6 +350,11 @@ const About = () => {
                 src={heroImage || '/placeholder.svg'}
                 alt="About Us"
                 className="w-full h-[500px] object-cover"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+                width="600"
+                height="500"
                 onError={(e) => {
                   e.currentTarget.src = '/placeholder.svg';
                 }}

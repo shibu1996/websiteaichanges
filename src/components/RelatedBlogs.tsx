@@ -109,7 +109,17 @@ const RelatedBlogs: React.FC<Props> = ({ excludeSlug, limit = 6 }) => {
           return (
             <article className="nx-related-item" key={`${it.slug}-${idx}`}>
               <Link className="nx-related-media" to={`/blog/${it.slug}`}>
-                <img src={imgSrc} alt={alt} loading="lazy" />
+                <img 
+                  src={imgSrc} 
+                  alt={alt} 
+                  loading="lazy" 
+                  decoding="async"
+                  width="300"
+                  height="200"
+                  onError={(e) => {
+                    e.currentTarget.src = "https://picsum.photos/seed/related-fallback/640/400";
+                  }}
+                />
               </Link>
               <h3 className="nx-h3 text-lg">
                 <Link to={`/blog/${it.slug}`}>{it.title}</Link>

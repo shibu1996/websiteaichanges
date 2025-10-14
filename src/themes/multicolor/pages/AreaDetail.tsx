@@ -1080,6 +1080,13 @@ const AreaDetail = () => {
                           src={service.images[0]?.url || "https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041850.jpg"}
                           alt={service.service_name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          loading="lazy"
+                          decoding="async"
+                          width="400"
+                          height="192"
+                          onError={(e) => {
+                            e.currentTarget.src = "https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041850.jpg";
+                          }}
                         />
                         
                         {/* Gradient Overlay */}

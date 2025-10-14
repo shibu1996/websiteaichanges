@@ -111,9 +111,16 @@ const ServicesGrid = ({ formattedLocationName = "" }) => {
                 >
                   <div className="relative h-48 overflow-hidden">
                     <img
-                      src={service.images[0]?.url || "https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041850.jpg"} // Default image in case service.image is unavailable
+                      src={service.images[0]?.url || "https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041850.jpg"}
                       alt={service.service_name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      loading="lazy"
+                      decoding="async"
+                      width="400"
+                      height="192"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041850.jpg";
+                      }}
                     />
                     {/* <div className="absolute inset-0 bg-primary/20 group-hover:bg-primary/10 transition-colors duration-300"></div> */}
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>

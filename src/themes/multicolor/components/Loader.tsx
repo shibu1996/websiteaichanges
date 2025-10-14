@@ -128,7 +128,6 @@ const Loader: React.FC<LoaderProps> = ({
             <h2 
               className={`font-bold mb-3 transition-all duration-500 ${textSizes[size]}`}
               style={{ 
-                color: colors.heading,
                 backgroundImage: variant === 'elegant' ? `linear-gradient(135deg, ${colors.primaryButton.bg}, ${colors.accent})` : undefined,
                 WebkitBackgroundClip: variant === 'elegant' ? 'text' : undefined,
                 backgroundClip: variant === 'elegant' ? 'text' : undefined,

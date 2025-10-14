@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigationType, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Calendar } from 'lucide-react';
 import { Phone, Star, Sparkles, Home, Wrench } from 'lucide-react';
 import { Button } from '@/components/ui/button';

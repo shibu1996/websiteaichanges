@@ -1,6 +1,6 @@
 
-import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { Link, useLocation, useNavigationType, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useLayoutEffect, lazy, Suspense } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Calendar } from 'lucide-react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
@@ -10,26 +10,28 @@ import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import AboutSection from '../components/AboutSection';
 import ServicesSection from '../components/ServicesSection';
-import BookingSection from '../components/BookingSection';
-import WhyChooseUsSection from '../components/WhyChooseUsSection';
-import ProcessSection from '../components/ProcessSection';
-import TestimonialsSection from '../components/TestimonialsSection';
-import GuaranteeSection from '../components/GuaranteeSection';
-import AreasSection from '../components/AreasSection';
-import FAQSection from '../components/FAQSection';
 import Footer from '../components/Footer';
-import SchemaMarkup from '../components/SchemaMarkup';
-import PageSchemaMarkup from '../components/PageSchemaMarkup';
-import TestimonialsSchemaMarkup from '../components/TestimonialsSchemaMarkup';
-import ProcessSchemaMarkup from '../components/ProcessSchemaMarkup';
 import SEOHead from '../components/SEOHead';
-import WebVitals from '../components/WebVitals';
 import { httpFile } from "../../../config.js";
 import { useSEO } from '../../../hooks/useSEO';
 import DynamicIcon from '../../../extras/DynamicIcon.js';
 import { useTheme } from '../contexts/ThemeContext';
 import Loader from '../components/Loader';
 import ColorThemeSelector from '../components/ColorThemeSelector';
+
+// Lazy load heavy components
+const BookingSection = lazy(() => import('../components/BookingSection'));
+const WhyChooseUsSection = lazy(() => import('../components/WhyChooseUsSection'));
+const ProcessSection = lazy(() => import('../components/ProcessSection'));
+const TestimonialsSection = lazy(() => import('../components/TestimonialsSection'));
+const GuaranteeSection = lazy(() => import('../components/GuaranteeSection'));
+const AreasSection = lazy(() => import('../components/AreasSection'));
+const FAQSection = lazy(() => import('../components/FAQSection'));
+const SchemaMarkup = lazy(() => import('../components/SchemaMarkup'));
+const PageSchemaMarkup = lazy(() => import('../components/PageSchemaMarkup'));
+const TestimonialsSchemaMarkup = lazy(() => import('../components/TestimonialsSchemaMarkup'));
+const ProcessSchemaMarkup = lazy(() => import('../components/ProcessSchemaMarkup'));
+const WebVitals = lazy(() => import('../components/WebVitals'));
 
 interface Feature {
   serialno: number;
@@ -632,8 +634,14 @@ const Index = () => {
         </section>
 
 
-        <GuaranteeSection />
-        <TestimonialsSection />
+        <Suspense fallback={<div className="py-16 text-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto border-pink-500"></div></div>}>
+          <GuaranteeSection />
+        </Suspense>
+        
+        <Suspense fallback={<div className="py-16 text-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto border-pink-500"></div></div>}>
+          <TestimonialsSection />
+        </Suspense>
+        
         {/* <BookingSection /> */}
 
         <section 
