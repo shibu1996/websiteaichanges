@@ -351,7 +351,7 @@ const About = () => {
                 alt="About Us"
                 className="w-full h-[500px] object-cover"
                 loading="eager"
-                fetchpriority="high"
+                fetchPriority="high"
                 decoding="async"
                 width="600"
                 height="500"
