@@ -6,6 +6,7 @@ import { httpFile } from "../../../config.js";
 import { getProjectId } from '../../../hooks/getProjectId';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+import Loader from './Loader';
 
 const Header = () => {
   const { getThemeColors } = useTheme();
@@ -41,13 +42,15 @@ const Header = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
+  // Header should not show full page loading, just show skeleton
   if (isLoading) {
     return (
       <header 
-        className="shadow-lg sticky top-0 z-50 transition-colors duration-300 font-poppins backdrop-blur-md"
+        className="sticky top-0 z-50 transition-colors duration-300 font-poppins backdrop-blur-md"
         style={{
-          backgroundColor: `${colors.surface}95`,
-          borderBottom: `1px solid ${colors.primaryButton.bg}20`
+          backgroundColor: 'white',
+          borderBottom: `1px solid ${colors.primaryButton.bg}20`,
+          boxShadow: `0 4px 20px ${colors.primaryButton.bg}10`
         }}
       >
         <div className="container mx-auto px-4 sm:px-8 lg:px-16">
@@ -67,13 +70,15 @@ const Header = () => {
   }
 
   return (
-    <header 
-      className="sticky top-0 z-50 transition-all duration-300 font-poppins"
-      style={{
-        backgroundColor: colors.surface,
-        borderBottom: `1px solid ${colors.primaryButton.bg}15`
-      }}
-    >
+    <>
+      <header 
+        className="sticky top-0 z-50 transition-all duration-300 font-poppins backdrop-blur-md"
+        style={{
+          backgroundColor: 'white',
+          borderBottom: `1px solid ${colors.primaryButton.bg}20`,
+          boxShadow: `0 4px 20px ${colors.primaryButton.bg}10`
+        }}
+      >
       <div className="container mx-auto px-4 sm:px-8 lg:px-16">
         <div className="flex items-center justify-between py-3">
           
@@ -90,14 +95,14 @@ const Header = () => {
             <div>
               <h1 
                 className="text-lg font-bold"
-                style={{ color: colors.heading }}
+                style={{ color: '#1f2937' }}
               >
                 {projectName}
               </h1>
-              <p className="text-xs hidden sm:block" style={{ color: colors.description }}>
+              <p className="text-xs hidden sm:block" style={{ color: '#6b7280' }}>
                 {projectSlogan}
               </p>
-            </div>
+          </div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -105,14 +110,14 @@ const Header = () => {
             <Link 
               to="/" 
               className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-              style={{ color: colors.heading }}
+              style={{ color: '#1f2937' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
                 e.currentTarget.style.color = colors.primaryButton.bg;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = colors.heading;
+                e.currentTarget.style.color = '#1f2937';
               }}
             >
               Home
@@ -120,14 +125,14 @@ const Header = () => {
             <Link 
               to="/about" 
               className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-              style={{ color: colors.heading }}
+              style={{ color: '#1f2937' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
                 e.currentTarget.style.color = colors.primaryButton.bg;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = colors.heading;
+                e.currentTarget.style.color = '#1f2937';
               }}
             >
               About
@@ -138,14 +143,14 @@ const Header = () => {
               <Link
                 to="/services"
                 className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1"
-                style={{ color: colors.heading }}
+                style={{ color: '#1f2937' }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
                   e.currentTarget.style.color = colors.primaryButton.bg;
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = colors.heading;
+                  e.currentTarget.style.color = '#1f2937';
                 }}
               >
                 Services <ChevronDown className="w-3 h-3" />
@@ -153,7 +158,7 @@ const Header = () => {
               <div 
                 className="absolute top-full left-0 mt-1 w-64 rounded-xl shadow-lg py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
                 style={{
-                  backgroundColor: colors.surface,
+                  backgroundColor: 'white',
                   border: `1px solid ${colors.primaryButton.bg}20`
                 }}
               >
@@ -162,14 +167,14 @@ const Header = () => {
                     key={service._id}
                     to={`/services/${service.service_name.toLowerCase().replace(/\s+/g, '-')}`}
                     className="block w-full px-4 py-2 text-sm transition-colors duration-200"
-                    style={{ color: colors.heading }}
+                    style={{ color: '#1f2937' }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
                       e.currentTarget.style.color = colors.primaryButton.bg;
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.color = colors.heading;
+                      e.currentTarget.style.color = '#1f2937';
                     }}
                   >
                     {service.service_name}
@@ -195,14 +200,14 @@ const Header = () => {
               <Link
                 to="/areas"
                 className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1"
-                style={{ color: colors.heading }}
+                style={{ color: '#1f2937' }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
                   e.currentTarget.style.color = colors.primaryButton.bg;
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = colors.heading;
+                  e.currentTarget.style.color = '#1f2937';
                 }}
               >
                 Areas <ChevronDown className="w-3 h-3" />
@@ -210,7 +215,7 @@ const Header = () => {
               <div 
                 className="absolute top-full left-0 mt-1 w-56 rounded-xl shadow-lg py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
                 style={{
-                  backgroundColor: colors.surface,
+                  backgroundColor: 'white',
                   border: `1px solid ${colors.primaryButton.bg}20`
                 }}
               >
@@ -219,14 +224,14 @@ const Header = () => {
                     key={loc.location_id}
                     to={`/${loc.slug}`}
                     className="block w-full px-4 py-2 text-sm transition-colors duration-200"
-                    style={{ color: colors.heading }}
+                    style={{ color: '#1f2937' }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
                       e.currentTarget.style.color = colors.primaryButton.bg;
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.color = colors.heading;
+                      e.currentTarget.style.color = '#1f2937';
                     }}
                   >
                     {loc.name}
@@ -250,14 +255,14 @@ const Header = () => {
             <Link 
               to="/contact" 
               className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-              style={{ color: colors.heading }}
+              style={{ color: '#1f2937' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
                 e.currentTarget.style.color = colors.primaryButton.bg;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = colors.heading;
+                e.currentTarget.style.color = '#1f2937';
               }}
             >
               Contact
@@ -265,14 +270,14 @@ const Header = () => {
             <Link 
               to="/ListBlogs" 
               className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-              style={{ color: colors.heading }}
+              style={{ color: '#1f2937' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
                 e.currentTarget.style.color = colors.primaryButton.bg;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = colors.heading;
+                e.currentTarget.style.color = '#1f2937';
               }}
             >
               Blogs
@@ -291,101 +296,178 @@ const Header = () => {
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
             >
-              <Phone className="w-4 h-4" />
+                <Phone className="w-4 h-4" />
               <span className="hidden xl:inline">{phoneNumber}</span>
               <span className="xl:hidden">Call</span>
-            </a>
+              </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button 
-            onClick={toggleMenu} 
-            className="lg:hidden p-2 rounded-lg transition-colors duration-200"
-            style={{ color: colors.heading }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
+          {/* Mobile Call Button */}
+          <a 
+            href={`tel:${phoneNumber}`}
+            className="lg:hidden px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2"
+            style={{
+              backgroundColor: colors.primaryButton.bg,
+              color: colors.primaryButton.text
             }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
           >
-            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+            <Phone className="w-4 h-4" />
+            <span className="hidden sm:inline">Call</span>
+          </a>
         </div>
+      </div>
+      </header>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
+      {/* Mobile Bottom Navigation */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40">
+        <div 
+          className="bg-white border-t-2 px-4 py-2"
+          style={{ 
+            borderTopColor: colors.primaryButton.bg,
+            boxShadow: `0 -4px 20px ${colors.primaryButton.bg}10`
+          }}
+        >
+          <nav className="flex items-center justify-around">
+            {/* Home */}
+            <Link 
+              to="/" 
+              className="flex flex-col items-center gap-1 py-2 px-3 rounded-lg transition-all duration-200"
+              style={{ color: '#1f2937' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
+                e.currentTarget.style.color = colors.primaryButton.bg;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#1f2937';
+              }}
+            >
+              <i className="fas fa-home text-lg"></i>
+              <span className="text-xs font-medium">Home</span>
+            </Link>
+
+            {/* About */}
+            <Link 
+              to="/about" 
+              className="flex flex-col items-center gap-1 py-2 px-3 rounded-lg transition-all duration-200"
+              style={{ color: '#1f2937' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
+                e.currentTarget.style.color = colors.primaryButton.bg;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#1f2937';
+              }}
+            >
+              <i className="fas fa-info-circle text-lg"></i>
+              <span className="text-xs font-medium">About</span>
+            </Link>
+
+            {/* Services */}
+            <Link 
+              to="/services" 
+              className="flex flex-col items-center gap-1 py-2 px-3 rounded-lg transition-all duration-200"
+              style={{ color: '#1f2937' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
+                e.currentTarget.style.color = colors.primaryButton.bg;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#1f2937';
+              }}
+            >
+              <i className="fas fa-tools text-lg"></i>
+              <span className="text-xs font-medium">Services</span>
+            </Link>
+
+            {/* Areas */}
+            <Link 
+              to="/areas" 
+              className="flex flex-col items-center gap-1 py-2 px-3 rounded-lg transition-all duration-200"
+              style={{ color: '#1f2937' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
+                e.currentTarget.style.color = colors.primaryButton.bg;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#1f2937';
+              }}
+            >
+              <i className="fas fa-map-marker-alt text-lg"></i>
+              <span className="text-xs font-medium">Areas</span>
+            </Link>
+
+            {/* All Menu */}
+            <button
+              onClick={toggleMenu}
+              className="flex flex-col items-center gap-1 py-2 px-3 rounded-lg transition-all duration-200"
+              style={{ color: '#1f2937' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
+                e.currentTarget.style.color = colors.primaryButton.bg;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#1f2937';
+              }}
+            >
+              <i className="fas fa-bars text-lg"></i>
+              <span className="text-xs font-medium">Menu</span>
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      {/* Mobile Full Menu Overlay */}
+      {isMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-50">
           <div 
-            className="lg:hidden py-4 font-poppins"
-            style={{ borderTop: `1px solid ${colors.primaryButton.bg}15` }}
+            className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6 max-h-[80vh] overflow-y-auto"
+            style={{ borderTop: `3px solid ${colors.primaryButton.bg}` }}
           >
-            <nav className="flex flex-col space-y-2">
-              <Link 
-                to="/" 
-                className="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-                style={{ color: colors.heading }}
-                onClick={() => setIsMenuOpen(false)}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
-                  e.currentTarget.style.color = colors.primaryButton.bg;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = colors.heading;
-                }}
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-bold" style={{ color: colors.primaryButton.bg }}>
+                All Menu
+              </h3>
+              <button
+                onClick={toggleMenu}
+                className="p-2 rounded-full"
+                style={{ backgroundColor: `${colors.primaryButton.bg}10` }}
               >
-                Home
-              </Link>
-              <Link 
-                to="/about" 
-                className="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-                style={{ color: colors.heading }}
-                onClick={() => setIsMenuOpen(false)}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
-                  e.currentTarget.style.color = colors.primaryButton.bg;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = colors.heading;
-                }}
-              >
-                About
-              </Link>
+                <X className="w-5 h-5" style={{ color: colors.primaryButton.bg }} />
+              </button>
+            </div>
 
-              {/* Mobile Services */}
+            <nav className="space-y-4">
+              {/* All Services */}
               <div>
-                <Link 
-                  to="/services" 
-                  className="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 block"
-                  style={{ color: colors.heading }}
-                  onClick={() => setIsMenuOpen(false)}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
-                    e.currentTarget.style.color = colors.primaryButton.bg;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = colors.heading;
-                  }}
-                >
+                <h4 className="text-sm font-semibold mb-3" style={{ color: colors.primaryButton.bg }}>
                   Services
-                </Link>
-                <div className="pl-4 mt-1 space-y-1">
-                  {services.slice(0, 4).map((service) => (
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {services.map((service) => (
                     <Link
                       key={service._id}
                       to={`/services/${service.service_name.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="block w-full px-4 py-2 text-sm transition-colors duration-200"
-                      style={{ color: colors.description }}
+                      className="p-3 rounded-lg text-sm transition-colors duration-200"
+                      style={{ 
+                        backgroundColor: `${colors.primaryButton.bg}05`,
+                        color: '#1f2937',
+                        border: `1px solid ${colors.primaryButton.bg}15`
+                      }}
                       onClick={() => setIsMenuOpen(false)}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
                         e.currentTarget.style.color = colors.primaryButton.bg;
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.color = colors.description;
+                        e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}05`;
+                        e.currentTarget.style.color = '#1f2937';
                       }}
                     >
                       {service.service_name}
@@ -394,39 +476,30 @@ const Header = () => {
                 </div>
               </div>
 
-              {/* Mobile Areas */}
+              {/* All Areas */}
               <div>
-                <Link 
-                  to="/areas" 
-                  className="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 block"
-                  style={{ color: colors.heading }}
-                  onClick={() => setIsMenuOpen(false)}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
-                    e.currentTarget.style.color = colors.primaryButton.bg;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = colors.heading;
-                  }}
-                >
-                  Areas
-                </Link>
-                <div className="pl-4 mt-1 space-y-1">
-                  {locations.slice(0, 4).map((loc) => (
+                <h4 className="text-sm font-semibold mb-3" style={{ color: colors.primaryButton.bg }}>
+                  Service Areas
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {locations.map((loc) => (
                     <Link
                       key={loc.location_id}
                       to={`/${loc.slug}`}
-                      className="block w-full px-4 py-2 text-sm transition-colors duration-200"
-                      style={{ color: colors.description }}
+                      className="p-3 rounded-lg text-sm transition-colors duration-200"
+                      style={{ 
+                        backgroundColor: `${colors.primaryButton.bg}05`,
+                        color: '#1f2937',
+                        border: `1px solid ${colors.primaryButton.bg}15`
+                      }}
                       onClick={() => setIsMenuOpen(false)}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
                         e.currentTarget.style.color = colors.primaryButton.bg;
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.color = colors.description;
+                        e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}05`;
+                        e.currentTarget.style.color = '#1f2937';
                       }}
                     >
                       {loc.name}
@@ -435,58 +508,47 @@ const Header = () => {
                 </div>
               </div>
 
-              <Link 
-                to="/contact" 
-                className="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-                style={{ color: colors.heading }}
-                onClick={() => setIsMenuOpen(false)}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
-                  e.currentTarget.style.color = colors.primaryButton.bg;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = colors.heading;
-                }}
-              >
-                Contact
-              </Link>
-              <Link 
-                to="/ListBlogs" 
-                className="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-                style={{ color: colors.heading }}
-                onClick={() => setIsMenuOpen(false)}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
-                  e.currentTarget.style.color = colors.primaryButton.bg;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = colors.heading;
-                }}
-              >
-                Blogs
-              </Link>
-
-              {/* Mobile Contact Button */}
-              <a 
-                href={`tel:${phoneNumber}`}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 w-fit mt-2"
-                style={{
-                  backgroundColor: colors.primaryButton.bg,
-                  color: colors.primaryButton.text
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
-              >
-                <Phone className="w-4 h-4" />
-                {phoneNumber}
-              </a>
+              {/* Contact & Blog */}
+              <div className="flex gap-3">
+                <Link 
+                  to="/contact" 
+                  className="flex-1 p-4 rounded-lg text-center font-semibold transition-colors duration-200"
+                  style={{
+                    backgroundColor: colors.primaryButton.bg,
+                    color: colors.primaryButton.text
+                  }}
+                  onClick={() => setIsMenuOpen(false)}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.hover}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primaryButton.bg}
+                >
+                  Contact Us
+                </Link>
+                <Link 
+                  to="/ListBlogs" 
+                  className="flex-1 p-4 rounded-lg text-center font-semibold transition-colors duration-200"
+                  style={{
+                    backgroundColor: `${colors.primaryButton.bg}10`,
+                    color: colors.primaryButton.bg,
+                    border: `2px solid ${colors.primaryButton.bg}`
+                  }}
+                  onClick={() => setIsMenuOpen(false)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = colors.primaryButton.bg;
+                    e.currentTarget.style.color = colors.primaryButton.text;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = `${colors.primaryButton.bg}10`;
+                    e.currentTarget.style.color = colors.primaryButton.bg;
+                  }}
+                >
+                  Blogs
+                </Link>
+              </div>
             </nav>
           </div>
-        )}
-      </div>
-    </header>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -24,6 +24,7 @@ import PageSchemaMarkup from '../components/PageSchemaMarkup';
 import ProcessSchemaMarkup from '../components/ProcessSchemaMarkup';
 import SEOHead from '../components/SEOHead';
 import { httpFile } from "../../../config.js";
+import Loader from '../components/Loader';
 
 const Services = () => {
   const { getThemeColors } = useTheme();
@@ -34,6 +35,7 @@ const Services = () => {
   ];
   const [phoneNumber, setPhoneNumber] = useState("");
   const [backgroundImage, setBackgroundImage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const [CTA, setCTA] = useState([]);
   const [projectCategory, setProjectCategory] = useState("");
@@ -143,6 +145,8 @@ const Services = () => {
 
       } catch (err) {
         console.error('Fetch hero data error:', err);
+      } finally {
+        setIsLoading(false);
       }
     })();
   }, [projectId]);
@@ -156,6 +160,10 @@ const Services = () => {
 
 
   console.log(formattedLocationName, "formattedLocationName in services page");
+
+  if (isLoading) {
+    return <Loader message="Loading Services..." />;
+  }
 
   return (
     <div className="min-h-screen font-poppins">

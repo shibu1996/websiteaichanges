@@ -28,6 +28,7 @@ import { httpFile } from "../../../config.js";
 import { useSEO } from '../../../hooks/useSEO';
 import DynamicIcon from '../../../extras/DynamicIcon.js';
 import { useTheme } from '../contexts/ThemeContext';
+import Loader from '../components/Loader';
 import ColorThemeSelector from '../components/ColorThemeSelector';
 
 interface Feature {
@@ -153,6 +154,10 @@ const Index = () => {
   };
 
 
+
+  if (isLoading) {
+    return <Loader message="Loading Home Page..." variant="elegant" size="lg" />;
+  }
 
   return (
     <HelmetProvider>

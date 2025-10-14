@@ -24,6 +24,7 @@ import DynamicFAIcon from '../../../extras/DynamicFAIcon.js';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
 import { Home } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import Loader from '../components/Loader';
 
 const About = () => {
   const { getThemeColors } = useTheme();
@@ -183,14 +184,7 @@ const About = () => {
 
   // Simple loading state
   if (!projectName && !aboutHeroText) {
-    return (
-      <div className="min-h-screen font-poppins flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: safeColors.primaryButton.bg }}></div>
-          <p style={{ color: safeColors.description }}>Loading...</p>
-        </div>
-      </div>
-    );
+    return <Loader message="Loading About Page..." />;
   }
 
   return (

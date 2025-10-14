@@ -37,6 +37,7 @@ import { useSEO } from '../../../hooks/useSEO';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
 import { Home } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import Loader from '../components/Loader';
 interface Testimonial {
   review_text: string;
   customer_image: string;
@@ -432,16 +433,9 @@ const DrainCleaning = () => {
   }));
 
 
-  // Simple loading state
-  if (!displayServiceName && !aboutService) {
-    return (
-      <div className="min-h-screen font-poppins flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: safeColors.primaryButton.bg }}></div>
-          <p style={{ color: safeColors.description }}>Loading...</p>
-        </div>
-      </div>
-    );
+  // Loading state
+  if (isLoading) {
+    return <Loader message="Loading Service Details..." />;
   }
 
   return (

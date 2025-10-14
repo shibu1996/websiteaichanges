@@ -10,6 +10,9 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageBreadcrumb from "../components/PageBreadcrumb";
 import SEOHead from "../components/SEOHead";
+import { useTheme } from '../contexts/ThemeContext';
+import { BookOpen } from 'lucide-react';
+import Loader from '../components/Loader';
 
 const API_URL = import.meta.env.VITE_PROJECT_URL || "https://apis.smartlybuild.dev";
 const PROJECT_ID = import.meta.env.VITE_PROJECT_ID;
@@ -23,6 +26,21 @@ const BlogPage: React.FC = () => {
   const [blogTitle, setBlogTitle] = useState("");
   const [currentSlug, setCurrentSlug] = useState(""); // Store currentSlug
   const [loading, setLoading] = useState(true);
+  
+  const { getThemeColors } = useTheme();
+  
+  // Fallback colors in case theme context is not loaded
+  const fallbackColors = {
+    primaryButton: { bg: '#e11d48', text: '#ffffff', hover: '#be123c' },
+    secondaryButton: { bg: 'transparent', text: '#ffffff', border: '#e11d48', hover: 'rgba(225,29,72,0.1)' },
+    accent: '#f59e0b',
+    surface: '#f8fafc',
+    gradient: { from: '#e11d48', to: '#f59e0b' },
+    heading: '#1f2937',
+    description: '#6b7280'
+  };
+  
+  const safeColors = getThemeColors() || fallbackColors;
 
   // Fetch blog HTML
   useEffect(() => {
@@ -82,7 +100,13 @@ const BlogPage: React.FC = () => {
     fetchBlog();
   }, [slug, navigate]);
 
-  if (loading) return <p>Loading blog...</p>;
+  if (loading) {
+    return (
+      <HelmetProvider>
+        <Loader message="Loading Blog..." />
+      </HelmetProvider>
+    );
+  }
 
   const breadcrumbItems = [{ label: "Blogs" }];
 

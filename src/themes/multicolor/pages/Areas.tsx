@@ -19,12 +19,14 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import DynamicFAIcon from '../../../extras/DynamicFAIcon.js';
 import { useTheme } from '../contexts/ThemeContext';
+import Loader from '../components/Loader';
 
 const Areas = () => {
   const breadcrumbItems = [
     { label: "Areas" }
   ];
   const [whyChooseUsAboutPage, setWhyChooseUsAboutPage] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { seoData } = useSEO('/areas');
   const { getThemeColors } = useTheme();
@@ -103,6 +105,8 @@ const Areas = () => {
         console.log(data.slug, "data.slug")
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -154,6 +158,10 @@ const Areas = () => {
     return CTA[index] || CTA[0];
   };
 
+
+  if (isLoading) {
+    return <Loader message="Loading Service Areas..." />;
+  }
 
   return (
 

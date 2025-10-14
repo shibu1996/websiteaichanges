@@ -3,6 +3,7 @@ import { Phone, Mail, MapPin, Clock, Star, Shield, Award } from 'lucide-react';
 import { useFooterData } from '../../../hooks/useFooterData.js';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+import Loader from './Loader';
 
 const Footer = () => {
   const { getThemeColors } = useTheme();
@@ -17,6 +18,7 @@ const Footer = () => {
   ];
 
   const { footerData, isLoading } = useFooterData();
+  // Footer should not show full page loading, just show skeleton
   if (isLoading) {
     return (
       <footer 

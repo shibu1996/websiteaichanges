@@ -20,6 +20,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import ColorThemeSelector from '../components/ColorThemeSelector';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
 import { Home } from 'lucide-react';
+import Loader from '../components/Loader';
 
 const Contact = () => {
   const breadcrumbItems = [
@@ -44,6 +45,7 @@ const Contact = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [projectFaqs, setprojectFaqs] = useState([]);
   const [showThankYou, setShowThankYou] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const projectId = import.meta.env.VITE_PROJECT_ID;
   const toggleFAQ = (index: number) => {
@@ -92,6 +94,8 @@ const Contact = () => {
         }
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -108,6 +112,10 @@ const Contact = () => {
 
 
   const faqSchema = generateFAQSchema(projectFaqs);
+
+  if (isLoading) {
+    return <Loader message="Loading Contact Page..." />;
+  }
 
   return (
 

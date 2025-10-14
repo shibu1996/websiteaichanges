@@ -10,6 +10,7 @@ import { httpFile } from "../../../config.js";
 import { useTheme } from '../contexts/ThemeContext';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
 import { Home } from 'lucide-react';
+import Loader from '../components/Loader';
 
 type BlogItem = { 
   slug: string; 
@@ -42,6 +43,8 @@ const Blogs = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+
+  console.log("ListBlogs loading state:", loading);
 
   // Function to generate quick answer based on title (exactly 15 words)
   const generateQuickAnswer = (title: string) => {
@@ -241,9 +244,13 @@ const Blogs = () => {
 
             {/* Loading State */}
             {loading && (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: safeColors.primaryButton.bg }}></div>
-                <p style={{ color: safeColors.description }}>Loading blogs...</p>
+              <div className="py-16">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: safeColors.primaryButton.bg }}></div>
+                  <h2 className="text-xl font-bold mb-2" style={{ color: safeColors.heading }}>Loading Blogs...</h2>
+                  <p style={{ color: safeColors.description }}>Please wait while we load the blogs.</p>
+                  <p className="text-xs text-gray-500 mt-2">Loading state: {loading.toString()}</p>
+                </div>
               </div>
             )}
 
