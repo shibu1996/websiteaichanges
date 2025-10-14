@@ -357,8 +357,8 @@ const Contact = () => {
                           required
                           className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 text-sm"
                           style={{
-                            focusRingColor: colors.primaryButton.bg
-                          }}
+                            '--tw-ring-color': colors.primaryButton.bg
+                          } as React.CSSProperties}
                           placeholder="Enter your full name"
                         />
                       </div>
@@ -375,8 +375,8 @@ const Contact = () => {
                           required
                           className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 text-sm"
                           style={{
-                            focusRingColor: colors.primaryButton.bg
-                          }}
+                            '--tw-ring-color': colors.primaryButton.bg
+                          } as React.CSSProperties}
                           placeholder="Enter your email address"
                         />
                       </div>
@@ -393,8 +393,8 @@ const Contact = () => {
                           required
                           className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 text-sm"
                           style={{
-                            focusRingColor: colors.primaryButton.bg
-                          }}
+                            '--tw-ring-color': colors.primaryButton.bg
+                          } as React.CSSProperties}
                           placeholder="Enter your phone number"
                         />
                       </div>
@@ -410,8 +410,8 @@ const Contact = () => {
                           required
                           className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 text-sm"
                           style={{
-                            focusRingColor: colors.primaryButton.bg
-                          }}
+                            '--tw-ring-color': colors.primaryButton.bg
+                          } as React.CSSProperties}
                         >
                           <option value="">Select a service</option>
                           <option value="emergency-repair">Emergency Repair</option>
@@ -433,8 +433,8 @@ const Contact = () => {
                           rows={3}
                           className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 resize-none text-sm"
                           style={{
-                            focusRingColor: colors.primaryButton.bg
-                          }}
+                            '--tw-ring-color': colors.primaryButton.bg
+                          } as React.CSSProperties}
                           placeholder="Tell us about your project or any specific requirements..."
                         ></textarea>
                       </div>
