@@ -5,6 +5,7 @@ import { httpFile } from '../../../config.js';
 import CleaningLoader from '../components/CleaningLoader';
 import DynamicIcon from '../../../extras/DynamicIcon.js';
 import { getProjectId } from '../../../hooks/getProjectId'; // Import the utility
+import { colorThemes, getThemeByName, defaultTheme } from '../colors.js';
 
 interface Feature {
   serialno: number;
@@ -23,6 +24,8 @@ export default function CleaningHero() {
   const [isLoading, setIsLoading]           = useState(true);
   const [heroHeadingPart1, setHeroHeadingPart1] = useState('');
   const [heroHeadingPart2, setHeroHeadingPart2] = useState('');
+  const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
+  const [currentTheme, setCurrentTheme] = useState(getThemeByName(defaultTheme));
 const conjunctions = [
   'and', 'or', 'but', 'with', 'for', 'as', 'because', 'so', 'then', 'by', 'on', 'at', 
   'in', 'of', 'to', 'from', 'about', 'through', 'between', 'during', 'before', 'after'
@@ -41,6 +44,27 @@ useEffect(() => {
 
     console.log(id, "this is id")
     setProjectId(id); // Set projectId in state
+  }, []);
+
+  // Load saved theme from localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('cleaningTheme');
+    if (savedTheme) {
+      setSelectedTheme(savedTheme);
+      setCurrentTheme(getThemeByName(savedTheme));
+    }
+  }, []);
+
+  // Listen for theme changes from other components
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const newTheme = event.detail.theme;
+      setSelectedTheme(newTheme);
+      setCurrentTheme(getThemeByName(newTheme));
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
   }, []);
   useEffect(() => {
     (async () => {
@@ -118,14 +142,30 @@ setProjectSlogan(info.projectSlogan || `Professional ${info.serviceType}`);
   if (isLoading) return <CleaningLoader />;
 
   return (
-    <section className="relative py-20 bg-gradient-to-r from-green-500 via-emerald-600 to-teal-600 text-white overflow-hidden min-h-[700px] flex items-center">
+    <>
+      <style>
+        {`
+          @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+        `}
+      </style>
+      <section 
+        className="relative py-16 text-white overflow-hidden min-h-[600px] flex items-center"
+        style={{
+          background: `linear-gradient(135deg, ${currentTheme.elements.surface}, ${currentTheme.elements.gradient.to})`
+        }}
+      >
       {/* animated dots */}
       <div className="absolute inset-0 opacity-10">
         {[...Array(30)].map((_, i) => (
           <div
             key={i}
-            className="absolute bg-white rounded-full animate-pulse"
+            className="absolute rounded-full animate-pulse"
             style={{
+              backgroundColor: currentTheme.elements.accent,
               width: `${Math.random()*8+4}px`,
               height:`${Math.random()*8+4}px`,
               top:   `${Math.random()*100}%`,
@@ -139,58 +179,157 @@ setProjectSlogan(info.projectSlogan || `Professional ${info.serviceType}`);
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
         {/* Badge */}
-        <div className="inline-flex items-center bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-white/30">
-          <DynamicIcon iconName="Sparkles" className="w-5 h-5 text-emerald-300 mr-2" />
-          <span className="text-emerald-100 font-semibold">
+        <div 
+          className="inline-flex items-center backdrop-blur-sm rounded-full px-6 py-3 mb-8 border"
+          style={{
+            backgroundColor: `${currentTheme.elements.primaryButton.bg}20`,
+            borderColor: currentTheme.elements.ring
+          }}
+        >
+          <DynamicIcon 
+            iconName="Sparkles" 
+            className="w-5 h-5 mr-2" 
+            style={{ color: currentTheme.elements.accent }}
+          />
+          <span 
+            className="font-semibold"
+            style={{ color: currentTheme.elements.description }}
+          >
              {projectSlogan}
           </span>
         </div>
 
         {/* Heading */}
-        <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
-          <span className="bg-gradient-to-r from-white to-emerald-200 bg-clip-text text-transparent">
+        <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+          <span 
+            key={`gradient-1-${selectedTheme}`}
+            className="bg-clip-text text-transparent"
+            style={{
+              background: `linear-gradient(135deg, ${currentTheme.elements.heading}, ${currentTheme.elements.accent}, ${currentTheme.elements.primaryButton.bg})`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 3s ease infinite'
+            }}
+          >
              {heroHeadingPart1}
           </span><br/>
-          <span className="text-emerald-300">{heroHeadingPart2}</span>
+          <span 
+            key={`gradient-2-${selectedTheme}`}
+            className="bg-clip-text text-transparent"
+            style={{
+              background: `linear-gradient(135deg, ${currentTheme.elements.accent}, ${currentTheme.elements.primaryButton.bg}, ${currentTheme.elements.heading})`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 3s ease infinite'
+            }}
+          >
+            {heroHeadingPart2}
+          </span>
         </h1>
 
         {/* Subheading */}
-        <p className="text-xl md:text-2xl text-green-100 mb-12 leading-relaxed max-w-4xl mx-auto">
+        <p 
+          className="text-lg md:text-xl mb-8 leading-relaxed max-w-3xl mx-auto"
+          style={{ color: currentTheme.elements.description }}
+        >
           {welcomeLine}
         </p>
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
+        <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
+          {/* Primary Button - Call Now */}
           <a
             href={`tel:${phoneNumber}`}
-            className="group bg-white text-green-600 px-8 py-5 rounded-2xl font-bold text-lg transition-transform hover:scale-105 shadow-2xl flex items-center justify-center space-x-3"
+            className="group relative px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-3 overflow-hidden"
+            style={{
+              background: `linear-gradient(135deg, ${currentTheme.elements.primaryButton.bg}, ${currentTheme.elements.accent})`,
+              color: currentTheme.elements.primaryButton.text,
+              boxShadow: `0 15px 35px ${currentTheme.elements.shadow}, 0 5px 15px ${currentTheme.elements.primaryButton.bg}40`
+            }}
+            onMouseEnter={(e) => {
+              (e.target as HTMLElement).style.transform = 'scale(1.1) translateY(-2px)';
+              (e.target as HTMLElement).style.boxShadow = `0 20px 40px ${currentTheme.elements.shadow}, 0 10px 20px ${currentTheme.elements.primaryButton.bg}60`;
+            }}
+            onMouseLeave={(e) => {
+              (e.target as HTMLElement).style.transform = 'scale(1) translateY(0px)';
+              (e.target as HTMLElement).style.boxShadow = `0 15px 35px ${currentTheme.elements.shadow}, 0 5px 15px ${currentTheme.elements.primaryButton.bg}40`;
+            }}
           >
-            <DynamicIcon iconName="Phone" size={24} className="group-hover:animate-bounce" />
-            <span>Call Now: {phoneNumber}</span>
+            {/* Shine Effect */}
+            <div 
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+            ></div>
+            <DynamicIcon iconName="Phone" size={20} className="group-hover:animate-bounce relative z-10" />
+            <span className="relative z-10">Call Now: {phoneNumber}</span>
           </a>
+
+          {/* Secondary Button - Free Quote */}
           <button
             onClick={()=>navigate('/contact')}
-            className="group bg-emerald-500/80 backdrop-blur-sm hover:bg-emerald-400 text-white px-8 py-5 rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 transition-transform hover:scale-105 border border-white/30"
+            className="group relative px-8 py-4 rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 transition-all duration-300 hover:scale-105 border-2 backdrop-blur-md overflow-hidden"
+            style={{
+              backgroundColor: `${currentTheme.elements.secondaryButton.bg}`,
+              color: currentTheme.elements.secondaryButton.text,
+              borderColor: currentTheme.elements.secondaryButton.border,
+              boxShadow: `0 15px 35px ${currentTheme.elements.shadow}, inset 0 1px 0 rgba(255,255,255,0.2)`
+            }}
+            onMouseEnter={(e) => {
+              (e.target as HTMLElement).style.backgroundColor = currentTheme.elements.secondaryButton.hover;
+              (e.target as HTMLElement).style.transform = 'scale(1.1) translateY(-2px)';
+              (e.target as HTMLElement).style.boxShadow = `0 20px 40px ${currentTheme.elements.shadow}, inset 0 1px 0 rgba(255,255,255,0.3)`;
+            }}
+            onMouseLeave={(e) => {
+              (e.target as HTMLElement).style.backgroundColor = currentTheme.elements.secondaryButton.bg;
+              (e.target as HTMLElement).style.transform = 'scale(1) translateY(0px)';
+              (e.target as HTMLElement).style.boxShadow = `0 15px 35px ${currentTheme.elements.shadow}, inset 0 1px 0 rgba(255,255,255,0.2)`;
+            }}
           >
-            <DynamicIcon iconName="Sparkles" size={24} className="group-hover:rotate-12 transition-transform" />
-            <span>Free Quote</span>
+            {/* Glow Effect */}
+            <div 
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+            ></div>
+            <DynamicIcon iconName="Sparkles" size={20} className="group-hover:rotate-12 transition-transform relative z-10" />
+            <span className="relative z-10">Free Quote</span>
           </button>
         </div>
 
         {/* Features */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
           {features.map(f => (
-            <div key={f.serialno} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center">
+            <div 
+              key={f.serialno} 
+              className="backdrop-blur-sm rounded-xl p-4 border text-center"
+              style={{
+                backgroundColor: `${currentTheme.elements.surface}40`,
+                borderColor: currentTheme.elements.ring
+              }}
+            >
               <DynamicIcon
                 iconName={f.iconName}
-                className="w-8 h-8 text-emerald-300 mx-auto mb-4"
+                className="w-6 h-6 mx-auto mb-3"
+                style={{ color: currentTheme.elements.accent }}
               />
-              <h3 className="text-lg font-bold text-white mb-2">{f.title}</h3>
-              <p className="text-green-100 text-sm">{f.subtitle}</p>
+              <h3 
+                className="text-base font-bold mb-2"
+                style={{ color: currentTheme.elements.heading }}
+              >
+                {f.title}
+              </h3>
+              <p 
+                className="text-xs"
+                style={{ color: currentTheme.elements.description }}
+              >
+                {f.subtitle}
+              </p>
             </div>
           ))}
         </div>
       </div>
     </section>
+    </>
   );
 }

@@ -16,13 +16,14 @@ import CleaningTestimonials from '../components/CleaningTestimonials';
 import CleaningServiceAreas from '../components/CleaningServiceAreas';
 import CleaningFAQ from '../components/CleaningFAQ';
 import CleaningFooter from '../components/CleaningFooter';
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbPage } from '../../../components/ui/breadcrumb';
-import { Home } from 'lucide-react';
+import { colorThemes, getThemeByName, defaultTheme } from '../colors';
 const CleaningIndex = () => {
   const { seoData } = useSEO('/home');
   const [phoneNumber, setPhoneNumber] = useState("");
   const [projectCategory, setProjectCategory] = useState("");
   const [CTA, setCTA] = useState([]);
+  const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
+  const [currentTheme, setCurrentTheme] = useState(getThemeByName(defaultTheme));
   const projectId = import.meta.env.VITE_PROJECT_ID;
   const location = useLocation();
 
@@ -37,6 +38,27 @@ const CleaningIndex = () => {
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
   }, [location, navigationType]);
+
+  // Load saved theme from localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('cleaningTheme');
+    if (savedTheme) {
+      setSelectedTheme(savedTheme);
+      setCurrentTheme(getThemeByName(savedTheme));
+    }
+  }, []);
+
+  // Listen for theme changes from other components
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const newTheme = event.detail.theme;
+      setSelectedTheme(newTheme);
+      setCurrentTheme(getThemeByName(newTheme));
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,12 +82,110 @@ const CleaningIndex = () => {
     fetchData();
   }, [projectId]);
 
+  // Load theme from localStorage on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('selectedTheme');
+    if (savedTheme && getThemeByName(savedTheme)) {
+      setSelectedTheme(savedTheme);
+      setCurrentTheme(getThemeByName(savedTheme));
+    }
+  }, []);
+
+  // Listen for theme changes from header
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const newTheme = event.detail.theme;
+      setSelectedTheme(newTheme);
+      setCurrentTheme(getThemeByName(newTheme));
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
+
   // Ensure there are at least 4 CTAs by reusing the first one if necessary
   const getCTAContent = (index) => {
     if (CTA.length === 0) {
       return { title: "Default CTA", description: "Contact us for our services" };
     }
     return CTA[index] || CTA[0];
+  };
+
+  const renderCTA = (cta, phoneNumber, projectCategory) => {
+    return (
+      <section 
+        className="py-16 font-poppins relative overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, ${currentTheme.elements.surface}, ${currentTheme.elements.gradient.to})`
+        }}
+      >
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          {[...Array(30)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full animate-pulse"
+              style={{
+                width: Math.random() * 6 + 3 + 'px',
+                height: Math.random() * 6 + 3 + 'px',
+                left: Math.random() * 100 + '%',
+                top: Math.random() * 100 + '%',
+                backgroundColor: currentTheme.elements.accent,
+                animationDelay: Math.random() * 3 + 's',
+                animationDuration: Math.random() * 3 + 2 + 's'
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="text-center mb-12">
+            <h2 
+              className="text-3xl md:text-4xl font-bold mb-6 leading-tight"
+              style={{ color: currentTheme.elements.heading }}
+            >
+              {cta.title}
+            </h2>
+            
+            <p 
+              className="text-lg max-w-3xl mx-auto leading-relaxed"
+              style={{ color: currentTheme.elements.description }}
+            >
+              {cta.description}
+            </p>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <a
+              href={`tel:${phoneNumber}`}
+              className="group px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
+              style={{
+                backgroundColor: currentTheme.elements.primaryButton.bg,
+                color: currentTheme.elements.primaryButton.text,
+                boxShadow: `0 10px 30px ${currentTheme.elements.primaryButton.bg}40`
+              }}
+            >
+              <Phone size={24} className="group-hover:animate-pulse" />
+              <span>Call Now: {phoneNumber}</span>
+            </a>
+            
+            <Link
+              to="/contact"
+              className="group px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105 border-2"
+              style={{
+                backgroundColor: currentTheme.elements.secondaryButton.bg,
+                color: currentTheme.elements.secondaryButton.text,
+                borderColor: currentTheme.elements.secondaryButton.border
+              }}
+            >
+              <Sparkles size={24} />
+              <span>Book Services of {projectCategory}</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
   };
 
   return (
@@ -78,139 +198,24 @@ const CleaningIndex = () => {
 
       <div className="min-h-screen font-poppins">
         <CleaningHeader />
-        {/* Breadcrumb */}
-        <div className="bg-gray-50 py-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="flex items-center ">
-                    <Home className="w-4 h-4 mr-1 text-green-600" />
-                    Home
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </div>
         <CleaningHero />
 
         <CleaningAboutUs />
         <CleaningServices />
         {/* First CTA */}
-        <section className="py-16 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-poppins">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {getCTAContent(0).title}
-            </h2>
-            <p className="text-xl mb-8 max-w-3xl mx-auto text-green-100">
-              {getCTAContent(0).description}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a
-                href={`tel:${phoneNumber}`}
-                className="group bg-white text-green-600 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
-              >
-                <Phone size={24} className="group-hover:animate-pulse" />
-                <span>Call Now: {phoneNumber}</span>
-              </a>
-              <Link
-                to="/contact"
-                className="group bg-emerald-500 hover:bg-emerald-400 text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
-              >
-                <Sparkles size={24} />
-                <span>Book Services of {projectCategory}</span>
-              </Link>
-            </div>
-          </div>
-        </section>
+        {renderCTA(getCTAContent(0), phoneNumber, projectCategory)}
         <CleaningWhyChooseUs />
         <CleaningProcess />
         {/* Second CTA */}
-        <section className="py-16 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-poppins">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {getCTAContent(1).title}
-            </h2>
-            <p className="text-xl mb-8 max-w-3xl mx-auto text-green-100">
-              {getCTAContent(1).description}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a
-                href={`tel:${phoneNumber}`}
-                className="group bg-white text-green-600 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
-              >
-                <Phone size={24} className="group-hover:animate-pulse" />
-                <span>Call Now: {phoneNumber}</span>
-              </a>
-              <Link
-                to="/contact"
-                className="group bg-emerald-500 hover:bg-emerald-400 text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
-              >
-                <Sparkles size={24} />
-                <span>Book Services of {projectCategory}</span>
-              </Link>
-            </div>
-          </div>
-        </section>
+        {renderCTA(getCTAContent(1), phoneNumber, projectCategory)}
         <CleaningGuarantee />
         <CleaningTestimonials />
         {/* Third CTA */}
-        <section className="py-16 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-poppins">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {getCTAContent(2).title}
-            </h2>
-            <p className="text-xl mb-8 max-w-3xl mx-auto text-green-100">
-              {getCTAContent(2).description}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a
-                href={`tel:${phoneNumber}`}
-                className="group bg-white text-green-600 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
-              >
-                <Phone size={24} className="group-hover:animate-pulse" />
-                <span>Call Now: {phoneNumber}</span>
-              </a>
-              <Link
-                to="/contact"
-                className="group bg-emerald-500 hover:bg-emerald-400 text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
-              >
-                <Sparkles size={24} />
-                <span>Book Services of {projectCategory}</span>
-              </Link>
-            </div>
-          </div>
-        </section>
+        {renderCTA(getCTAContent(2), phoneNumber, projectCategory)}
         <CleaningServiceAreas />
         <CleaningFAQ />
         {/* Fourth CTA */}
-        <section className="py-16 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-poppins">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {getCTAContent(3).title}
-            </h2>
-            <p className="text-xl mb-8 max-w-3xl mx-auto text-green-100">
-              {getCTAContent(3).description}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a
-                href={`tel:${phoneNumber}`}
-                className="group bg-white text-green-600 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
-              >
-                <Phone size={24} className="group-hover:animate-pulse" />
-                <span>Call Now: {phoneNumber}</span>
-              </a>
-              <Link
-                to="/contact"
-                className="group bg-emerald-500 hover:bg-emerald-400 text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
-              >
-                <Sparkles size={24} />
-                <span>Book Services of {projectCategory}</span>
-              </Link>
-            </div>
-          </div>
-        </section>
+        {renderCTA(getCTAContent(3), phoneNumber, projectCategory)}
         <CleaningFooter />
       </div>
     </HelmetProvider>

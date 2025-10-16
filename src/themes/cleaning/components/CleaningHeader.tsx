@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Phone, Menu, X, ChevronDown } from 'lucide-react';
+import { Phone, Menu, X, ChevronDown, Palette } from 'lucide-react';
 import { useHeaderData } from '../../../hooks/useHeaderData.js';
 import { httpFile } from "../../../config.js";
 import { getProjectId } from '../../../hooks/getProjectId';
+import { colorThemes, getThemeByName, defaultTheme } from '../colors.js';
 
 const CleaningHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [services, setServices] = useState([]);
   const [locations, setLocations] = useState([]);
+  const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
   const navigate = useNavigate();
+
   
   const {
     phoneNumber,
@@ -21,11 +24,32 @@ const CleaningHeader = () => {
   } = useHeaderData();
 
   const [projectId, setProjectId] = useState(null);
+  const currentTheme = getThemeByName(selectedTheme);
+
 
   useEffect(() => {
     const id = getProjectId();
     console.log(id, "this is id");
     setProjectId(id);
+  }, []);
+
+  // Load saved theme from localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('cleaningTheme');
+    if (savedTheme) {
+      setSelectedTheme(savedTheme);
+    }
+  }, []);
+
+  // Listen for theme changes from other components
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const newTheme = event.detail.theme;
+      setSelectedTheme(newTheme);
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
   }, []);
 
   useEffect(() => {
@@ -103,88 +127,123 @@ const CleaningHeader = () => {
   }
 
   return (
-    <header className="bg-white shadow-lg sticky top-0 z-50 font-poppins">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
-          {/* Logo */}
-          <div className="flex items-center">
-            <div
-              style={{
-                fontSize: '2rem',
-                color: '#fff',
-                background: 'linear-gradient(145deg, #38a169, #2f855a)',
-                width: '48px',
-                height: '48px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: '50%',
-                boxShadow:
-                  'inset -2px -2px 5px rgba(255,255,255,0.2), inset 2px 2px 5px rgba(0,0,0,0.2), 0 6px 15px rgba(0,0,0,0.15)',
-                transition: 'transform 0.25s ease, box-shadow 0.25s ease',
-                cursor: 'pointer',
-                transform: 'scale(1)',
-                marginRight: '13px'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.08)';
-                e.currentTarget.style.boxShadow =
-                  'inset -1px -1px 4px rgba(255,255,255,0.3), inset 1px 1px 4px rgba(0,0,0,0.2), 0 8px 20px rgba(0,0,0,0.25)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow =
-                  'inset -2px -2px 5px rgba(255,255,255,0.2), inset 2px 2px 5px rgba(0,0,0,0.2), 0 6px 15px rgba(0,0,0,0.15)';
-              }}
-            >
-              <Link to="/">
-                <i className={`fas ${projectFasFA}`}></i>
+    <>
+      <header 
+        className="shadow-lg sticky top-0 z-50 font-poppins border-b"
+        style={{
+          backgroundColor: currentTheme.elements.surface,
+          borderColor: currentTheme.elements.ring
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            {/* Logo */}
+            <div className="flex items-center space-x-4">
+              <div className="relative group">
+                <div 
+                  className="w-12 h-12 rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-105 transition-all duration-300"
+                  style={{
+                    background: `linear-gradient(135deg, ${currentTheme.elements.primaryButton.bg}, ${currentTheme.elements.accent})`,
+                    boxShadow: `0 4px 15px ${currentTheme.elements.shadow}`
+                  }}
+                >
+                  <i className={`fas ${projectFasFA} text-white text-lg`}></i>
+                </div>
+                <div 
+                  className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: currentTheme.elements.accent }}
+                >
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                </div>
+              </div>
+
+              <Link to="/" className="flex flex-col">
+                <h1 
+                  className="text-2xl font-bold leading-tight"
+                  style={{ color: currentTheme.elements.heading }}
+                >
+                  {projectName}
+                </h1>
+                <p 
+                  className="text-sm font-medium"
+                  style={{ color: currentTheme.elements.description }}
+                >
+                  {projectSlogan}
+                </p>
               </Link>
             </div>
 
-            <Link to="/">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                {projectName}
-              </h1>
-              <p className="text-sm text-gray-600">{projectSlogan}</p>
-            </Link>
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navigationItems.map((item) => (
-              <div key={item.name} className="relative group">
-                {item.hasDropdown ? (
-                  <>
-                    <Link
-                      to={item.href}
-                      className="text-gray-700 hover:text-green-600 font-medium transition-colors duration-200 flex items-center"
-                    >
-                      {item.name}
-                      <ChevronDown size={16} className="ml-1" />
-                    </Link>
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-6">
+              {navigationItems.map((item) => (
+                <div key={item.name} className="relative group">
+                  {item.hasDropdown ? (
+                    <>
+                      <Link
+                        to={item.href}
+                        className="font-semibold text-sm transition-colors duration-200 flex items-center py-2"
+                        style={{ color: currentTheme.elements.heading }}
+                        onMouseEnter={(e) => {
+                          (e.target as HTMLElement).style.color = currentTheme.elements.primaryButton.bg;
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.target as HTMLElement).style.color = currentTheme.elements.heading;
+                        }}
+                      >
+                        {item.name}
+                        <ChevronDown size={14} className="ml-1 group-hover:rotate-180 transition-transform duration-300" />
+                      </Link>
                     
                     {/* Services Dropdown */}
                     {item.name === 'Services' && (
-                      <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                      <div 
+                        className="absolute top-full left-0 mt-2 w-64 rounded-lg shadow-xl py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+                        style={{
+                          backgroundColor: currentTheme.elements.surface,
+                          border: `1px solid ${currentTheme.elements.ring}`,
+                          boxShadow: `0 8px 25px ${currentTheme.elements.shadow}`
+                        }}
+                      >
                         {services.slice(0, 5).map((service) => (
                           <Link
                             key={service._id}
                             to={`/services/${service.service_name.toLowerCase().replace(/\s+/g, '-')}`}
                             onClick={() => handleServiceClick(service)}
                             onContextMenu={(e) => e.stopPropagation()}
-                            className="block w-full text-left px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors duration-200"
+                            className="block w-full text-left px-4 py-3 transition-colors duration-200"
+                            style={{ color: currentTheme.elements.heading }}
+                            onMouseEnter={(e) => {
+                              (e.target as HTMLElement).style.backgroundColor = `${currentTheme.elements.primaryButton.bg}20`;
+                              (e.target as HTMLElement).style.color = currentTheme.elements.primaryButton.bg;
+                            }}
+                            onMouseLeave={(e) => {
+                              (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                              (e.target as HTMLElement).style.color = currentTheme.elements.heading;
+                            }}
                           >
                             <div className="flex items-center">
-                              <i className={`${service.fas_fa_icon} text-green-500 mr-3`}></i>
+                              <i 
+                                className={`${service.fas_fa_icon} mr-3`}
+                                style={{ color: currentTheme.elements.accent }}
+                              ></i>
                               <span>{service.service_name}</span>
                             </div>
                           </Link>
                         ))}
-                        <div className="border-t border-gray-100 mt-2 pt-2">
+                        <div 
+                          className="border-t mt-2 pt-2"
+                          style={{ borderColor: currentTheme.elements.ring }}
+                        >
                           <Link
                             to="/services"
-                            className="block w-full text-left px-4 py-3 text-green-600 font-semibold hover:bg-green-50 transition-colors duration-200"
+                            className="block w-full text-left px-4 py-3 font-semibold transition-colors duration-200"
+                            style={{ color: currentTheme.elements.primaryButton.bg }}
+                            onMouseEnter={(e) => {
+                              (e.target as HTMLElement).style.backgroundColor = `${currentTheme.elements.primaryButton.bg}20`;
+                            }}
+                            onMouseLeave={(e) => {
+                              (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                            }}
                           >
                             View All Services
                           </Link>
@@ -194,22 +253,48 @@ const CleaningHeader = () => {
 
                     {/* Areas Dropdown */}
                     {item.name === 'Areas' && (
-                      <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                      <div 
+                        className="absolute top-full left-0 mt-2 w-64 rounded-lg shadow-xl py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+                        style={{
+                          backgroundColor: currentTheme.elements.surface,
+                          border: `1px solid ${currentTheme.elements.ring}`,
+                          boxShadow: `0 8px 25px ${currentTheme.elements.shadow}`
+                        }}
+                      >
                         {locations.slice(0, 5).map((location) => (
                           <Link
                             key={location.location_id}
                             to={`/${location.slug}`}
                             onClick={() => handleAreaClick(location)}
                             onContextMenu={(e) => e.stopPropagation()}
-                            className="block w-full text-left px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors duration-200"
+                            className="block w-full text-left px-4 py-3 transition-colors duration-200"
+                            style={{ color: currentTheme.elements.heading }}
+                            onMouseEnter={(e) => {
+                              (e.target as HTMLElement).style.backgroundColor = `${currentTheme.elements.primaryButton.bg}20`;
+                              (e.target as HTMLElement).style.color = currentTheme.elements.primaryButton.bg;
+                            }}
+                            onMouseLeave={(e) => {
+                              (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                              (e.target as HTMLElement).style.color = currentTheme.elements.heading;
+                            }}
                           >
                             {location.name}
                           </Link>
                         ))}
-                        <div className="border-t border-gray-100 mt-2 pt-2">
+                        <div 
+                          className="border-t mt-2 pt-2"
+                          style={{ borderColor: currentTheme.elements.ring }}
+                        >
                           <Link
                             to="/areas"
-                            className="block w-full text-left px-4 py-3 text-green-600 font-semibold hover:bg-green-50 transition-colors duration-200"
+                            className="block w-full text-left px-4 py-3 font-semibold transition-colors duration-200"
+                            style={{ color: currentTheme.elements.primaryButton.bg }}
+                            onMouseEnter={(e) => {
+                              (e.target as HTMLElement).style.backgroundColor = `${currentTheme.elements.primaryButton.bg}20`;
+                            }}
+                            onMouseLeave={(e) => {
+                              (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                            }}
                           >
                             View All Areas
                           </Link>
@@ -217,14 +302,21 @@ const CleaningHeader = () => {
                       </div>
                     )}
                   </>
-                ) : (
-                  <Link
-                    to={item.href}
-                    className="text-gray-700 hover:text-green-600 font-medium transition-colors duration-200"
-                  >
-                    {item.name}
-                  </Link>
-                )}
+                  ) : (
+                    <Link
+                      to={item.href}
+                      className="font-semibold text-sm transition-colors duration-200 py-2"
+                      style={{ color: currentTheme.elements.heading }}
+                      onMouseEnter={(e) => {
+                        (e.target as HTMLElement).style.color = currentTheme.elements.primaryButton.bg;
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.target as HTMLElement).style.color = currentTheme.elements.heading;
+                      }}
+                    >
+                      {item.name}
+                    </Link>
+                  )}
               </div>
             ))}
           </nav>
@@ -233,9 +325,20 @@ const CleaningHeader = () => {
           <div className="hidden md:flex items-center">
             <a
               href={`tel:${phoneNumber}`}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-3 rounded-full font-bold flex items-center space-x-2 transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="px-6 py-3 rounded-full font-bold flex items-center space-x-2 transition-all duration-300 transform hover:scale-105 shadow-lg"
+              style={{
+                backgroundColor: currentTheme.elements.primaryButton.bg,
+                color: currentTheme.elements.primaryButton.text,
+                boxShadow: `0 4px 15px ${currentTheme.elements.shadow}`
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLElement).style.backgroundColor = currentTheme.elements.primaryButton.hover;
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLElement).style.backgroundColor = currentTheme.elements.primaryButton.bg;
+              }}
             >
-              <Phone size={18} />
+              <Phone size={16} />
               <span>{phoneNumber}</span>
             </a>
           </div>
@@ -243,7 +346,19 @@ const CleaningHeader = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-gray-700 hover:text-green-600"
+            className="md:hidden p-2 rounded-lg transition-all duration-300"
+            style={{
+              color: currentTheme.elements.heading,
+              backgroundColor: isMenuOpen ? `${currentTheme.elements.primaryButton.bg}20` : 'transparent'
+            }}
+            onMouseEnter={(e) => {
+              (e.target as HTMLElement).style.color = currentTheme.elements.primaryButton.bg;
+              (e.target as HTMLElement).style.backgroundColor = `${currentTheme.elements.primaryButton.bg}20`;
+            }}
+            onMouseLeave={(e) => {
+              (e.target as HTMLElement).style.color = currentTheme.elements.heading;
+              (e.target as HTMLElement).style.backgroundColor = isMenuOpen ? `${currentTheme.elements.primaryButton.bg}20` : 'transparent';
+            }}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -251,14 +366,29 @@ const CleaningHeader = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
-            <div className="flex flex-col space-y-4">
+          <div 
+            className="md:hidden py-4 border-t"
+            style={{
+              borderColor: currentTheme.elements.ring,
+              backgroundColor: `${currentTheme.elements.surface}20`
+            }}
+          >
+            <div className="flex flex-col space-y-3">
               {navigationItems.map((item) => (
                 <div key={item.name}>
                   <Link
                     to={item.href}
-                    className="text-gray-700 hover:text-green-600 font-medium transition-colors duration-200 text-left block"
+                    className="font-semibold text-sm transition-colors duration-200 text-left block py-3 px-4"
+                    style={{ color: currentTheme.elements.heading }}
                     onClick={() => setIsMenuOpen(false)}
+                    onMouseEnter={(e) => {
+                      (e.target as HTMLElement).style.color = currentTheme.elements.primaryButton.bg;
+                      (e.target as HTMLElement).style.backgroundColor = `${currentTheme.elements.primaryButton.bg}10`;
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.target as HTMLElement).style.color = currentTheme.elements.heading;
+                      (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                    }}
                   >
                     {item.name}
                   </Link>
@@ -275,18 +405,37 @@ const CleaningHeader = () => {
                             setIsMenuOpen(false);
                           }}
                           onContextMenu={(e) => e.stopPropagation()}
-                          className="block w-full text-left py-2 text-sm text-gray-600 hover:text-green-600 transition-colors duration-200"
+                          className="block w-full text-left py-2 text-sm transition-colors duration-200"
+                          style={{ color: currentTheme.elements.heading }}
+                          onMouseEnter={(e) => {
+                            (e.target as HTMLElement).style.color = currentTheme.elements.primaryButton.bg;
+                            (e.target as HTMLElement).style.backgroundColor = `${currentTheme.elements.primaryButton.bg}10`;
+                          }}
+                          onMouseLeave={(e) => {
+                            (e.target as HTMLElement).style.color = currentTheme.elements.heading;
+                            (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                          }}
                         >
                           <div className="flex items-center">
-                            <i className={`${service.fas_fa_icon} text-green-500 mr-2 text-xs`}></i>
+                            <i 
+                              className={`${service.fas_fa_icon} mr-2 text-xs`}
+                              style={{ color: currentTheme.elements.accent }}
+                            ></i>
                             <span>{service.service_name}</span>
                           </div>
                         </Link>
                       ))}
                       <Link
                         to="/services"
-                        className="block w-full text-left py-2 text-sm text-green-600 font-semibold hover:bg-green-50 transition-colors duration-200"
+                        className="block w-full text-left py-2 text-sm font-semibold transition-colors duration-200"
+                        style={{ color: currentTheme.elements.primaryButton.bg }}
                         onClick={() => setIsMenuOpen(false)}
+                        onMouseEnter={(e) => {
+                          (e.target as HTMLElement).style.backgroundColor = `${currentTheme.elements.primaryButton.bg}20`;
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                        }}
                       >
                         View All Services
                       </Link>
@@ -305,15 +454,31 @@ const CleaningHeader = () => {
                             setIsMenuOpen(false);
                           }}
                           onContextMenu={(e) => e.stopPropagation()}
-                          className="block w-full text-left py-2 text-sm text-gray-600 hover:text-green-600 transition-colors duration-200"
+                          className="block w-full text-left py-2 text-sm transition-colors duration-200"
+                          style={{ color: currentTheme.elements.heading }}
+                          onMouseEnter={(e) => {
+                            (e.target as HTMLElement).style.color = currentTheme.elements.primaryButton.bg;
+                            (e.target as HTMLElement).style.backgroundColor = `${currentTheme.elements.primaryButton.bg}10`;
+                          }}
+                          onMouseLeave={(e) => {
+                            (e.target as HTMLElement).style.color = currentTheme.elements.heading;
+                            (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                          }}
                         >
                           {location.name}
                         </Link>
                       ))}
                       <Link
                         to="/areas"
-                        className="block w-full text-left py-2 text-sm text-green-600 font-semibold hover:bg-green-50 transition-colors duration-200"
+                        className="block w-full text-left py-2 text-sm font-semibold transition-colors duration-200"
+                        style={{ color: currentTheme.elements.primaryButton.bg }}
                         onClick={() => setIsMenuOpen(false)}
+                        onMouseEnter={(e) => {
+                          (e.target as HTMLElement).style.backgroundColor = `${currentTheme.elements.primaryButton.bg}20`;
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.target as HTMLElement).style.backgroundColor = 'transparent';
+                        }}
                       >
                         View All Areas
                       </Link>
@@ -323,9 +488,22 @@ const CleaningHeader = () => {
               ))}
               <a
                 href={`tel:${phoneNumber}`}
-                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-full font-bold flex items-center justify-center space-x-2 w-full"
+                className="px-6 py-3 rounded-full font-bold flex items-center justify-center space-x-2 w-full mt-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                style={{
+                  background: `linear-gradient(135deg, ${currentTheme.elements.primaryButton.bg}, ${currentTheme.elements.accent})`,
+                  color: currentTheme.elements.primaryButton.text,
+                  boxShadow: `0 4px 15px ${currentTheme.elements.shadow}`
+                }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLElement).style.transform = 'scale(1.05)';
+                  (e.target as HTMLElement).style.boxShadow = `0 8px 25px ${currentTheme.elements.shadow}`;
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLElement).style.transform = 'scale(1)';
+                  (e.target as HTMLElement).style.boxShadow = `0 4px 15px ${currentTheme.elements.shadow}`;
+                }}
               >
-                <Phone size={18} />
+                <Phone size={16} />
                 <span>{phoneNumber}</span>
               </a>
             </div>
@@ -333,6 +511,35 @@ const CleaningHeader = () => {
         )}
       </div>
     </header>
+
+    {/* Simple Color Theme Selector - Left Center */}
+    <div className="fixed left-0 top-1/2 transform -translate-y-1/2 z-[999999] p-4" style={{ zIndex: 999999 }}>
+      <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-200 p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <div 
+            className="w-3 h-3 rounded-full"
+            style={{ backgroundColor: currentTheme.elements.primaryButton.bg }}
+          ></div>
+          <span className="text-sm font-medium text-gray-700">Theme</span>
+        </div>
+        <select
+          value={selectedTheme}
+          onChange={(e) => {
+            console.log('🎨 Theme changed to:', e.target.value);
+            setSelectedTheme(e.target.value);
+          }}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+          {colorThemes.map((theme) => (
+            <option key={theme.name} value={theme.name}>
+              {theme.name}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    </>
   );
 };
 

@@ -4,13 +4,20 @@ import { httpFile } from "../../../config.js";
 import { MapPin, Clock, Shield } from 'lucide-react';
 import { slugify } from "../../../extras/slug";
 import { useNavigate, useLocation } from "react-router-dom";
+import { colorThemes, getThemeByName, defaultTheme } from '../colors';
 
-const CleaningServiceAreas = () => {
+interface CleaningServiceAreasProps {
+  locations?: any[];
+}
+
+const CleaningServiceAreas: React.FC<CleaningServiceAreasProps> = ({ locations: propLocations }) => {
   const [projectCategory, setProjectCategory] = useState("");
   const [welcomeLine, setWelcomeLine] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [UpcomingPage, setUpcomingPage] = useState("");
   const [locations, setLocations] = useState([]);
+  const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
+  const [currentTheme, setCurrentTheme] = useState(getThemeByName(defaultTheme));
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,6 +36,28 @@ const CleaningServiceAreas = () => {
 
   // 3) Now read back from localStorage (or fall back to default):
   const projectId = import.meta.env.VITE_PROJECT_ID;
+
+  // Load saved theme from localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('cleaningTheme');
+    if (savedTheme) {
+      setSelectedTheme(savedTheme);
+      setCurrentTheme(getThemeByName(savedTheme));
+    }
+  }, []);
+
+  // Listen for theme changes from other components
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const newTheme = event.detail.theme;
+      setSelectedTheme(newTheme);
+      setCurrentTheme(getThemeByName(newTheme));
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -55,6 +84,27 @@ const CleaningServiceAreas = () => {
 
     fetchData();
   }, [projectId]);
+
+  // Load theme from localStorage on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('selectedTheme');
+    if (savedTheme && getThemeByName(savedTheme)) {
+      setSelectedTheme(savedTheme);
+      setCurrentTheme(getThemeByName(savedTheme));
+    }
+  }, []);
+
+  // Listen for theme changes from header
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const newTheme = event.detail.theme;
+      setSelectedTheme(newTheme);
+      setCurrentTheme(getThemeByName(newTheme));
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
 
   console.log(locations, "locations");
 
@@ -128,57 +178,176 @@ const CleaningServiceAreas = () => {
     return '';
   };
 
+  // Use provided locations or fallback to fetched locations
+  const finalLocations = propLocations || locations;
+
 
   return (
-    <section className="py-20 bg-gray-50 font-poppins">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section 
+      className="py-16 font-poppins relative overflow-hidden"
+      style={{
+        background: `linear-gradient(135deg, ${currentTheme.elements.surface}05, ${currentTheme.elements.gradient.to}05)`
+      }}
+    >
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full animate-pulse"
+            style={{
+              width: Math.random() * 6 + 3 + 'px',
+              height: Math.random() * 6 + 3 + 'px',
+              left: Math.random() * 100 + '%',
+              top: Math.random() * 100 + '%',
+              backgroundColor: currentTheme.elements.accent,
+              animationDelay: Math.random() * 3 + 's',
+              animationDuration: Math.random() * 3 + 2 + 's'
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        {/* Header Section */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+          <div className="inline-flex items-center justify-center mb-6">
+            <div 
+              className="w-12 h-1 rounded-full mr-3"
+              style={{ backgroundColor: currentTheme.elements.accent }}
+            ></div>
+            <span 
+              className="text-xs font-semibold uppercase tracking-wider"
+              style={{ color: currentTheme.elements.accent }}
+            >
+              Service Areas
+            </span>
+            <div 
+              className="w-12 h-1 rounded-full ml-3"
+              style={{ backgroundColor: currentTheme.elements.accent }}
+            ></div>
+          </div>
+          
+          <h2 
+            className="text-3xl md:text-4xl font-bold mb-6 leading-tight"
+            style={{ color: currentTheme.elements.surface }}
+          >
             Areas We Serve
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Professional {projectCategory} services throughout Our availability.
+          
+          <p 
+            className="text-lg max-w-3xl mx-auto leading-relaxed"
+            style={{ color: currentTheme.elements.surface }}
+          >
+            Professional {projectCategory} services throughout our availability.
           </p>
         </div>
 
+        {/* Areas Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {locations.map((area, index) => (
-            <div
-              key={index}
-              onClick={() => handleLocationClick(area, false)} // pass false for div click
-              className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 cursor-pointer"
-            >
-              <div className="flex items-center mb-4">
-                <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-full p-3 mr-4">
-                  <MapPin className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900">{area.name}</h3>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center text-gray-600">
-                  <Clock className="w-5 h-5 text-green-500 mr-3" />
-                  <span>Response time: Extreme</span>
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <Shield className="w-5 h-5 text-emerald-500 mr-3" />
-                  <span>100% Original services</span>
-                </div>
-              </div>
-
-              <button
-                onClick={(e) => {
-                  e.stopPropagation(); // prevent div click
-                  handleLocationClick(area, true);
-                }}
-                className="mt-6 w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 inline-block text-center"
+          {finalLocations.length > 0 ? (
+            finalLocations.map((area, index) => (
+              <div
+                key={index}
+                className="group relative"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                See Areas
-              </button>
+                {/* Area Card */}
+                <div
+                  className="relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 h-full border-2 cursor-pointer"
+                  style={{
+                    borderColor: currentTheme.elements.ring
+                  }}
+                  onClick={() => handleLocationClick(area, false)}
+                >
+                  {/* Header with Icon */}
+                  <div className="flex items-center mb-6">
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center shadow-md mr-4"
+                      style={{
+                        backgroundColor: currentTheme.elements.accent
+                      }}
+                    >
+                      <MapPin className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 
+                      className="text-xl font-bold"
+                      style={{ color: currentTheme.elements.surface }}
+                    >
+                      {area.name}
+                    </h3>
+                  </div>
 
+                  {/* Features */}
+                  <div className="space-y-4 mb-6">
+                    <div className="flex items-center">
+                      <div
+                        className="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
+                        style={{
+                          backgroundColor: currentTheme.elements.accent
+                        }}
+                      >
+                        <Clock className="w-4 h-4 text-white" />
+                      </div>
+                      <span 
+                        className="text-sm"
+                        style={{ color: currentTheme.elements.surface }}
+                      >
+                        Response time: Extreme
+                      </span>
+                    </div>
+                    <div className="flex items-center">
+                      <div
+                        className="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
+                        style={{
+                          backgroundColor: currentTheme.elements.accent
+                        }}
+                      >
+                        <Shield className="w-4 h-4 text-white" />
+                      </div>
+                      <span 
+                        className="text-sm"
+                        style={{ color: currentTheme.elements.surface }}
+                      >
+                        100% Original services
+                      </span>
+                    </div>
+                  </div>
 
+                  {/* Action Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleLocationClick(area, true);
+                    }}
+                    className="w-full py-3 rounded-xl font-semibold transition-all duration-300 text-center"
+                    style={{
+                      backgroundColor: currentTheme.elements.primaryButton.bg,
+                      color: currentTheme.elements.primaryButton.text,
+                      boxShadow: `0 4px 15px ${currentTheme.elements.primaryButton.bg}40`
+                    }}
+                  >
+                    See Areas
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <div
+                className="w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center"
+                style={{ backgroundColor: currentTheme.elements.accent }}
+              >
+                <span className="text-white text-3xl">📍</span>
+              </div>
+              <p
+                className="text-xl"
+                style={{ color: currentTheme.elements.surface }}
+              >
+                No service areas listed yet.
+              </p>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </section>

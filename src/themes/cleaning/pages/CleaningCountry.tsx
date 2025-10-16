@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 
 import { useNavigate, useLocation, Link, useParams } from "react-router-dom";
@@ -13,6 +12,7 @@ import { useSEO } from '../../../hooks/useSEO';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
 import { Home } from 'lucide-react';
 import { generateFAQSchema, generateReviewSchema, generateServicesSchema } from "../../../hooks/schemaMarkup"
+import { colorThemes, getThemeByName, defaultTheme } from '../colors.js';
 interface Testimonial {
   review_text: string;
   customer_image: string;
@@ -22,11 +22,14 @@ interface Testimonial {
 
 import humanizeString from "../../../extras/stringUtils.js";
 import { slugify } from "../../../extras/slug";
-import CleaningCountryMap from '../components/CleaningCountryMap.js';
+import CleaningCountryMap from '../components/CleaningCountryMap';
 
 import CleaningHeader from '../components/CleaningHeader';
 
 import CleaningAboutUs from '../components/CleaningAboutUs';
+import CleaningServiceAreas from '../components/CleaningServiceAreas';
+import CleaningFAQ from '../components/CleaningFAQ';
+import CleaningTestimonials from '../components/CleaningTestimonials';
 
 import CleaningWhyChooseUs from '../components/CleaningWhyChooseUs';
 import CleaningProcess from '../components/CleaningProcess';
@@ -73,6 +76,8 @@ const CleaningCountry = () => {
   const [pageLocation, setPageLocation] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isHeroLoading, setIsHeroLoading] = useState(true);
+  const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
+  const [currentTheme, setCurrentTheme] = useState(getThemeByName(defaultTheme));
 
   const [locInfo, setLocInfo] = useState<{ name: string; lat: number; lng: number } | null>(null);
   const [CTA, setCTA] = useState([]);
@@ -82,6 +87,21 @@ const CleaningCountry = () => {
   const [hero3Image, setHero3Image] = useState("");
   const [hero4Image, setHero4Image] = useState("");
   const areaSectionRef = useRef(null);
+  const [projectWhyChooseUs, setProjectWhyChooseUs] = useState([]);
+  const [processSteps, setProcessSteps] = useState([]);
+  const [guarantees, setGuarantees] = useState([]);
+  const [guaranteeText, setGuaranteeText] = useState("");
+  const [promiseLine, setPromiseLine] = useState("");
+
+  const gradients = [
+    'from-green-500 to-emerald-500',
+    'from-emerald-500 to-teal-500',
+    'from-teal-500 to-cyan-500',
+    'from-cyan-500 to-blue-500',
+    'from-blue-500 to-indigo-500',
+    'from-indigo-500 to-purple-500',
+    'from-purple-500 to-pink-500'
+  ];
 
   const ctaSlotMap = {
     country: {
@@ -122,29 +142,72 @@ const CleaningCountry = () => {
     if (CTA.length === 0) return null;
     const cta = CTA[index] || CTA[0];
 
-
-
-
     return (
-      <section className="py-16 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-poppins">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            {cta.title}
-          </h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto text-green-100">
-            {cta.description}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+      <section 
+        className="py-16 font-poppins relative overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, ${currentTheme.elements.surface}, ${currentTheme.elements.gradient.to})`
+        }}
+      >
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          {[...Array(30)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full animate-pulse"
+              style={{
+                width: Math.random() * 6 + 3 + 'px',
+                height: Math.random() * 6 + 3 + 'px',
+                left: Math.random() * 100 + '%',
+                top: Math.random() * 100 + '%',
+                backgroundColor: currentTheme.elements.accent,
+                animationDelay: Math.random() * 3 + 's',
+                animationDuration: Math.random() * 3 + 2 + 's'
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="text-center mb-12">
+            <h2 
+              className="text-3xl md:text-4xl font-bold mb-6 leading-tight"
+              style={{ color: currentTheme.elements.heading }}
+            >
+              {cta.title}
+            </h2>
+            
+            <p 
+              className="text-lg max-w-3xl mx-auto leading-relaxed"
+              style={{ color: currentTheme.elements.description }}
+            >
+              {cta.description}
+            </p>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <a
               href={`tel:${phoneNumber}`}
-              className="group bg-white text-green-600 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
+              className="group px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
+              style={{
+                backgroundColor: currentTheme.elements.primaryButton.bg,
+                color: currentTheme.elements.primaryButton.text,
+                boxShadow: `0 10px 30px ${currentTheme.elements.primaryButton.bg}40`
+              }}
             >
               <Phone size={24} className="group-hover:animate-pulse" />
               <span>Call Now: {phoneNumber}</span>
             </a>
+            
             <Link
               to="/contact"
-              className="group bg-emerald-500 hover:bg-emerald-400 text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
+              className="group px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105 border-2"
+              style={{
+                backgroundColor: currentTheme.elements.secondaryButton.bg,
+                color: currentTheme.elements.secondaryButton.text,
+                borderColor: currentTheme.elements.secondaryButton.border
+              }}
             >
               <Sparkles size={24} />
               <span>Book Services of {projectCategory}</span>
@@ -190,7 +253,7 @@ const CleaningCountry = () => {
       case 'city':
         return `${cityName} ${projectCategory} Services`;
       case 'local_area':
-        return cityName;
+        return `${cityName} ${projectCategory} Services`;
       default:
         return `${projectCategory} services`;
     }
@@ -242,6 +305,27 @@ const CleaningCountry = () => {
       setIsHeroLoading(false);  // Set to false when hero data is ready
     }
   }, [heroImage, hero2Image, hero3Image, hero4Image]);
+
+  // Load saved theme from localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('cleaningTheme');
+    if (savedTheme) {
+      setSelectedTheme(savedTheme);
+      setCurrentTheme(getThemeByName(savedTheme));
+    }
+  }, []);
+
+  // Listen for theme changes from other components
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const newTheme = event.detail.theme;
+      setSelectedTheme(newTheme);
+      setCurrentTheme(getThemeByName(newTheme));
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
 
   // First API call to determine page type
   useEffect(() => {
@@ -314,7 +398,15 @@ const CleaningCountry = () => {
         if (data.projectInfo && data.projectInfo.serviceType) {
           setProjectCategory(data.projectInfo.serviceType);
           setWelcomeLine(data.projectInfo.welcomeLine);
-
+          setProjectWhyChooseUs(data.projectInfo.whyChooseUsSection || []);
+          setProcessSteps(
+            (data.projectInfo.ourProcessSection )
+          );
+          setGuarantees(
+            (data.projectInfo.ourGuaranteeSection || [])
+          );
+          setGuaranteeText(data.projectInfo.ourGuaranteeText || "");
+          setPromiseLine(data.projectInfo.promiseLine || "");
           setProjectReviews(data.testimonials || []);
           setprojectFaqs(data.faq || []);
           setPageLocation(data.RefLocation || '');
@@ -514,78 +606,53 @@ const CleaningCountry = () => {
       <div className="min-h-screen font-poppins">
         <CleaningHeader />
 
-        {/* Breadcrumb */}
-        <div className="bg-gray-50 py-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/" className="flex items-center">
-                      <Home className="w-4 h-4 mr-1" />
-                      Home
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-
-                {segments.map((segment, index) => {
-                  const url = '/' + segments.slice(0, index + 1).join('/');
-                  const isLast = index === segments.length - 1;
-
-                  // Capitalize each segment for display (you can use humanizeString or your utility)
-                  const displayName = segment
-                    .split('-')
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ');
-
-                  return (
-                    <React.Fragment key={index}>
-                      <BreadcrumbSeparator />
-                      <BreadcrumbItem>
-                        {isLast ? (
-                          <BreadcrumbPage className="font-medium text-green-600">{displayName}</BreadcrumbPage>
-                        ) : (
-                          <BreadcrumbLink asChild>
-                            <Link to={url}>{displayName}</Link>
-                          </BreadcrumbLink>
-                        )}
-                      </BreadcrumbItem>
-                    </React.Fragment>
-                  );
-                })}
-              </BreadcrumbList>
-            </Breadcrumb>
-
-          </div>
-        </div>
 
 
         {/* Dynamic Hero Section */}
-        <section className="relative py-20 bg-gradient-to-br from-green-600 to-emerald-600 text-white overflow-hidden min-h-[500px] flex items-center">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: pageType === 'country'
-                ? `url(${heroImage})`  // Hero image for country
-                : pageType === 'state'
-                  ? `url(${hero2Image})`  // Hero image for state
-                  : pageType === 'city'
-                    ? `url(${hero3Image})`  // Hero image for city
-                    : pageType === 'local_area'
-                      ? `url(${hero4Image})`  // Hero image for local area
-                      : 'url(https://images.unsplash.com/photo-1631889993959-41b4e9c6e3c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2126&q=80)', // Default image
-            }}
-          ></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-green-600/85 to-emerald-600/85"></div>
+        <section 
+          className="relative py-20 text-white overflow-hidden min-h-[500px] flex items-center"
+          style={{
+            background: `linear-gradient(135deg, ${currentTheme.elements.surface}, ${currentTheme.elements.gradient.to})`
+          }}
+        >
+          {/* animated dots */}
+          <div className="absolute inset-0 opacity-10">
+            {[...Array(30)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute rounded-full animate-pulse"
+                style={{
+                  width: Math.random() * 4 + 2 + 'px',
+                  height: Math.random() * 4 + 2 + 'px',
+                  left: Math.random() * 100 + '%',
+                  top: Math.random() * 100 + '%',
+                  backgroundColor: currentTheme.elements.accent,
+                  animationDelay: Math.random() * 3 + 's',
+                  animationDuration: Math.random() * 3 + 2 + 's'
+                }}
+              />
+            ))}
+          </div>
 
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             {pageType === 'local_area' ? (
               <div className="text-center">
                 <div className="flex items-center justify-center mb-4">
-                  <HeroIcon className="w-8 h-8 text-emerald-400 mr-3" />
-                  <h1 className="text-4xl md:text-5xl font-bold">{getPageTitle()}</h1>
+                  <Sparkles 
+                    className="w-8 h-8 mr-3" 
+                    style={{ color: currentTheme.elements.accent }}
+                  />
+                  <h1 
+                    className="text-4xl md:text-5xl font-bold"
+                    style={{ color: currentTheme.elements.heading }}
+                  >
+                    {getPageTitle()}
+                  </h1>
                 </div>
-                <p className="text-xl text-green-100 max-w-2xl mx-auto mb-6">
+                <p 
+                  className="text-xl max-w-2xl mx-auto mb-6"
+                  style={{ color: currentTheme.elements.description }}
+                >
                   {getPageDescription()}
                 </p>
 
@@ -594,7 +661,11 @@ const CleaningCountry = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                   <a
                     href={`tel:${phoneNumber}`}
-                    className="group bg-white text-green-600 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
+                    className="group px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center space-x-3 w-full sm:w-auto justify-center shadow-xl transform hover:scale-105"
+                    style={{
+                      backgroundColor: currentTheme.elements.primaryButton.bg,
+                      color: currentTheme.elements.primaryButton.text
+                    }}
                   >
                     <Phone size={24} className="group-hover:animate-pulse" />
                     <span>Call Now: {phoneNumber}</span>
@@ -615,10 +686,21 @@ const CleaningCountry = () => {
             ) : (
               <div className="text-center">
                 <div className="flex items-center justify-center mb-4">
-                  <HeroIcon className="w-8 h-8 text-emerald-400 mr-3" />
-                  <h1 className="text-4xl md:text-5xl font-bold">{getPageTitle()}</h1>
+                  <Sparkles 
+                    className="w-8 h-8 mr-3" 
+                    style={{ color: currentTheme.elements.accent }}
+                  />
+                  <h1 
+                    className="text-4xl md:text-5xl font-bold"
+                    style={{ color: currentTheme.elements.heading }}
+                  >
+                    {getPageTitle()}
+                  </h1>
                 </div>
-                <p className="text-xl text-green-100 max-w-3xl mx-auto mb-8">
+                <p 
+                  className="text-xl max-w-3xl mx-auto mb-8"
+                  style={{ color: currentTheme.elements.description }}
+                >
                   {getPageDescription()}
                 </p>
 
@@ -626,14 +708,23 @@ const CleaningCountry = () => {
                 <div className="flex flex-col sm:flex-row gap-6 justify-center">
                   <a
                     href={`tel:${phoneNumber}`}
-                    className="group bg-emerald-400 hover:bg-emerald-500 text-white font-semibold py-3 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center space-x-3"
+                    className="group font-semibold py-3 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center space-x-3"
+                    style={{
+                      backgroundColor: currentTheme.elements.primaryButton.bg,
+                      color: currentTheme.elements.primaryButton.text
+                    }}
                   >
                     <Phone className="w-5 h-5" />
                     <span>Call Now {phoneNumber}</span>
                   </a>
                   <button
                     onClick={() => navigate('/contact')}
-                    className="group bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white font-semibold py-3 px-8 rounded-2xl shadow-lg border border-white/30 transition-all duration-300 flex items-center justify-center space-x-3"
+                    className="group font-semibold py-3 px-8 rounded-2xl shadow-lg border transition-all duration-300 flex items-center justify-center space-x-3"
+                    style={{
+                      backgroundColor: currentTheme.elements.secondaryButton.bg,
+                      color: currentTheme.elements.secondaryButton.text,
+                      borderColor: currentTheme.elements.secondaryButton.border
+                    }}
                   >
                     <Quote className="w-5 h-5" />
                     <span>Free Quote</span>
@@ -641,8 +732,126 @@ const CleaningCountry = () => {
                 </div>
               </div>
             )}
+
+            {/* Breadcrumb at bottom */}
+            <div className="flex justify-center mt-12">
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink asChild>
+                      <Link to="/" className="flex items-center" style={{ color: currentTheme.elements.description }}>
+                        <Home className="w-4 h-4 mr-1" />
+                        Home
+                      </Link>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+
+                  {segments.map((segment, index) => {
+                    const url = '/' + segments.slice(0, index + 1).join('/');
+                    const isLast = index === segments.length - 1;
+
+                    // Capitalize each segment for display
+                    const displayName = segment
+                      .split('-')
+                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                      .join(' ');
+
+                    return (
+                      <React.Fragment key={index}>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                          {isLast ? (
+                            <BreadcrumbPage className="font-medium" style={{ color: currentTheme.elements.accent }}>
+                              {displayName}
+                            </BreadcrumbPage>
+                          ) : (
+                            <BreadcrumbLink asChild>
+                              <Link to={url} style={{ color: currentTheme.elements.description }}>{displayName}</Link>
+                            </BreadcrumbLink>
+                          )}
+                        </BreadcrumbItem>
+                      </React.Fragment>
+                    );
+                  })}
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
           </div>
         </section>
+
+        <CleaningAboutUs description={getPageDescription()} />
+
+        {/* Services Section */}
+        <section className="py-20 bg-white font-poppins">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 
+                className="text-4xl md:text-5xl font-bold mb-6 hover:scale-105 transition-transform duration-300"
+                style={{ color: currentTheme.elements.surface }}
+              >
+                Our {projectCategory} Services
+              </h2>
+              <p 
+                className="text-xl max-w-3xl mx-auto leading-relaxed"
+                style={{ color: currentTheme.elements.surface }}
+              >
+                Comprehensive {projectCategory} solutions for professional results.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projectServices.map((service, index) => (
+                <div
+                  key={index}
+                  className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-4 overflow-hidden cursor-pointer border-2"
+                  style={{ borderColor: currentTheme.elements.ring }}
+                  onClick={() => handleServiceClick(service)}
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={service.images[0]?.url || "https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041850.jpg"}
+                      alt={service.service_name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    <div 
+                      className="absolute top-4 left-4 rounded-full p-3 text-white shadow-lg"
+                      style={{ backgroundColor: currentTheme.elements.accent }}
+                    >
+                      <i className={service.fas_fa_icon} />
+                    </div>
+                  </div>
+                  <div className="p-8">
+                    <h3 
+                      className="text-2xl font-bold mb-4"
+                      style={{ color: currentTheme.elements.surface }}
+                    >
+                      {service.service_name} in {cityName}
+                    </h3>
+                    <p 
+                      className="mb-6 leading-relaxed"
+                      style={{ color: currentTheme.elements.surface }}
+                    >
+                      {getFirstSentence(service.service_description)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {renderCTA(CTA, pageType, 'slot2', phoneNumber, projectCategory)}
+        <CleaningWhyChooseUs items={projectWhyChooseUs} />
+        <CleaningProcess steps={processSteps} />
+        {renderCTA(CTA, pageType, 'slot3', phoneNumber, projectCategory)}
+        <CleaningGuarantee guarantees={guarantees} guaranteeText={guaranteeText} promiseLine={promiseLine} />
+
+        {/* Testimonials Section */}
+        <CleaningTestimonials reviews={projectReviews} />
+        {renderCTA(CTA, pageType, 'slot4', phoneNumber, projectCategory)}
+        {/* Service Areas Section */}
+        <CleaningServiceAreas locations={projectLocations} />
 
         {/* Map Section (only if lat/lng available) */}
         {locInfo && (
@@ -654,226 +863,8 @@ const CleaningCountry = () => {
           />
         )}
 
-
-        {renderCTA(CTA, pageType, 'slot1', phoneNumber, projectCategory)}
-        <CleaningAboutUs />
-
-        {/* Services Section */}
-        <section className="py-20 bg-white font-poppins">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6">
-                Our {projectCategory} Services
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Comprehensive {projectCategory} solutions for professional results.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projectServices.map((service, index) => (
-                <div
-                  key={index}
-                  className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-4 overflow-hidden border border-gray-100 cursor-pointer"
-                  onClick={() => handleServiceClick(service)}
-                >
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={service.images[0]?.url || "https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041850.jpg"}
-                      alt={service.service_name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                    <div className={`absolute top-4 left-4 bg-gradient-to-r ${service.gradient} rounded-full p-3 text-white shadow-lg`}>
-                      <i className={service.fas_fa_icon} />
-                    </div>
-                  </div>
-                  <div className="p-8">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                      {service.service_name} in {cityName}
-                    </h3>
-                    <p className="text-gray-600 mb-6 leading-relaxed">{getFirstSentence(service.service_description)}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {renderCTA(CTA, pageType, 'slot2', phoneNumber, projectCategory)}
-        <CleaningWhyChooseUs />
-        <CleaningProcess />
-        {renderCTA(CTA, pageType, 'slot3', phoneNumber, projectCategory)}
-        <CleaningGuarantee />
-
-        {/* Testimonials Section */}
-        {projectReviews.length > 0 && (
-          <section className="py-20 bg-white font-poppins">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6">
-                  What Our Customers Say
-                </h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                  Don't just take our word for it. Here's what our satisfied customers have to say about our cleaning services.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projectReviews.map((testimonial, index) => {
-                  const rawRating = Number(testimonial.rating) || 0;
-                  const fullStars = Math.floor(rawRating);
-                  const hasHalf = rawRating - fullStars >= 0.5;
-                  const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
-
-                  return (
-                    <div
-                      key={index}
-                      className="bg-gray-50 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100"
-                    >
-                      <div className="mb-6">
-                        <Quote className="w-10 h-10 text-green-500 mb-4" />
-                        <p className="text-gray-700 leading-relaxed text-lg">
-                          "{testimonial.review_text}"
-                        </p>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div>
-                            <h4 className="font-bold text-gray-900">
-                              {testimonial.customer_name}
-                            </h4>
-                          </div>
-                        </div>
-
-                        <div className="flex space-x-1">
-                          {[...Array(fullStars)].map((_, i) => (
-                            <Star
-                              key={`full-${index}-${i}`}
-                              className="w-5 h-5 text-yellow-400 fill-current"
-                            />
-                          ))}
-                          {hasHalf && (
-                            <StarHalf
-                              key={`half-${index}`}
-                              className="w-5 h-5 text-yellow-400 fill-current"
-                            />
-                          )}
-                          {[...Array(emptyStars)].map((_, i) => (
-                            <Star
-                              key={`empty-${index}-${i}`}
-                              className="w-5 h-5 text-gray-300 fill-current"
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-        )}
-        {renderCTA(CTA, pageType, 'slot4', phoneNumber, projectCategory)}
-        {/* Service Areas Section */}
-
-
-        <section ref={areaSectionRef} className="py-20 bg-gray-50 font-poppins">
-
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6">
-                Areas We Serve
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                {projectCategory} services throughout our coverage area.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projectLocations.map((area, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleLocationClick(area.slug, area.location_id, area._id, sortname)}
-                  className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 cursor-pointer"
-                >
-                  <div className="flex items-center mb-4">
-                    <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-full p-3 mr-4">
-                      <MapPin className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900">
-                      {area.name}{pageType === 'country' && sortname ? `, ${sortname}` : ''}
-                    </h3>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center text-gray-600">
-                      <Clock className="w-5 h-5 text-green-500 mr-3" />
-                      <span>Response time: Fast</span>
-                    </div>
-                    <div className="flex items-center text-gray-600">
-                      <Shield className="w-5 h-5 text-emerald-500 mr-3" />
-                      <span>100% Professional services</span>
-                    </div>
-                  </div>
-
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // prevent div click event
-                      handleLocationClick(area.slug, area.location_id, area._id, sortname, true);
-                    }}
-                    className="mt-6 w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300"
-                  >
-                    See Areas
-                  </button>
-
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-
         {/* FAQ Section */}
-        {projectFaqs.length > 0 && (
-          <section className="py-20 bg-white font-poppins">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6">
-                  Frequently Asked Questions
-                </h2>
-                <p className="text-xl text-gray-600">
-                  Got questions? We've got answers. Here are the most common questions about our cleaning services.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {projectFaqs.map((faq, index) => (
-                  <div key={index} className="bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden">
-                    <button
-                      className="w-full px-8 py-6 text-left flex justify-between items-center hover:bg-gray-100 transition-colors duration-200"
-                      onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
-                    >
-                      <h3 className="text-lg font-bold text-gray-900 pr-4">{faq.question}</h3>
-                      {openFAQ === index ? (
-                        <ChevronUp className="w-6 h-6 text-green-600 flex-shrink-0" />
-                      ) : (
-                        <ChevronDown className="w-6 h-6 text-gray-400 flex-shrink-0" />
-                      )}
-                    </button>
-                    {openFAQ === index && (
-                      <div className="px-8 pb-6">
-                        <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+        <CleaningFAQ faqs={projectFaqs} />
 
         {renderCTA(CTA, pageType, 'slot5', phoneNumber, projectCategory)}
         <CleaningFooter />

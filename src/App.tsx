@@ -35,10 +35,14 @@ import NotFound from "./pages/NotFound";
 // Theme-specific legal pages
 import CleaningTermsConditions from "./themes/cleaning/pages/CleaningTermsConditions";
 import CleaningPrivacyPolicy from "./themes/cleaning/pages/CleaningPrivacyPolicy";
+import CleaningDisclaimer from "./themes/cleaning/pages/CleaningDisclaimer";
+import CleaningColorPicker from "./themes/cleaning/pages/CleaningColorPicker";
 import MultiBlog from "./themes/multicolor/pages/multiblog"
 import ListBlogs from "./themes/multicolor/pages/ListBlogs"
 
-// import themess from "./cleaning.css"
+// Resolve theme CSS URLs so they work in production builds
+const cleaningCssUrl = new URL('./cleaning.css', import.meta.url).href;
+const multicolorCssUrl = new URL('./multicolor.css', import.meta.url).href;
 
 const queryClient = new QueryClient();
 // import ThemeToggle from "./themes/multicolor/components/ThemeToggle";
@@ -64,11 +68,11 @@ useEffect(() => {
   const projectId = import.meta.env.VITE_PROJECT_ID || 'default';
   console.log('Project ID:', projectId);
   
-  // For development, use multicolor theme as default
+  // For development, use cleaning theme as default
   if (!import.meta.env.VITE_PROJECT_ID) {
-    console.log('No project ID found, using multicolor theme as default');
-    setTheme('multicolor');
-    setThemeSubColor('multicolor');
+    console.log('No project ID found, using cleaning theme as default');
+    setTheme('cleaning');
+    setThemeSubColor('cleaning');
     return;
   }
   
@@ -87,20 +91,37 @@ useEffect(() => {
       localStorage.setItem('maintheme', fetchedTheme);
       localStorage.setItem('theme', fetchedThemeSubColor);
 
+      console.log(fetchedTheme, 'maintheme from local storage', fetchedThemeSubColor, 'theme from local storage');
+
       currentTheme = fetchedTheme;  // Dynamically export the fetched theme
     })
     .catch((error) => {
       console.error('Theme API error:', error);
-      // Fallback to multicolor theme on error
-      setTheme('multicolor');
-      setThemeSubColor('multicolor');
+      // Fallback to cleaning theme on error
+      setTheme('cleaning');
+      setThemeSubColor('cleaning');
     });
+  // Safety fallback: if theme hasn't resolved quickly (e.g., wrong API URL in prod),
+  // default to cleaning to avoid a blank screen.
+  const timer = setTimeout(() => {
+    setTheme((prev) => prev ?? 'cleaning');
+    setThemeSubColor((prev) => prev ?? 'cleaning');
+  }, 3000);
+  return () => clearTimeout(timer);
 }, []);
 
 
   if (!theme) {
     console.log('Theme not loaded yet...');
-    return null; // Don't show loading message
+    return (
+      <div style={{minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'sans-serif'}}>
+        <div style={{textAlign: 'center'}}>
+          <div style={{width: 48, height: 48, borderRadius: '50%', border: '4px solid #f3f4f6', borderTopColor: '#e11d48', margin: '0 auto', animation: 'spin 1s linear infinite'}}></div>
+          <div style={{marginTop: 12, color: '#4b5563'}}>Loading...</div>
+          <style>{`@keyframes spin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }`}</style>
+        </div>
+      </div>
+    );
   }
   
   console.log('Current theme:', theme);
@@ -113,9 +134,9 @@ useEffect(() => {
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <Helmet>
-          {/* Load theme-specific CSS */}
-          {theme === 'cleaning' && <link rel="stylesheet" href="/src/cleaning.css" />}
-          {theme === 'multicolor' && <link rel="stylesheet" href="/src/multicolor.css" />}
+          {/* Load theme-specific CSS via bundled asset URLs */}
+          {theme === 'cleaning' && <link rel="stylesheet" href={cleaningCssUrl} />}
+          {theme === 'multicolor' && <link rel="stylesheet" href={multicolorCssUrl} />}
         </Helmet>
 
 
@@ -160,6 +181,8 @@ useEffect(() => {
                   {/* Theme-specific Legal Pages */}
                   <Route path="/terms-conditions" element={<CleaningTermsConditions />} />
                   <Route path="/privacy-policy" element={<CleaningPrivacyPolicy />} />
+                  <Route path="/disclaimer" element={<CleaningDisclaimer />} />
+                  <Route path="/color-picker" element={<CleaningColorPicker />} />
 
                   {/* General Legal Pages */}
                   <Route path="/terms-conditions" element={<TermsConditions />} />

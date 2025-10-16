@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Link, useParams } from "react-router-dom";
 import { useSEO } from '../../../hooks/useSEO';
 import { httpFile } from "../../../config.js";
 import { generateFAQSchema, generateReviewSchema, generateServicesSchema } from "../../../hooks/schemaMarkup"
-import CleaningLoader from '../../cleaning/components/CleaningLoader.js';
+import Loader from '../components/Loader';
 import { useTheme } from '../contexts/ThemeContext';
 import ColorThemeSelector from '../components/ColorThemeSelector';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
@@ -676,7 +676,7 @@ const AreaDetail = () => {
     number: (i + 1).toString()
   }));
   if (isHeroLoading || isLoading) {
-    return <CleaningLoader />;
+    return <Loader message="Loading..." variant="elegant" size="lg" />;
   }
 
   // console.log(countryDescription,"countryDescriptioncountryDescriptioncountryDescriptioncountryDescription")

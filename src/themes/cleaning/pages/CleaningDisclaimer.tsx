@@ -1,11 +1,8 @@
-
 import React, { useEffect, useState } from "react";
-import { httpFile } from "../../../config.js";
-import DOMPurify from 'dompurify';
 import CleaningHeader from '../components/CleaningHeader';
 import CleaningFooter from '../components/CleaningFooter';
 import CleaningLoader from '../components/CleaningLoader';
-import { Shield, Lock, Eye, FileText, Sparkles } from 'lucide-react';
+import { FileText, Sparkles, AlertTriangle } from 'lucide-react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { useSEO } from '../../../hooks/useSEO';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
@@ -13,14 +10,10 @@ import { Home } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { colorThemes, getThemeByName, defaultTheme } from '../colors.js';
 
-const CleaningPrivacyPolicy = () => {
-  const { seoData } = useSEO('/privacy-policy');
-  const [privacyContent, setPrivacyContent] = useState("");
+const CleaningDisclaimer = () => {
+  const { seoData } = useSEO('/disclaimer');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const location = useLocation();
-
-  const projectId = import.meta.env.VITE_PROJECT_ID;
 
   // Theme state
   const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
@@ -47,38 +40,17 @@ const CleaningPrivacyPolicy = () => {
     return () => window.removeEventListener('themeChanged', handleThemeChange);
   }, []);
 
-useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location.pathname]); // runs every time URL path changes
+  }, [location.pathname]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const { data } = await httpFile.post("/webapp/v1/fetchTnC_Au_Pp", { projectId });
-
-        if (data.privacyPolicy) {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(data.privacyPolicy, "text/html");
-          const bodyContent = doc.body.innerHTML;
-          const cleanHTML = DOMPurify.sanitize(bodyContent);
-          setPrivacyContent(cleanHTML);
-        } else {
-          setPrivacyContent("<p>No privacy policy available.</p>");
-        }
-      } catch (err) {
-        setError("Failed to load privacy policy.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [projectId]);
-
-  console.log("Raw HTML content:", privacyContent);
+    // Simulate loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (loading) return <CleaningLoader />;
 
@@ -146,14 +118,14 @@ useEffect(() => {
                   className="text-4xl md:text-5xl font-bold"
                   style={{ color: currentTheme.elements.heading }}
                 >
-                  Privacy Policy
+                  Disclaimer
                 </h1>
               </div>
               <p 
                 className="text-xl max-w-3xl mx-auto"
                 style={{ color: currentTheme.elements.description }}
               >
-                Learn how we collect, use, and protect your personal information.
+                Important information about our services and limitations.
               </p>
             </div>
 
@@ -171,7 +143,7 @@ useEffect(() => {
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <BreadcrumbPage className="font-medium" style={{ color: currentTheme.elements.accent }}>Privacy Policy</BreadcrumbPage>
+                    <BreadcrumbPage className="font-medium" style={{ color: currentTheme.elements.accent }}>Disclaimer</BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
@@ -214,66 +186,87 @@ useEffect(() => {
                   background: `linear-gradient(135deg, ${currentTheme.elements.primaryButton.bg}, ${currentTheme.elements.accent})`
                 }}
               >
-                <Shield className="w-8 h-8 text-white" />
+                <FileText className="w-8 h-8 text-white" />
               </div>
               <h2 
                 className="text-3xl font-bold mb-4 flex items-center justify-center"
                 style={{ color: currentTheme.elements.surface }}
               >
-                <Lock 
+                <AlertTriangle 
                   className="w-8 h-8 mr-3" 
                   style={{ color: currentTheme.elements.accent }}
                 />
-                Data Protection & Privacy
+                Service Disclaimer
               </h2>
             </div>
 
             {/* Content */}
             <div className="max-w-3xl mx-auto">
-              {error && (
-                <div 
-                  className="p-4 rounded-lg mb-6"
-                  style={{
-                    backgroundColor: `${currentTheme.elements.primaryButton.bg}10`,
-                    border: `1px solid ${currentTheme.elements.primaryButton.bg}30`
-                  }}
-                >
-                  <p style={{ color: currentTheme.elements.primaryButton.bg }}>
-                    {error}
-                  </p>
-                </div>
-              )}
-              
-              {!loading && !error && (
-                <div 
-                  className="prose max-w-none"
-                  style={{ 
-                    color: '#000000',
-                    lineHeight: '1.6',
-                    fontSize: '15px'
-                  }}
-                >
-                  <style dangerouslySetInnerHTML={{
-                    __html: `
-                      .prose h1 {
-                        font-size: 1.5rem !important;
-                        margin-bottom: 1.5rem !important;
-                        color: #000000 !important;
-                      }
-                      .prose h2 {
-                        font-size: 1.5rem !important;
-                        margin-bottom: 1.5rem !important;
-                        color: #000000 !important;
-                      }
-                      .prose p {
-                        color: #000000 !important;
-                        margin-bottom: 1rem !important;
-                      }
-                    `
-                  }} />
-                  <div dangerouslySetInnerHTML={{ __html: privacyContent }} />
-                </div>
-              )}
+              <div 
+                className="prose max-w-none"
+                style={{ 
+                  color: '#000000',
+                  lineHeight: '1.6',
+                  fontSize: '15px'
+                }}
+              >
+                <style dangerouslySetInnerHTML={{
+                  __html: `
+                    .prose h1 {
+                      font-size: 1.5rem !important;
+                      margin-bottom: 1.5rem !important;
+                      color: #000000 !important;
+                    }
+                    .prose h2 {
+                      font-size: 1.5rem !important;
+                      margin-bottom: 1.5rem !important;
+                      color: #000000 !important;
+                    }
+                    .prose p {
+                      color: #000000 !important;
+                      margin-bottom: 1rem !important;
+                    }
+                  `
+                }} />
+                
+                <h1>Service Disclaimer</h1>
+                <p>This disclaimer governs the use of our cleaning services. By engaging our services, you acknowledge and agree to the terms outlined below.</p>
+
+                <h2>Service Limitations</h2>
+                <p>While we strive to provide the highest quality cleaning services, we cannot guarantee that all stains, marks, or damage will be completely removed. Some materials and surfaces may have limitations that prevent complete restoration.</p>
+
+                <h2>Client Responsibilities</h2>
+                <p>Clients are responsible for:</p>
+                <ul>
+                  <li>Providing clear access to all areas requiring cleaning</li>
+                  <li>Removing or securing valuable and fragile items</li>
+                  <li>Informing our team of any special requirements or concerns</li>
+                  <li>Ensuring the safety of our cleaning staff</li>
+                </ul>
+
+                <h2>Liability Limitations</h2>
+                <p>Our liability is limited to the cost of the cleaning service provided. We are not responsible for:</p>
+                <ul>
+                  <li>Pre-existing damage to items or surfaces</li>
+                  <li>Damage caused by normal wear and tear</li>
+                  <li>Items not properly secured or protected by the client</li>
+                  <li>Consequential or indirect damages</li>
+                </ul>
+
+                <h2>Insurance Coverage</h2>
+                <p>We maintain appropriate insurance coverage for our cleaning services. However, clients are encouraged to maintain their own insurance for valuable items and property.</p>
+
+                <h2>Service Guarantees</h2>
+                <p>We offer satisfaction guarantees for our services, but these are subject to reasonable limitations based on the condition of items and surfaces prior to cleaning.</p>
+
+                <h2>Force Majeure</h2>
+                <p>We are not liable for delays or inability to perform services due to circumstances beyond our control, including but not limited to natural disasters, government actions, or other force majeure events.</p>
+
+                <h2>Contact Information</h2>
+                <p>If you have any questions about this disclaimer or our services, please contact us directly. We are committed to providing clear communication and addressing any concerns you may have.</p>
+
+                <p><strong>Last Updated:</strong> {new Date().toLocaleDateString()}</p>
+              </div>
             </div>
           </div>
         </section>
@@ -284,4 +277,4 @@ useEffect(() => {
   );
 };
 
-export default CleaningPrivacyPolicy;
+export default CleaningDisclaimer;

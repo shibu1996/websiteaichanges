@@ -13,19 +13,45 @@ import CleaningProcess from '../components/CleaningProcess';
 import CleaningServiceAreas from '../components/CleaningServiceAreas';
 import CleaningFAQ from '../components/CleaningFAQ';
 import CleaningFooter from '../components/CleaningFooter';
+import CleaningLoader from '../components/CleaningLoader';
 import { Sparkles } from 'lucide-react';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '../../../components/ui/breadcrumb';
 import { Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { colorThemes, getThemeByName, defaultTheme } from '../colors.js';
 
 const CleaningServicesPage = () => {
   const [projectCategory, setProjectCategory] = useState("");
   const [projectName, setProjectName] = useState("");
   const [projectDescriptions, setProjectDescriptions] = useState([]);
   let [locationName, setDisplayLocationName] = useState("");
+  const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
+  const [currentTheme, setCurrentTheme] = useState(getThemeByName(defaultTheme));
+  const [isLoading, setIsLoading] = useState(true);
 
 const formattedLocationName = locationName ? `in ${locationName}` : "";
   const projectId = import.meta.env.VITE_PROJECT_ID;
+
+  // Load saved theme from localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('cleaningTheme');
+    if (savedTheme) {
+      setSelectedTheme(savedTheme);
+      setCurrentTheme(getThemeByName(savedTheme));
+    }
+  }, []);
+
+  // Listen for theme changes from other components
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const newTheme = event.detail.theme;
+      setSelectedTheme(newTheme);
+      setCurrentTheme(getThemeByName(newTheme));
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
 
   const location = useLocation();
   const segments = location.pathname.split('/').filter(Boolean);
@@ -89,6 +115,7 @@ console.log(locationSlug, "locationSlug");
           setProjectCategory(data.serviceType || "");
           setProjectName(data.projectName || "");
           setProjectDescriptions(data.descriptions || []);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("Error fetching basic project info:", error);
@@ -103,73 +130,114 @@ console.log(locationSlug, "locationSlug");
     }
   }, [projectId]);
 
+  // Load saved theme from localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('cleaningTheme');
+    if (savedTheme && colorThemes.find(theme => theme.name === savedTheme)) {
+      console.log('🎨 Services: Loading saved theme:', savedTheme);
+      setSelectedTheme(savedTheme);
+      setCurrentTheme(getThemeByName(savedTheme));
+    } else {
+      console.log('🎨 Services: Using default theme:', defaultTheme);
+    }
+  }, []);
+
+  // Listen for theme changes from other components
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      const newTheme = event.detail.theme;
+      console.log('🎨 Services: Theme changed to:', newTheme);
+      setSelectedTheme(newTheme);
+      setCurrentTheme(getThemeByName(newTheme));
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
+
+  if (isLoading) return <CleaningLoader />;
+
   return (
     <div className="min-h-screen font-poppins">
       <CleaningHeader />
 
-      {/* Breadcrumb */}
-
-
-      <div className="bg-gray-50 py-2">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="/" className="flex items-center">
-                    <Home className="w-4 h-4 mr-1" />
-                    Home
-                  </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-
-              {segments.map((segment, index) => {
-                cumulativePath += `/${segment}`;
-                const isLast = index === segments.length - 1;
-                const displayName = segment === 'services' ? 'Services' : humanizeString(segment);
-
-                return (
-                  <React.Fragment key={index}>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      {isLast ? (
-                        <BreadcrumbPage className="font-medium text-green-600">{displayName}</BreadcrumbPage>
-                      ) : (
-                        <BreadcrumbLink asChild>
-                          <Link to={cumulativePath}>{displayName}</Link>
-                        </BreadcrumbLink>
-                      )}
-                    </BreadcrumbItem>
-                  </React.Fragment>
-                );
-              })}
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </div>
 
 
       {/* Services Hero */}
-      <section className="relative py-20 bg-gradient-to-br from-green-600 to-emerald-600 text-white overflow-hidden min-h-[500px] flex items-center">
-
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+      <section 
+        className="relative py-20 text-white overflow-hidden min-h-[500px] flex items-center"
+        style={{
+          background: `linear-gradient(135deg, ${currentTheme.elements.surface}, ${currentTheme.elements.gradient.to})`
+        }}
+      >
+        <div 
+          className="absolute inset-0"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1562259949-e8e7689d7828?ixlib=rb-4.0.3&auto=format&fit=crop&w=2126&q=80)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
+            background: `linear-gradient(135deg, ${currentTheme.elements.surface}85, ${currentTheme.elements.gradient.to}85)`
           }}
         ></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-green-600/85 to-emerald-600/85"></div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
-          <div className="flex items-center justify-center mb-4">
-            <Sparkles className="w-8 h-8 text-emerald-400 mr-3" />
-            <h1 className="text-4xl md:text-5xl font-bold">Our {projectCategory} Services {formattedLocationName}</h1>
+        {/* animated dots */}
+        <div className="absolute inset-0 opacity-10">
+          {[...Array(30)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full animate-pulse"
+              style={{
+                width: Math.random() * 4 + 2 + 'px',
+                height: Math.random() * 4 + 2 + 'px',
+                left: Math.random() * 100 + '%',
+                top: Math.random() * 100 + '%',
+                backgroundColor: currentTheme.elements.accent,
+                animationDelay: Math.random() * 3 + 's',
+                animationDuration: Math.random() * 3 + 2 + 's'
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          {/* Hero Content */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center mb-4">
+              <Sparkles 
+                className="w-8 h-8 mr-3" 
+                style={{ color: currentTheme.elements.accent }}
+              />
+              <h1 
+                className="text-4xl md:text-5xl font-bold"
+                style={{ color: currentTheme.elements.heading }}
+              >
+                Our {projectCategory} Services {formattedLocationName}
+              </h1>
+            </div>
+            <p 
+              className="text-xl max-w-3xl mx-auto"
+              style={{ color: currentTheme.elements.description }}
+            >
+              {projectDescriptions[2]}
+            </p>
           </div>
-          <p className="text-xl text-green-100 max-w-3xl mx-auto">
-           {projectDescriptions[2]}
-          </p>
+
+          {/* Breadcrumb */}
+          <div className="flex justify-center">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link to="/" className="flex items-center" style={{ color: currentTheme.elements.description }}>
+                      <Home className="w-4 h-4 mr-1" />
+                      Home
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="font-medium" style={{ color: currentTheme.elements.accent }}>Services</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
         </div>
       </section>
       
