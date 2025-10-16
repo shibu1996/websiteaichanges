@@ -183,7 +183,6 @@ const CleaningColorPicker = () => {
     setEditingTheme(null);
   };
 
-  console.log('CleaningColorPicker rendered!', { showCustomPicker, customThemes });
 
   return (
     <HelmetProvider>
@@ -202,94 +201,70 @@ const CleaningColorPicker = () => {
                 </div>
               </div>
               
-              {/* Prominent Custom Colors Button */}
-              <div className="text-center">
+              {/* Simple Custom Colors Button */}
+              <div className="flex items-center space-x-3">
                 <button
-                  onClick={() => {
-                    console.log('BIG Custom Colors Button Clicked!', !showCustomPicker);
-                    setShowCustomPicker(!showCustomPicker);
-                  }}
+                  onClick={() => setShowCustomPicker(!showCustomPicker)}
                   style={{
-                    background: 'linear-gradient(135deg, #8B5CF6, #3B82F6)',
+                    background: '#3B82F6',
                     color: 'white',
-                    padding: '16px 32px',
-                    borderRadius: '12px',
+                    padding: '8px 16px',
+                    borderRadius: '6px',
                     border: 'none',
-                    fontSize: '20px',
-                    fontWeight: 'bold',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    margin: '0 auto'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #7C3AED, #2563EB)';
-                    e.target.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
-                    e.target.style.transform = 'scale(1)';
-                  }}
-                >
-                  <Palette className="w-6 h-6 mr-3" />
-                  {showCustomPicker ? 'Hide Custom Colors' : '🎨 Create Custom Colors'}
-                </button>
-                <p className="text-sm text-gray-500 mt-2">Click to create your own color themes</p>
-              </div>
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => window.open('/', '_blank')}
-                  style={{
-                    background: '#6B7280',
-                    color: 'white',
-                    padding: '12px 24px',
-                    borderRadius: '8px',
-                    border: 'none',
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    boxShadow: '0 4px 12px rgba(107, 114, 128, 0.3)',
+                    fontSize: '14px',
+                    fontWeight: '500',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center'
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.background = '#4B5563';
-                    e.target.style.transform = 'scale(1.02)';
+                    const target = e.target as HTMLButtonElement;
+                    target.style.background = '#2563EB';
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.background = '#6B7280';
-                    e.target.style.transform = 'scale(1)';
+                    const target = e.target as HTMLButtonElement;
+                    target.style.background = '#3B82F6';
+                  }}
+                >
+                  <Palette className="w-4 h-4 mr-2" />
+                  {showCustomPicker ? 'Hide Custom' : 'Custom Colors'}
+                </button>
+                <button
+                  onClick={() => window.open('/', '_blank')}
+                  style={{
+                    background: '#6B7280',
+                    color: 'white',
+                    padding: '8px 16px',
+                    borderRadius: '6px',
+                    border: 'none',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                  onMouseEnter={(e) => {
+                    const target = e.target as HTMLButtonElement;
+                    target.style.background = '#4B5563';
+                  }}
+                  onMouseLeave={(e) => {
+                    const target = e.target as HTMLButtonElement;
+                    target.style.background = '#6B7280';
                   }}
                 >
                   <Eye className="w-4 h-4 mr-2" />
-                  Preview Site
+                  Preview
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Debug Info */}
-        <div className="bg-red-100 border border-red-400 p-4 m-4 rounded">
-          <p className="text-red-800 font-bold">DEBUG: showCustomPicker = {showCustomPicker.toString()}</p>
-          <p className="text-red-700">Click the purple button to toggle custom colors</p>
-          <button 
-            onClick={() => setShowCustomPicker(!showCustomPicker)}
-            className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-          >
-            Toggle Custom Colors (Test Button)
-          </button>
-        </div>
 
-        {/* Custom Color Picker - Always Visible for Testing */}
-        {(showCustomPicker || true) && (
+        {/* Custom Color Picker */}
+        {showCustomPicker && (
           <section className="py-8 bg-white border-b">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="mb-4 p-4 bg-yellow-100 border border-yellow-400 rounded-lg">
-                <p className="text-yellow-800 font-medium">🎨 Custom Colors Section is Active!</p>
-                <p className="text-yellow-700 text-sm">You can now create and manage custom themes</p>
-              </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 
                 {/* Custom Themes List */}
@@ -349,12 +324,14 @@ const CleaningColorPicker = () => {
                                   alignItems: 'center'
                                 }}
                                 onMouseEnter={(e) => {
-                                  e.target.style.background = '#1D4ED8';
-                                  e.target.style.transform = 'scale(1.05)';
+                                  const target = e.target as HTMLButtonElement;
+                                  target.style.background = '#1D4ED8';
+                                  target.style.transform = 'scale(1.05)';
                                 }}
                                 onMouseLeave={(e) => {
-                                  e.target.style.background = '#2563EB';
-                                  e.target.style.transform = 'scale(1)';
+                                  const target = e.target as HTMLButtonElement;
+                                  target.style.background = '#2563EB';
+                                  target.style.transform = 'scale(1)';
                                 }}
                               >
                                 Apply
@@ -374,12 +351,14 @@ const CleaningColorPicker = () => {
                                   alignItems: 'center'
                                 }}
                                 onMouseEnter={(e) => {
-                                  e.target.style.background = '#4B5563';
-                                  e.target.style.transform = 'scale(1.05)';
+                                  const target = e.target as HTMLButtonElement;
+                                  target.style.background = '#4B5563';
+                                  target.style.transform = 'scale(1.05)';
                                 }}
                                 onMouseLeave={(e) => {
-                                  e.target.style.background = '#6B7280';
-                                  e.target.style.transform = 'scale(1)';
+                                  const target = e.target as HTMLButtonElement;
+                                  target.style.background = '#6B7280';
+                                  target.style.transform = 'scale(1)';
                                 }}
                               >
                                 Edit
@@ -399,12 +378,14 @@ const CleaningColorPicker = () => {
                                   alignItems: 'center'
                                 }}
                                 onMouseEnter={(e) => {
-                                  e.target.style.background = '#B91C1C';
-                                  e.target.style.transform = 'scale(1.05)';
+                                  const target = e.target as HTMLButtonElement;
+                                  target.style.background = '#B91C1C';
+                                  target.style.transform = 'scale(1.05)';
                                 }}
                                 onMouseLeave={(e) => {
-                                  e.target.style.background = '#DC2626';
-                                  e.target.style.transform = 'scale(1)';
+                                  const target = e.target as HTMLButtonElement;
+                                  target.style.background = '#DC2626';
+                                  target.style.transform = 'scale(1)';
                                 }}
                               >
                                 Delete
@@ -650,12 +631,14 @@ const CleaningColorPicker = () => {
                                 flex: '1'
                               }}
                               onMouseEnter={(e) => {
-                                e.target.style.background = '#047857';
-                                e.target.style.transform = 'scale(1.02)';
+                                const target = e.target as HTMLButtonElement;
+                                target.style.background = '#047857';
+                                target.style.transform = 'scale(1.02)';
                               }}
                               onMouseLeave={(e) => {
-                                e.target.style.background = '#059669';
-                                e.target.style.transform = 'scale(1)';
+                                const target = e.target as HTMLButtonElement;
+                                target.style.background = '#059669';
+                                target.style.transform = 'scale(1)';
                               }}
                             >
                               <Save className="w-4 h-4 mr-2" />
@@ -677,12 +660,14 @@ const CleaningColorPicker = () => {
                                 alignItems: 'center'
                               }}
                               onMouseEnter={(e) => {
-                                e.target.style.background = '#4B5563';
-                                e.target.style.transform = 'scale(1.02)';
+                                const target = e.target as HTMLButtonElement;
+                                target.style.background = '#4B5563';
+                                target.style.transform = 'scale(1.02)';
                               }}
                               onMouseLeave={(e) => {
-                                e.target.style.background = '#6B7280';
-                                e.target.style.transform = 'scale(1)';
+                                const target = e.target as HTMLButtonElement;
+                                target.style.background = '#6B7280';
+                                target.style.transform = 'scale(1)';
                               }}
                             >
                               Cancel
@@ -708,12 +693,14 @@ const CleaningColorPicker = () => {
                                 flex: '1'
                               }}
                               onMouseEnter={(e) => {
-                                e.target.style.background = '#1D4ED8';
-                                e.target.style.transform = 'scale(1.02)';
+                                const target = e.target as HTMLButtonElement;
+                                target.style.background = '#1D4ED8';
+                                target.style.transform = 'scale(1.02)';
                               }}
                               onMouseLeave={(e) => {
-                                e.target.style.background = '#2563EB';
-                                e.target.style.transform = 'scale(1)';
+                                const target = e.target as HTMLButtonElement;
+                                target.style.background = '#2563EB';
+                                target.style.transform = 'scale(1)';
                               }}
                             >
                               <Save className="w-4 h-4 mr-2" />
@@ -735,12 +722,14 @@ const CleaningColorPicker = () => {
                                 alignItems: 'center'
                               }}
                               onMouseEnter={(e) => {
-                                e.target.style.background = '#4B5563';
-                                e.target.style.transform = 'scale(1.02)';
+                                const target = e.target as HTMLButtonElement;
+                                target.style.background = '#4B5563';
+                                target.style.transform = 'scale(1.02)';
                               }}
                               onMouseLeave={(e) => {
-                                e.target.style.background = '#6B7280';
-                                e.target.style.transform = 'scale(1)';
+                                const target = e.target as HTMLButtonElement;
+                                target.style.background = '#6B7280';
+                                target.style.transform = 'scale(1)';
                               }}
                             >
                               Reset
